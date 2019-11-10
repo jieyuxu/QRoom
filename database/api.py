@@ -1,6 +1,7 @@
 from app import Buildings, Rooms, Events, Groups, Users
 from base import Session, engine, Base
 from datetime import datetime, timedelta
+from sqlalchemy import or_, and_
 
 session = Session()
 
@@ -95,27 +96,129 @@ def hasBooked(user):
 
     return True
 
-# def releaseRoom(event):
+# if user already exists, return user object
+# else makes new user objects with admin = False, add to database,
+# and returns new object
+
+def getUser(net_id):
+    user = session.query(Users)\
+            .filter(Users.net_id == net_id)\
+            .first()
+
+    if user is None:
+        user = Users(net_id= net_id, contact = '', admin = False)
+        session.add(user)
+        session.commit()
+
+    return user
+
+def isAdmin(user):
+    return user.admin
+
+def updateContact(user, contact):
+    user.contact = contact
+
+def isAvailableScheduled(start_time, end_time, room):
+    group = getGroup(room)
+
+    if (not isGroupOpen(group, start_time)) or (not isGroupOpen(group, end_time)):
+        return False
+
+    # shouldn't book an event that ends in the past
+    current_time = datetime.now()
+    if (end_time < current_time):
+        return False
+
+    conditions1 = []
+    conditions1.append(Events.start_time < start_time)
+    conditions1.append(Events.end_time > start_time)
+    clause1 = and_(*conditions1)
+
+    conditions2 = []
+    conditions2.append(Events.start_time > start_time)
+    conditions2.append(Events.start_time < end_time)
+    clause2 = and_(*conditions2)
+
+    clauses = [clause1, clause2]
+    combined = or_(*clauses)
+
+    events = session.query(Events) \
+            .filter(combined) \
+            .all()
+
+    if len(events) != 0:
+        return False
+
+    return True
+
+# def bookRoomSchedule(user, room, start_time, end_time, event_title = ''):
+#     if not isAdmin(user):
+#         return "NOT ADMIN"
+#     if not isAvailableScheduled(start_time, end_time, room):
+#         return "TIME NOT AVAILABLE"
+#     event = Events(user = user, event_title= event_title, start_time = start_time,
+#                     end_time = end_time, room = room, passed = False)
+#
+#     session.add(event)
+#     session.commit()
+#     return ""
+
+def addAdmin(user, net_id):
+    if not isAdmin(user):
+        return "NOT ADMIN"
+    new_user = getUser(net_id)
+    new_user.admin = True
+    session.commit()
+    return ""
+
+# def releaseEvent(event):
 #     session.delete(event)
+#     # session.commit()
+
+# def bookRoomAdHoc(user1, room, button_end_time):
+#     current_time = datetime.now()
+#
+#     if not user1.admin and hasBooked(user):
+#         print("You have already booked a room at this time. Release previous room to book another one.")
+#     if not isGroupOpen(getGroup(room), current_time):
+#         print("SYS FAILURE")
+#     if not isGroupOpen(getGroup(room), button_end_time):
+#         print("SYS FAILURE")
+#
+#     markPassed()
+#     existEvent, event = findEarliest(room)
+#     if existEvent and isLater(event.start_time, current_time):
+#         print("SYS FAILURE")
+#
+#     event = Events(user = user1, event_title="...", start_time = current_time,
+#                     end_time = button_end_time, room = room, passed = False)
+#
+#     session.add(event)
 #     session.commit()
 
-def bookRoomAdHoc(user1, room, button_end_time):
-    current_time = datetime.now()
+# get list of building objects
+def getBuildings():
+    buildings = session.query(Buildings).all()
+    # building_names = []
+    # for b in buildings:
+    #     building_names.append(b.building_name)
+    return buildings
 
-    if not user1.admin and hasBooked(user):
-        print("You have already booked a room at this time. Release previous room to book another one.")
-    if not isGroupOpen(getGroup(room), current_time):
-        print("SYS FAILURE")
-    if not isGroupOpen(getGroup(room), button_end_time):
-        print("SYS FAILURE")
+# get rooms assos with building object, return dictionary with key = room and
+# object = boolean for availability
+def getRooms(building):
+    rooms = session.query(Rooms)\
+            .filter(Rooms.building_id == building.building_id)\
+            .all()
+    dict = {}
+    for r in rooms:
+        dict[r] = isAvailable(r)
 
-    markPassed()
-    existEvent, event = findEarliest(room)
-    if existEvent and isLater(event.start_time, current_time):
-        print("SYS FAILURE")
+    return dict
 
-    event = Events(user = user1, event_title="...", start_time = current_time,
-                    end_time = button_end_time, room = room, passed = False)
+# get events given room object
+def getEvents(room):
+    events = session.query(Events).all()
+    return events
 
-    session.add(event)
-    session.commit()
+session.close()

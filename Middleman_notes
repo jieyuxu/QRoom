@@ -1,0 +1,9 @@
+middleman potential
+
+> composite heatmap avail for buildings (green, yellow, red) based on % avail
+> api returns objects and objects are passed in!
+
+> when calling isAdmin, check if the object passed in even exists(i.e. the user)
+> gotta always check fam
+
+> when error is being returned, "" means no error
