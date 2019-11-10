@@ -151,17 +151,17 @@ def isAvailableScheduled(start_time, end_time, room):
 
     return True
 
-# def bookRoomSchedule(user, room, start_time, end_time, event_title = ''):
-#     if not isAdmin(user):
-#         return "NOT ADMIN"
-#     if not isAvailableScheduled(start_time, end_time, room):
-#         return "TIME NOT AVAILABLE"
-#     event = Events(user = user, event_title= event_title, start_time = start_time,
-#                     end_time = end_time, room = room, passed = False)
-#
-#     session.add(event)
-#     session.commit()
-#     return ""
+def bookRoomSchedule(user, room, start_time, end_time, session, event_title = ''):
+    if not isAdmin(user):
+        return "NOT ADMIN"
+    if not isAvailableScheduled(start_time, end_time, room):
+        return "TIME NOT AVAILABLE"
+    event = Events(user = user, event_title= event_title, start_time = start_time,
+                    end_time = end_time, room = room, passed = False)
+
+    session.add(event)
+    session.commit()
+    return ""
 
 def addAdmin(user, net_id):
     if not isAdmin(user):
@@ -171,30 +171,30 @@ def addAdmin(user, net_id):
     session.commit()
     return ""
 
-# def releaseEvent(event):
-#     session.delete(event)
-#     # session.commit()
+def releaseEvent(event, session):
+    session.delete(event)
+    session.commit()
 
-# def bookRoomAdHoc(user1, room, button_end_time):
-#     current_time = datetime.now()
-#
-#     if not user1.admin and hasBooked(user):
-#         print("You have already booked a room at this time. Release previous room to book another one.")
-#     if not isGroupOpen(getGroup(room), current_time):
-#         print("SYS FAILURE")
-#     if not isGroupOpen(getGroup(room), button_end_time):
-#         print("SYS FAILURE")
-#
-#     markPassed()
-#     existEvent, event = findEarliest(room)
-#     if existEvent and isLater(event.start_time, current_time):
-#         print("SYS FAILURE")
-#
-#     event = Events(user = user1, event_title="...", start_time = current_time,
-#                     end_time = button_end_time, room = room, passed = False)
-#
-#     session.add(event)
-#     session.commit()
+def bookRoomAdHoc(user1, room, button_end_time, session):
+    current_time = datetime.now()
+
+    if not user1.admin and hasBooked(user):
+        print("You have already booked a room at this time. Release previous room to book another one.")
+    if not isGroupOpen(getGroup(room), current_time):
+        print("SYS FAILURE: Group not open at current time")
+    if not isGroupOpen(getGroup(room), button_end_time):
+        print("SYS FAILURE: Group not open at button end time")
+
+    markPassed()
+    existEvent, event = findEarliest(room)
+    if existEvent and isLater(event.start_time, current_time):
+        print("SYS FAILURE: current time later than start time")
+
+    event = Events(user = user1, event_title="...", start_time = current_time,
+                    end_time = button_end_time, room = room, passed = False)
+
+    session.add(event)
+    session.commit()
 
 # get list of building objects
 def getBuildings():

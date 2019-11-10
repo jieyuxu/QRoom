@@ -19,7 +19,7 @@ firestone = Buildings(building_name = "Firestone")
 frist = Buildings(building_name = "Frist")
 lewis = Buildings(building_name = "Lewis")
 
-group1 = Groups(open_time = time(8,00,00), close_time = time(18,00,00))
+group1 = Groups(open_time = time(0,00,00), close_time = time(18,00,00))
 group2 = Groups(open_time = time(3,00,00), close_time = time(20,00,00))
 
 
@@ -95,10 +95,13 @@ session.commit()
 # session.commit()
 # print(isAvailableScheduled(datetime(2019, 11, 10, 7, 0, 0, 0), datetime(2019, 11, 11, 15, 55, 59, 0), room1))
 # print(addAdmin(bob, "pie"))
-bookRoomAdHoc(bob, room1, datetime(2019, 8, 28, 23, 55, 59, 342380))
+# bookRoomAdHoc(bob, room1, datetime(2019, 8, 28, 8, 55, 59, 342380), session)
+# bookRoomAdHoc(bob, room1, datetime(2019, 8, 28, 23, 55, 59, 342380), session)
 # session.commit()
 # print(getBuildings())
 # print(getRooms(firestone))
 #
 # session.delete(event1)
 # session.commit()
+# releaseEvent(event1, session)
+bookRoomSchedule(bob, room1, datetime(2021, 8, 28, 5, 55, 59, 342380), datetime(2021, 8, 28, 8, 55, 59, 342380), session)
