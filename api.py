@@ -1,4 +1,4 @@
-from app import Buildings, Rooms, Events, Groups, Users
+from database import Buildings, Rooms, Events, Groups, Users
 from base import Session, engine, Base
 from datetime import datetime, timedelta
 from sqlalchemy import or_, and_
@@ -199,9 +199,6 @@ def bookRoomAdHoc(user1, room, button_end_time, session):
 # get list of building objects
 def getBuildings():
     buildings = session.query(Buildings).all()
-    # building_names = []
-    # for b in buildings:
-    #     building_names.append(b.building_name)
     return buildings
 
 # get rooms assos with building object, return dictionary with key = room and
@@ -220,5 +217,21 @@ def getRooms(building):
 def getEvents(room):
     events = session.query(Events).all()
     return events
+
+# get assosiated building object from building name
+def getBuildingObject(building_name):
+    building = session.query(Buildings)\
+                .filter(Buildings.building_name == building_name)\
+                .first()
+    return building
+
+# get associated room object from room name and building name
+def getRoomObject(room_name, building_name):
+    building = getBuildingObject(building_name)
+    room = session.query(Rooms)\
+                .filter(Rooms.room_name == room_name)\
+                .filter(Rooms.building_id == building.building_id)\
+                .first()
+    return room
 
 session.close()

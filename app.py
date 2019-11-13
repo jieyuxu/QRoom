@@ -1,10 +1,12 @@
 from flask import Flask, request, render_template, session, url_for, redirect
 from flask_cas import CAS
 from flask_cas import login_required
+from api import *
 import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+
 ########## CAS AUTHENTICATION ###########
 cas = CAS(app)
 app.config['CAS_SERVER'] = "https://fed.princeton.edu/cas/login"
@@ -43,39 +45,57 @@ def profile():
 
 @app.route('/buildings')
 def buildings():
-   loggedin = False
-   if 'username' in session:
-      loggedin = True
-      # TODO: get buiildings from database #
-      buildings = ['Firestone', 'Frist Student Center', 'Lewis Library']
-      return render_template("buildings.html", loggedin = loggedin, username = cas.username, buildings=buildings)
-   else:
+    loggedin = False
+    if 'username' in session:
+        loggedin = True
+        buildings_query = getBuildings();
+        buildings = []
+        for b in buildings_query:
+            buildings.append(b.building_name)
+        return render_template("buildings.html", loggedin = loggedin,
+                                username = cas.username, buildings=buildings)
+    else:
       return redirect(url_for("index"))
 
 @app.route('/rooms')
 def rooms():
-   loggedin = False
-   if 'username' in session:
-      loggedin = True
-      building = request.args.get('building')
-      # TODO: get rooms from the database #
-      rooms = ['Level 1 Room A', 'Level 2 Room B', 'Level 3 Room C']
-      return render_template("rooms.html", loggedin = loggedin, username = cas.username, building=building, rooms=rooms)
-   else:
-      return redirect(url_for("index"))
+    loggedin = False
+    if 'username' in session:
+        loggedin = True
+        building = str(request.args.get('building'))
+        building_object = getBuildingObject(building)
+
+        # returns a dictionary of keys = rooms, objects = availability
+        rooms_query = getRooms(building_object)
+        rooms = []
+        for r in rooms_query.keys():
+            if rooms_query[r]:
+                rooms.append(r.room_name)
+        return render_template("rooms.html", loggedin = loggedin,
+                                username = cas.username, building=building, rooms=rooms)
+    else:
+       return redirect(url_for("index"))
 
 @app.route('/bookRoom')
 def bookRoom():
-   loggedin = False
-   if 'username' in session:
-      loggedin = True
-      building = request.args.get('building')
-      room = request.args.get('room')
-      # TODO: get times from the database #
-      times = ['1:00 PM', '1:30 PM', '3:00 PM', '3:30 PM']
-      return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times)
-   else:
-      return redirect(url_for("index"))
+    THIRTY_MIN = 30
+
+    loggedin = False
+    if 'username' in session:
+        loggedin = True
+        building = request.args.get('building')
+        room = str(request.args.get('room'))
+        room_object = getRoomObject('101', 'Firestone')
+
+        number = displayBookingButtons(room_object) # number of buttons to display
+        times = []
+        for i in range(number):
+            time = getDelta(datetime.now(), THIRTY_MIN + THIRTY_MIN * i)
+            times.append(str(time)[11:16])
+
+        return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times)
+    else:
+       return redirect(url_for("index"))
 
 @app.route('/confirmation')
 def confirmation():
@@ -92,4 +112,3 @@ def confirmation():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug = True)
-   app.run(debug=True)

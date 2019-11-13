@@ -1,4 +1,4 @@
-from app import Buildings, Rooms, Events, Groups, Users
+from database import Buildings, Rooms, Events, Groups, Users
 from base import Session, engine, Base
 from datetime import time, datetime
 from api import *
@@ -99,7 +99,9 @@ session.commit()
 # bookRoomAdHoc(bob, room1, datetime(2019, 8, 28, 23, 55, 59, 342380), session)
 # session.commit()
 # print(getBuildings())
-# print(getRooms(firestone))
+# print(getBuildingObject("Firestone"))
+# firestone = Buildings(building_name = "Firestone")
+print(getRooms(firestone))
 #
 # session.delete(event1)
 # session.commit()
