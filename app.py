@@ -15,10 +15,10 @@ app.config['CAS_LOGIN_ROUTE'] = '/cas'
 
 @app.route('/')
 def index():
-   loggedin = False 
-   
-   if 'username' in session: 
-      loggedin = True 
+   loggedin = False
+
+   if 'username' in session:
+      loggedin = True
 
    return render_template("index.html" ,loggedin = loggedin)
 
@@ -26,16 +26,16 @@ def index():
 def reroute():
    print(app.config['CAS_USERNAME_SESSION_KEY'])
    if cas.username is not None:
-      print("user: ", cas.username) 
+      print("user: ", cas.username)
       session['username'] = cas.username
-   
+
    return redirect(url_for('profile'))
 
 @app.route('/profile')
 def profile():
-   loggedin = False 
+   loggedin = False
    if 'username' in session:
-      loggedin = True 
+      loggedin = True
       return render_template("profile.html", loggedin = loggedin, username = cas.username)
 
    else:
@@ -43,9 +43,9 @@ def profile():
 
 @app.route('/buildings')
 def buildings():
-   loggedin = False 
+   loggedin = False
    if 'username' in session:
-      loggedin = True 
+      loggedin = True
       # TODO: get buiildings from database #
       buildings = ['Firestone', 'Frist Student Center', 'Lewis Library']
       return render_template("buildings.html", loggedin = loggedin, username = cas.username, buildings=buildings)
@@ -54,9 +54,9 @@ def buildings():
 
 @app.route('/rooms')
 def rooms():
-   loggedin = False 
+   loggedin = False
    if 'username' in session:
-      loggedin = True 
+      loggedin = True
       building = request.args.get('building')
       # TODO: get rooms from the database #
       rooms = ['Level 1 Room A', 'Level 2 Room B', 'Level 3 Room C']
@@ -66,9 +66,9 @@ def rooms():
 
 @app.route('/bookRoom')
 def bookRoom():
-   loggedin = False 
+   loggedin = False
    if 'username' in session:
-      loggedin = True 
+      loggedin = True
       building = request.args.get('building')
       room = request.args.get('room')
       # TODO: get times from the database #
@@ -79,9 +79,9 @@ def bookRoom():
 
 @app.route('/confirmation')
 def confirmation():
-   loggedin = False 
+   loggedin = False
    if 'username' in session:
-      loggedin = True 
+      loggedin = True
       building = request.args.get('building')
       room = request.args.get('room')
       time = request.args.get('time')
@@ -91,4 +91,5 @@ def confirmation():
 
 
 if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug = True)
    app.run(debug=True)
