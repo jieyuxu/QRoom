@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, url_for, redirect
+from flask import Flask, request, render_template, session, url_for, redirect
 from flask_cas import CAS
 from flask_cas import login_required
 import os
@@ -40,7 +40,55 @@ def profile():
 
    else:
       return redirect(url_for("index"))
-   
+
+@app.route('/buildings')
+def buildings():
+   loggedin = False 
+   if 'username' in session:
+      loggedin = True 
+      # TODO: get buiildings from database #
+      buildings = ['Firestone', 'Frist Student Center', 'Lewis Library']
+      return render_template("buildings.html", loggedin = loggedin, username = cas.username, buildings=buildings)
+   else:
+      return redirect(url_for("index"))
+
+@app.route('/rooms')
+def rooms():
+   loggedin = False 
+   if 'username' in session:
+      loggedin = True 
+      building = request.args.get('building')
+      # TODO: get rooms from the database #
+      rooms = ['Level 1 Room A', 'Level 2 Room B', 'Level 3 Room C']
+      return render_template("rooms.html", loggedin = loggedin, username = cas.username, building=building, rooms=rooms)
+   else:
+      return redirect(url_for("index"))
+
+@app.route('/bookRoom')
+def bookRoom():
+   loggedin = False 
+   if 'username' in session:
+      loggedin = True 
+      building = request.args.get('building')
+      room = request.args.get('room')
+      # TODO: get times from the database #
+      times = ['1:00 PM', '1:30 PM', '3:00 PM', '3:30 PM']
+      return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times)
+   else:
+      return redirect(url_for("index"))
+
+@app.route('/confirmation')
+def confirmation():
+   loggedin = False 
+   if 'username' in session:
+      loggedin = True 
+      building = request.args.get('building')
+      room = request.args.get('room')
+      time = request.args.get('time')
+      return render_template("confirmation.html", loggedin = loggedin, username = cas.username, building=building, room=room, time = time)
+   else:
+      return redirect(url_for("index"))
+
 
 if __name__ == '__main__':
    app.run(debug=True)
