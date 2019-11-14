@@ -76,6 +76,19 @@ def bookRoom():
       return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times)
    else:
       return redirect(url_for("index"))
+   
+@app.route('/viewRoom')
+def viewRoom():
+   loggedin = False 
+   if 'username' in session:
+      loggedin = True 
+      building = request.args.get('building')
+      room = request.args.get('room')
+      # TODO: get times from the database #
+      times = ['1:00 PM', '1:30 PM', '3:00 PM', '3:30 PM']
+      return render_template("viewRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times)
+   else:
+      return redirect(url_for("index"))
 
 @app.route('/confirmation')
 def confirmation():
