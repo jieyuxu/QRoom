@@ -84,7 +84,7 @@ def viewRoom():
       loggedin = True 
       building = request.args.get('building')
       room = request.args.get('room')
-      # TODO: get times from the database #
+      # TODO: get schedule from the database #
       times = ['1:00 PM', '1:30 PM', '3:00 PM', '3:30 PM']
       return render_template("viewRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times)
    else:
