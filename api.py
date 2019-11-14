@@ -175,26 +175,30 @@ def releaseEvent(event, session):
     session.delete(event)
     session.commit()
 
-def bookRoomAdHoc(user1, room, button_end_time, session):
+def bookRoomAdHoc(user1, room, button_end_time):
+    session = Session()
     current_time = datetime.now()
 
     if not user1.admin and hasBooked(user):
-        print("You have already booked a room at this time. Release previous room to book another one.")
+        return "You have already booked a room at this time. Release previous room to book another one."
     if not isGroupOpen(getGroup(room), current_time):
-        print("SYS FAILURE: Group not open at current time")
+        return "SYS FAILURE: Group not open at current time"
     if not isGroupOpen(getGroup(room), button_end_time):
-        print("SYS FAILURE: Group not open at button end time")
+        return "SYS FAILURE: Group not open at button end time"
 
     markPassed()
     existEvent, event = findEarliest(room)
     if existEvent and isLater(event.start_time, current_time):
-        print("SYS FAILURE: current time later than start time")
+        return "SYS FAILURE: current time later than start time of booked event"
 
     event = Events(user = user1, event_title="...", start_time = current_time,
                     end_time = button_end_time, room = room, passed = False)
 
     session.add(event)
     session.commit()
+    session.close()
+
+    return ''
 
 # get list of building objects
 def getBuildings():
@@ -233,5 +237,12 @@ def getRoomObject(room_name, building_name):
                 .filter(Rooms.building_id == building.building_id)\
                 .first()
     return room
+
+# gets user object from net id
+def getUserObject(net_id):
+    user = session.query(Users)\
+                .filter(Users.net_id == net_id)\
+                .first()
+    return user
 
 session.close()

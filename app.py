@@ -31,6 +31,10 @@ def reroute():
       print("user: ", cas.username)
       session['username'] = cas.username
 
+      # add user to database if not in there
+      # returns user object that was added
+      user = getUser(str(cas.username))
+
    return redirect(url_for('profile'))
 
 @app.route('/profile')
@@ -85,7 +89,7 @@ def bookRoom():
         loggedin = True
         building = request.args.get('building')
         room = str(request.args.get('room'))
-        room_object = getRoomObject('101', 'Firestone')
+        room_object = getRoomObject(room, building)
 
         number = displayBookingButtons(room_object) # number of buttons to display
         times = []
@@ -99,14 +103,29 @@ def bookRoom():
 
 @app.route('/confirmation')
 def confirmation():
-   loggedin = False
-   if 'username' in session:
-      loggedin = True
-      building = request.args.get('building')
-      room = request.args.get('room')
-      time = request.args.get('time')
-      return render_template("confirmation.html", loggedin = loggedin, username = cas.username, building=building, room=room, time = time)
-   else:
+    loggedin = False
+    if 'username' in session:
+        loggedin = True
+        building = request.args.get('building')
+        room = request.args.get('room')
+        # assuming time is a string form of datetime object, like '2021-08-28 05:55:59.342380'
+        time = str(request.args.get('time'))
+
+        # assuming 'username' means netid
+        user = getUserObject('username')
+        room_object = getRoomObject(room, building)
+        year = int(time[0:4])
+        month = int(time[5:7])
+        day = int(time[8:10])
+        hour = int(time[11:13])
+        minute = int(time[14:16])
+        end_time = datetime(year, month, day, hour, minute, 0, 0)
+
+        # updates database, returns empty string if successful
+        error = bookRoomAdHoc(user, room_object, end_time)
+
+        return render_template("confirmation.html", loggedin = loggedin, username = cas.username, building=building, room=room, time = time)
+    else:
       return redirect(url_for("index"))
 
 
