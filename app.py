@@ -84,9 +84,11 @@ def viewRoom():
       loggedin = True 
       building = request.args.get('building')
       room = request.args.get('room')
+      # TODO: get if room is available from the database #
+      isAvailable = false;
       # TODO: get schedule from the database #
       times = ['1:00 PM', '1:30 PM', '3:00 PM', '3:30 PM']
-      return render_template("viewRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times)
+      return render_template("viewRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, isAvailable = isAvailable)
    else:
       return redirect(url_for("index"))
 
