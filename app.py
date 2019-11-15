@@ -27,9 +27,10 @@ def index():
 def caslogin():
    print(app.config['CAS_USERNAME_SESSION_KEY'])
    if cas.username is not None:
-      print("user: ", cas.username)
+      print("user:", cas.username)
       session['username'] = cas.username
-
+      print("confirming user logged into session", session['username'])
+      session.modified = True
       # add user to database if not in there
       # returns user object that was added
       user = getUser(str(cas.username))
@@ -40,6 +41,7 @@ def caslogin():
 def caslogout():
    if isLoggedIn():
       session.pop('username')
+      session.modified = True
    return redirect(url_for('index'))
 
 @app.route('/profile')
@@ -50,7 +52,7 @@ def profile():
    else:
       return redirect(url_for("index"))
 
-@app.route('/buildings')
+@app.route('/buildings', methods=['GET', 'POST'])
 def buildings():
     if isLoggedIn():
         buildings_query = getBuildings()
@@ -62,7 +64,7 @@ def buildings():
     else:
       return redirect(url_for("index"))
 
-@app.route('/rooms')
+@app.route('/rooms', methods=['GET', 'POST'])
 def rooms():
     if isLoggedIn():
         building = str(request.args.get('building'))
@@ -79,7 +81,7 @@ def rooms():
     else:
        return redirect(url_for("index"))
 
-@app.route('/bookRoom')
+@app.route('/bookRoom', methods=['GET', 'POST'])
 def bookRoom(): 
    THIRTY_MIN = 30
 
@@ -95,23 +97,27 @@ def bookRoom():
       fullTimes = []
       for i in range(number):
           time = getDelta(datetime.now(), THIRTY_MIN + THIRTY_MIN * i)
+          print("time:", time)
+          print("i:", i)
           times.append(str(time)[11:16])
           fullTimes.append(str(time))
-
+      print(times)
+      print(fullTimes)
       return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes)
    else:
       return redirect(url_for("index"))
    
-@app.route('/viewRoom')
+@app.route('/viewRoom', methods=['GET', 'POST'])
 def viewRoom(): 
    if isLoggedIn():
       building = request.args.get('building')
       room = request.args.get('room')
       # TODO: get if room is available from the database #
-      isAvailable = false
+      isAvailable = False
       # TODO: get schedule from the database #
       times = ['1:00 PM', '1:30 PM', '3:00 PM', '3:30 PM']
-      return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, isAvailable = isAvailable)
+      length = len(times)
+      return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, isAvailable = isAvailable, length = length)
    else:
       return redirect(url_for("index"))
    
@@ -128,20 +134,22 @@ def viewRoom():
          time = getDelta(datetime.now(), THIRTY_MIN + THIRTY_MIN * i)
          times.append(str(time)[11:16])
 
-      return render_template("bookRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times)
+      length = len(times)
+      return render_template("bookRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, length = length)
    else:
       return redirect(url_for("index"))
 
-@app.route('/confirmation')
+@app.route('/confirmation', methods=['GET', 'POST'])
 def confirmation():
     if isLoggedIn():
         building = request.args.get('building')
         room = request.args.get('room')
         # assuming time is a string form of datetime object, like '2021-08-28 05:55:59.342380'
-        time = str(request.args.get('time'))
-      
+        time = str(request.args.get('fullTime'))
+        print("THIS IS THE TIME", time)
         # assuming 'username' means netid
-        user = getUserObject('username')
+        user = getUserObject(cas.username)
+        print("THIS IS THE USER", user)
         room_object = getRoomObject(room, building)
         year = int(time[0:4])
         month = int(time[5:7])

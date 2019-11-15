@@ -49,6 +49,10 @@ def isAvailable(room):
     return isLater(datetime.now(), event.start_time)
 
 def getDelta(date_time, delta):
+    # print("delta time:", delta)
+    # print("current date time:", date_time)
+    # print("datetime.min - date_time", datetime.min - date_time)
+    # print("timedelta", timedelta(minutes=delta))
     return date_time + (datetime.min - date_time) % timedelta(minutes=delta)
 
 def getGroup(room):
@@ -179,7 +183,7 @@ def bookRoomAdHoc(user1, room, button_end_time):
     sess = Session()
     current_time = datetime.now()
 
-    if not user1.admin and hasBooked(user):
+    if not isAdmin(user1) and hasBooked(user1):
         return "You have already booked a room at this time. Release previous room to book another one."
     if not isGroupOpen(getGroup(room), current_time):
         return "SYS FAILURE: Group not open at current time"
