@@ -116,6 +116,10 @@ def getUser(net_id):
 
     return user
 
+def getUserEvent(net_id):
+    event = sess.query(Events).filter(Events.net_id == net_id).first()    
+    return event        
+
 def isAdmin(user):
     return user.admin
 

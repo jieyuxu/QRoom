@@ -47,8 +47,13 @@ def caslogout():
 @app.route('/profile')
 def profile():
    if isLoggedIn():
-      return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username)
-
+      event = getUserEvent(session['username'])
+      eventDetails = {}
+      if event is not None:
+         eventDetails['Start Time'] = event.start_time
+         eventDetails['End Time'] = event.end_time
+      
+      return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails)
    else:
       return redirect(url_for("index"))
 
