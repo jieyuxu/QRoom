@@ -92,11 +92,13 @@ def bookRoom():
 
       number = displayBookingButtons(room_object) # number of buttons to display
       times = []
+      fullTimes = []
       for i in range(number):
           time = getDelta(datetime.now(), THIRTY_MIN + THIRTY_MIN * i)
           times.append(str(time)[11:16])
+          fullTimes.append(str(time))
 
-      return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times)
+      return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes)
    else:
       return redirect(url_for("index"))
    
@@ -151,7 +153,7 @@ def confirmation():
         # updates database, returns empty string if successful
         error = bookRoomAdHoc(user, room_object, end_time)
 
-        return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = time)
+        return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = time, fullTime = time)
     else:
       return redirect(url_for("index"))
 

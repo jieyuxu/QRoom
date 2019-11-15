@@ -153,7 +153,7 @@ def confirmation():
         # updates database, returns empty string if successful
         error = bookRoomAdHoc(user, room_object, end_time)
 
-        return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = time)
+        return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time)
     else:
       return redirect(url_for("index"))
 
