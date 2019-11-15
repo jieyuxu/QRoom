@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% block extracss%}
+    <!-- Main css -->
+    <link href="../static/css/style.css" rel="stylesheet">
+{% endblock %}
 {% block content %}
     <header class="bg-gradient" id="home">
         <div class="container mt-5">
@@ -222,4 +226,7 @@
             <a href="#" class="m-2">PRIVACY</a>
         </small>
     </footer>
+{% endblock %}
+{% block extrajs %}
+<script src="js/script.js"></script>
 {% endblock %}

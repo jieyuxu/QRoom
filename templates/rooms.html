@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<body class="section light-bg" id="rooms">
+<div class="section light-bg mt-5 pt-5" id="rooms">
    <div class="container">
        <div class="section-title">
-            <h3>{{building}}</h3>
+            <center><h3>{{building}}</h3></center>
             <h4>All Rooms</h4>
        </div>
    
@@ -12,5 +12,5 @@
             <a href={{url_for('bookRoom', building=building, room=room)}} class="list-group-item list-group-item-action">{{room}}</a>
           {% endfor %}
       </div>
-</body>
+  </div>
  {% endblock %}

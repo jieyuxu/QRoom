@@ -11,17 +11,20 @@ app.secret_key = os.urandom(24)
 ########## CAS AUTHENTICATION ###########
 cas = CAS(app)
 app.config['CAS_SERVER'] = "https://fed.princeton.edu/cas/login"
-app.config['CAS_AFTER_LOGIN'] = 'reroute'
-app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:5000'
+app.config['CAS_AFTER_LOGIN'] = 'caslogin'
+app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:5000/caslogout'
 app.config['CAS_LOGIN_ROUTE'] = '/cas'
 #########################################
 
 @app.route('/')
 def index():
-   return render_template("index.html" ,loggedin = isLoggedIn())
+   if isLoggedIn():
+      return redirect(url_for('profile'))
 
-@app.route('/reroute')
-def reroute():
+   return render_template("index.html",loggedin = isLoggedIn())
+
+@app.route('/caslogin')
+def caslogin():
    print(app.config['CAS_USERNAME_SESSION_KEY'])
    if cas.username is not None:
       print("user: ", cas.username)
@@ -32,6 +35,12 @@ def reroute():
       user = getUser(str(cas.username))
 
    return redirect(url_for('profile'))
+
+@app.route('/caslogout')
+def caslogout():
+   if isLoggedIn():
+      session.pop('username')
+   return redirect(url_for('index'))
 
 @app.route('/profile')
 def profile():
@@ -128,7 +137,7 @@ def confirmation():
         room = request.args.get('room')
         # assuming time is a string form of datetime object, like '2021-08-28 05:55:59.342380'
         time = str(request.args.get('time'))
-
+      
         # assuming 'username' means netid
         user = getUserObject('username')
         room_object = getRoomObject(room, building)
