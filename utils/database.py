@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer, DateTime, Time, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from base import Base
+from .base import Base
 
 # Create our database model
 class Buildings(Base):

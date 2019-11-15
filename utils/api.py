@@ -1,17 +1,13 @@
-<<<<<<< HEAD
-from app import Buildings, Rooms, Events, Groups, Users
-=======
-from database import Buildings, Rooms, Events, Groups, Users
->>>>>>> origin/middleman
-from base import Session, engine, Base
+from .database import Buildings, Rooms, Events, Groups, Users
+from .base import Session, engine, Base
 from datetime import datetime, timedelta
 from sqlalchemy import or_, and_
 
-session = Session()
+sess = Session()
 
 def markPassed():
     current_time = datetime.now()
-    passed_events = session.query(Events) \
+    passed_events = sess.query(Events) \
                     .filter(Events.end_time < current_time) \
                     .filter(Events.passed == False) \
                     .all()
@@ -19,11 +15,11 @@ def markPassed():
     for e in passed_events:
         e.passed = True
 
-    session.commit()
+    sess.commit()
 
 def findEarliest(room):
     markPassed()
-    min_event = session.query(Events) \
+    min_event = sess.query(Events) \
             .filter(Events.passed == False) \
             .filter(Events.room_id == room.room_id) \
             .order_by(Events.start_time) \
@@ -57,7 +53,7 @@ def getDelta(date_time, delta):
 
 def getGroup(room):
     group_id = room.group_id
-    group = session.query(Groups)\
+    group = sess.query(Groups)\
             .filter(Groups.group_id == group_id) \
             .first()
 
@@ -91,7 +87,7 @@ def displayBookingButtons(room):
 
 def hasBooked(user):
     markPassed()
-    events = session.query(Events) \
+    events = sess.query(Events) \
             .filter(Events.net_id == user.net_id) \
             .all()
 
@@ -105,14 +101,14 @@ def hasBooked(user):
 # and returns new object
 
 def getUser(net_id):
-    user = session.query(Users)\
+    user = sess.query(Users)\
             .filter(Users.net_id == net_id)\
             .first()
 
     if user is None:
         user = Users(net_id= net_id, contact = '', admin = False)
-        session.add(user)
-        session.commit()
+        sess.add(user)
+        sess.commit()
 
     return user
 
@@ -146,7 +142,7 @@ def isAvailableScheduled(start_time, end_time, room):
     clauses = [clause1, clause2]
     combined = or_(*clauses)
 
-    events = session.query(Events) \
+    events = sess.query(Events) \
             .filter(combined) \
             .all()
 
@@ -163,8 +159,8 @@ def bookRoomSchedule(user, room, start_time, end_time, session, event_title = ''
     event = Events(user = user, event_title= event_title, start_time = start_time,
                     end_time = end_time, room = room, passed = False)
 
-    session.add(event)
-    session.commit()
+    sess.add(event)
+    sess.commit()
     return ""
 
 def addAdmin(user, net_id):
@@ -172,26 +168,15 @@ def addAdmin(user, net_id):
         return "NOT ADMIN"
     new_user = getUser(net_id)
     new_user.admin = True
-    session.commit()
+    sess.commit()
     return ""
 
 def releaseEvent(event, session):
-    session.delete(event)
-    session.commit()
+    sess.delete(event)
+    sess.commit()
 
-<<<<<<< HEAD
-def bookRoomAdHoc(user1, room, button_end_time, session):
-    current_time = datetime.now()
-
-    if not user1.admin and hasBooked(user):
-        print("You have already booked a room at this time. Release previous room to book another one.")
-    if not isGroupOpen(getGroup(room), current_time):
-        print("SYS FAILURE: Group not open at current time")
-    if not isGroupOpen(getGroup(room), button_end_time):
-        print("SYS FAILURE: Group not open at button end time")
-=======
 def bookRoomAdHoc(user1, room, button_end_time):
-    session = Session()
+    sess = Session()
     current_time = datetime.now()
 
     if not user1.admin and hasBooked(user):
@@ -200,44 +185,30 @@ def bookRoomAdHoc(user1, room, button_end_time):
         return "SYS FAILURE: Group not open at current time"
     if not isGroupOpen(getGroup(room), button_end_time):
         return "SYS FAILURE: Group not open at button end time"
->>>>>>> origin/middleman
 
     markPassed()
     existEvent, event = findEarliest(room)
     if existEvent and isLater(event.start_time, current_time):
-<<<<<<< HEAD
-        print("SYS FAILURE: current time later than start time")
-=======
         return "SYS FAILURE: current time later than start time of booked event"
->>>>>>> origin/middleman
 
     event = Events(user = user1, event_title="...", start_time = current_time,
                     end_time = button_end_time, room = room, passed = False)
 
-    session.add(event)
-    session.commit()
-<<<<<<< HEAD
-=======
-    session.close()
+    sess.add(event)
+    sess.commit()
+    sess.close()
 
     return ''
->>>>>>> origin/middleman
 
 # get list of building objects
 def getBuildings():
-    buildings = session.query(Buildings).all()
-<<<<<<< HEAD
-    # building_names = []
-    # for b in buildings:
-    #     building_names.append(b.building_name)
-=======
->>>>>>> origin/middleman
+    buildings = sess.query(Buildings).all()
     return buildings
 
 # get rooms assos with building object, return dictionary with key = room and
 # object = boolean for availability
 def getRooms(building):
-    rooms = session.query(Rooms)\
+    rooms = sess.query(Rooms)\
             .filter(Rooms.building_id == building.building_id)\
             .all()
     dict = {}
@@ -248,14 +219,12 @@ def getRooms(building):
 
 # get events given room object
 def getEvents(room):
-    events = session.query(Events).all()
+    events = sess.query(Events).all()
     return events
 
-<<<<<<< HEAD
-=======
 # get assosiated building object from building name
 def getBuildingObject(building_name):
-    building = session.query(Buildings)\
+    building = sess.query(Buildings)\
                 .filter(Buildings.building_name == building_name)\
                 .first()
     return building
@@ -263,7 +232,7 @@ def getBuildingObject(building_name):
 # get associated room object from room name and building name
 def getRoomObject(room_name, building_name):
     building = getBuildingObject(building_name)
-    room = session.query(Rooms)\
+    room = sess.query(Rooms)\
                 .filter(Rooms.room_name == room_name)\
                 .filter(Rooms.building_id == building.building_id)\
                 .first()
@@ -271,10 +240,9 @@ def getRoomObject(room_name, building_name):
 
 # gets user object from net id
 def getUserObject(net_id):
-    user = session.query(Users)\
+    user = sess.query(Users)\
                 .filter(Users.net_id == net_id)\
                 .first()
     return user
 
->>>>>>> origin/middleman
-session.close()
+sess.close()

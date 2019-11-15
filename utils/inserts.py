@@ -1,4 +1,4 @@
-from app import Buildings, Rooms, Events, Groups, Users
+from database import Buildings, Rooms, Events, Groups, Users
 from base import Session, engine, Base
 from datetime import time, datetime
 from api import *
