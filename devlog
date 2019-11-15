@@ -7,3 +7,8 @@ format:
 - edits
 
 ###############################################################
+Amy Xu 11/15/2019 5:00pm
+    - tested prototype
+    - wrote getEvent for a single user to display
+    - wrote front and middle end code to display user's events
+    - fixed bugs in date time fix 
