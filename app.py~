@@ -92,13 +92,11 @@ def bookRoom():
 
       number = displayBookingButtons(room_object) # number of buttons to display
       times = []
-      fullTimes = []
       for i in range(number):
           time = getDelta(datetime.now(), THIRTY_MIN + THIRTY_MIN * i)
           times.append(str(time)[11:16])
-          fullTimes.append(str(time))
 
-      return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes)
+      return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times)
    else:
       return redirect(url_for("index"))
    
