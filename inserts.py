@@ -19,7 +19,7 @@ firestone = Buildings(building_name = "Firestone")
 frist = Buildings(building_name = "Frist")
 lewis = Buildings(building_name = "Lewis")
 
-group1 = Groups(open_time = time(0,00,00), close_time = time(18,00,00))
+group1 = Groups(open_time = time(0,00,00), close_time = time(23,00,00))
 group2 = Groups(open_time = time(3,00,00), close_time = time(20,00,00))
 
 
@@ -99,7 +99,11 @@ session.commit()
 # bookRoomAdHoc(bob, room1, datetime(2019, 8, 28, 23, 55, 59, 342380), session)
 # session.commit()
 # print(getBuildings())
-# print(getRooms(firestone))
+# print(getBuildingObject("Firestone"))
+# firestone = Buildings(building_name = "Firestone")
+print(getRooms(firestone))
+print(datetime(2021, 8, 28, 5, 55, 59, 342380))
+print(int('05'))
 #
 # session.delete(event1)
 # session.commit()

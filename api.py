@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from app import Buildings, Rooms, Events, Groups, Users
+=======
+from database import Buildings, Rooms, Events, Groups, Users
+>>>>>>> origin/middleman
 from base import Session, engine, Base
 from datetime import datetime, timedelta
 from sqlalchemy import or_, and_
@@ -175,6 +179,7 @@ def releaseEvent(event, session):
     session.delete(event)
     session.commit()
 
+<<<<<<< HEAD
 def bookRoomAdHoc(user1, room, button_end_time, session):
     current_time = datetime.now()
 
@@ -184,24 +189,49 @@ def bookRoomAdHoc(user1, room, button_end_time, session):
         print("SYS FAILURE: Group not open at current time")
     if not isGroupOpen(getGroup(room), button_end_time):
         print("SYS FAILURE: Group not open at button end time")
+=======
+def bookRoomAdHoc(user1, room, button_end_time):
+    session = Session()
+    current_time = datetime.now()
+
+    if not user1.admin and hasBooked(user):
+        return "You have already booked a room at this time. Release previous room to book another one."
+    if not isGroupOpen(getGroup(room), current_time):
+        return "SYS FAILURE: Group not open at current time"
+    if not isGroupOpen(getGroup(room), button_end_time):
+        return "SYS FAILURE: Group not open at button end time"
+>>>>>>> origin/middleman
 
     markPassed()
     existEvent, event = findEarliest(room)
     if existEvent and isLater(event.start_time, current_time):
+<<<<<<< HEAD
         print("SYS FAILURE: current time later than start time")
+=======
+        return "SYS FAILURE: current time later than start time of booked event"
+>>>>>>> origin/middleman
 
     event = Events(user = user1, event_title="...", start_time = current_time,
                     end_time = button_end_time, room = room, passed = False)
 
     session.add(event)
     session.commit()
+<<<<<<< HEAD
+=======
+    session.close()
+
+    return ''
+>>>>>>> origin/middleman
 
 # get list of building objects
 def getBuildings():
     buildings = session.query(Buildings).all()
+<<<<<<< HEAD
     # building_names = []
     # for b in buildings:
     #     building_names.append(b.building_name)
+=======
+>>>>>>> origin/middleman
     return buildings
 
 # get rooms assos with building object, return dictionary with key = room and
@@ -221,4 +251,30 @@ def getEvents(room):
     events = session.query(Events).all()
     return events
 
+<<<<<<< HEAD
+=======
+# get assosiated building object from building name
+def getBuildingObject(building_name):
+    building = session.query(Buildings)\
+                .filter(Buildings.building_name == building_name)\
+                .first()
+    return building
+
+# get associated room object from room name and building name
+def getRoomObject(room_name, building_name):
+    building = getBuildingObject(building_name)
+    room = session.query(Rooms)\
+                .filter(Rooms.room_name == room_name)\
+                .filter(Rooms.building_id == building.building_id)\
+                .first()
+    return room
+
+# gets user object from net id
+def getUserObject(net_id):
+    user = session.query(Users)\
+                .filter(Users.net_id == net_id)\
+                .first()
+    return user
+
+>>>>>>> origin/middleman
 session.close()
