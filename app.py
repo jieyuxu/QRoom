@@ -4,16 +4,19 @@ from flask_cas import CAS
 from flask_cas import login_required
 import os
 from utils.api import *
+from flask_sqlalchemy_session import flask_scoped_session
+from utils.base import session_factory
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
-heroku = Heroku(app)
+app.secret_key = 'stop bothering me honey'
+# print(os.random(24))
+sess = flask_scoped_session(session_factory, app)
 
 ########## CAS AUTHENTICATION ###########
 cas = CAS(app)
 app.config['CAS_SERVER'] = "https://fed.princeton.edu/cas/login"
 app.config['CAS_AFTER_LOGIN'] = 'caslogin'
-app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:5000/caslogout'
+app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:1234/caslogout'
 app.config['CAS_LOGIN_ROUTE'] = '/cas'
 #########################################
 
@@ -124,24 +127,6 @@ def viewRoom():
       times = ['1:00 PM', '1:30 PM', '3:00 PM', '3:30 PM']
       length = len(times)
       return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, isAvailable = isAvailable, length = length)
-   else:
-      return redirect(url_for("index"))
-   
-   THIRTY_MIN = 30
-
-   if isLoggedIn():
-      building = request.args.get('building')
-      room = str(request.args.get('room'))
-      room_object = getRoomObject(room, building)
-
-      number = displayBookingButtons(room_object) # number of buttons to display
-      times = []
-      for i in range(number):
-         time = getDelta(datetime.now(), THIRTY_MIN + THIRTY_MIN * i)
-         times.append(str(time)[11:16])
-
-      length = len(times)
-      return render_template("bookRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, length = length)
    else:
       return redirect(url_for("index"))
 

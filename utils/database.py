@@ -22,6 +22,7 @@ class Rooms(Base):
     group_id = Column(Integer, ForeignKey('groups.group_id'), nullable=False)
 
     events = relationship("Events", backref='room')
+    
 
 
 class Events(Base):

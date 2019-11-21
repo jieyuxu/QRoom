@@ -1,9 +1,9 @@
 from utils.database import Buildings, Rooms, Events, Groups, Users
-from utils.base import Session, engine, Base
 from datetime import datetime, timedelta
 from sqlalchemy import or_, and_
+from flask_sqlalchemy_session import current_session
 
-sess = Session()
+sess = current_session
 
 def markPassed():
     current_time = datetime.now()
@@ -113,7 +113,7 @@ def getUser(net_id):
         user = Users(net_id= net_id, contact = '', admin = False)
         sess.add(user)
         sess.commit()
-
+    print(type(user))
     return user
 
 def getUserEvent(net_id):
@@ -159,7 +159,7 @@ def isAvailableScheduled(start_time, end_time, room):
 
     return True
 
-def bookRoomSchedule(user, room, start_time, end_time, session, event_title = ''):
+def bookRoomSchedule(user, room, start_time, end_time, event_title = ''):
     if not isAdmin(user):
         return "NOT ADMIN"
     if not isAvailableScheduled(start_time, end_time, room):
@@ -179,12 +179,11 @@ def addAdmin(user, net_id):
     sess.commit()
     return ""
 
-def releaseEvent(event, session):
+def releaseEvent(event):
     sess.delete(event)
     sess.commit()
 
 def bookRoomAdHoc(user1, room, button_end_time):
-    sess = Session()
     current_time = datetime.now()
 
     if not isAdmin(user1) and hasBooked(user1):
@@ -203,8 +202,7 @@ def bookRoomAdHoc(user1, room, button_end_time):
                     end_time = button_end_time, room = room, passed = False)
 
     sess.add(event)
-    sess.commit()
-    sess.close()
+    sess.commit() 
 
     return ''
 
@@ -252,5 +250,3 @@ def getUserObject(net_id):
                 .filter(Users.net_id == net_id)\
                 .first()
     return user
-
-sess.close()
