@@ -1,7 +1,7 @@
 from database import Buildings, Rooms, Events, Groups, Users
-from base import Session, engine, Base
+from utils.base import Session, engine, Base
 from datetime import time, datetime
-from api import *
+from utils.api import *
 
 # 2 - generate database schema
 

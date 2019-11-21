@@ -7,6 +7,7 @@ from utils.api import *
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+heroku = Heroku(app)
 
 ########## CAS AUTHENTICATION ###########
 cas = CAS(app)
