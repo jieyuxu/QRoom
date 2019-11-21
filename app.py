@@ -105,11 +105,12 @@ def bookRoom():
       times = []
       fullTimes = [] # military time
       for i in range(number):
-          time = getDelta(datetime.now(), THIRTY_MIN + THIRTY_MIN * i)
-          print("time:", time)
-          print("i:", i)
-          times.append(str(time)[11:16])
-          fullTimes.append(str(time))
+         if i == 0:
+            time = get30(datetime.now())
+         else: 
+            time = add30(time)
+         times.append(str(time)[11:16])
+         fullTimes.append(str(time))
       print(times)
       print(fullTimes)
       return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes)

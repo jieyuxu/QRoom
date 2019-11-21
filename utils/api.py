@@ -48,12 +48,15 @@ def isAvailable(room):
         return True
     return isLater(datetime.now(), event.start_time)
 
-def getDelta(date_time, delta):
-    # print("delta time:", delta)
+def get30(date_time):
     # print("current date time:", date_time)
     # print("datetime.min - date_time", datetime.min - date_time)
     # print("timedelta", timedelta(minutes=delta))
-    return date_time + (datetime.min - date_time) % timedelta(minutes=delta)
+
+    return date_time + (datetime.min - date_time) % timedelta(minutes=30)
+
+def add30(date_time):
+    return date_time + timedelta(minutes=30)
 
 def getGroup(room):
     group_id = room.group_id
@@ -79,7 +82,10 @@ def displayBookingButtons(room):
         return ZERO_BUTTONS
 
     for i in range(4):
-        time = getDelta(current_time, THIRTY_MIN + THIRTY_MIN * i)
+        if i == 0:
+            time = get30(datetime.now())
+        else: 
+            time = add30(time)
         isOpen = isGroupOpen(group, time)
         if not isOpen:
             return i
