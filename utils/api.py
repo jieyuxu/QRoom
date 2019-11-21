@@ -1,5 +1,5 @@
-from database import Buildings, Rooms, Events, Groups, Users
-from base import Session, engine, Base
+from utils.database import Buildings, Rooms, Events, Groups, Users
+from utils.base import Session, engine, Base
 from datetime import datetime, timedelta
 from sqlalchemy import or_, and_
 
