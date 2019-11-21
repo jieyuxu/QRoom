@@ -100,7 +100,7 @@ def bookRoom():
 
       number = displayBookingButtons(room_object) # number of buttons to display
       times = []
-      fullTimes = []
+      fullTimes = [] # military time
       for i in range(number):
           time = getDelta(datetime.now(), THIRTY_MIN + THIRTY_MIN * i)
           print("time:", time)

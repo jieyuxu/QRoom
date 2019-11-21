@@ -1,4 +1,4 @@
-from database import Buildings, Rooms, Events, Groups, Users
+from utils.database import Buildings, Rooms, Events, Groups, Users
 from utils.base import Session, engine, Base
 from datetime import time, datetime
 from utils.api import *
