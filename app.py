@@ -24,6 +24,7 @@ app.config['CAS_LOGIN_ROUTE'] = '/cas'
 def index():
    if isLoggedIn():
       return redirect(url_for('profile'))
+      session['admin'] = True
 
    return render_template("index.html",loggedin = isLoggedIn(), admin = False)
 
@@ -40,6 +41,7 @@ def caslogin():
       user = getUser(str(cas.username))
       if isAdmin(user):
          session['admin'] = cas.username
+         print('i got here')
    return redirect(url_for('profile'))
 
 @app.route('/caslogout')
@@ -61,9 +63,10 @@ def profile():
          eventDetails['End Time'] = event.end_time
 
       if 'admin' in session:
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = True)
-      else:
+         print('here')
          return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = False)
+      else:
+         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = True)
    else:
       return redirect(url_for("index"))
 
@@ -212,8 +215,10 @@ def handleAddUser():
             addFlag = False
             admin = request.form['admin-id']
             print(admin)
-            current_user = getUserObject(cas.username)
+            current_user = getUser(cas.username)
             errorMsg = addAdmin(current_user, admin)
+            added_user = getUser(admin)
+            print("is user an admin?", added_user.admin)
             if errorMsg == '':
                 addFlag = True
             isAdmin = ('admin' in session is True)
