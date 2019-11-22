@@ -8,7 +8,7 @@ from CAS import CAS
 from CAS import login_required
 
 app = Flask(__name__)
-app.secret_key = 'stop bothering me honey'
+app.secret_key = 'hello its me'
 # print(os.random(24))
 sess = flask_scoped_session(session_factory, app)
 
