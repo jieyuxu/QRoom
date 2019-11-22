@@ -1,11 +1,11 @@
 from flask import Flask, request, render_template, url_for, redirect
 from flask import session
-from CAS import CAS
-from CAS import login_required
 import os
 from utils.api import *
 from flask_sqlalchemy_session import flask_scoped_session
 from utils.base import session_factory
+from CAS import CAS
+from CAS import login_required
 
 app = Flask(__name__)
 app.secret_key = 'stop bothering me honey'
@@ -16,7 +16,7 @@ sess = flask_scoped_session(session_factory, app)
 cas = CAS(app)
 app.config['CAS_SERVER'] = "https://fed.princeton.edu/cas/login"
 app.config['CAS_AFTER_LOGIN'] = 'caslogin'
-app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:1234/caslogout'
+app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:8000/caslogout'
 app.config['CAS_LOGIN_ROUTE'] = '/cas'
 #########################################
 
@@ -25,7 +25,7 @@ def index():
    if isLoggedIn():
       return redirect(url_for('profile'))
 
-   return render_template("index.html",loggedin = isLoggedIn())
+   return render_template("index.html",loggedin = isLoggedIn(), admin = False)
 
 @app.route('/caslogin')
 def caslogin():
@@ -38,13 +38,15 @@ def caslogin():
       # add user to database if not in there
       # returns user object that was added
       user = getUser(str(cas.username))
-
+      if isAdmin(cas.username): 
+         session['admin'] = cas.username
    return redirect(url_for('profile'))
 
 @app.route('/caslogout')
 def caslogout():
    if isLoggedIn():
       session.pop('username')
+      session.pop('admin')
       session.modified = True
    return redirect(url_for('index'))
 
@@ -57,7 +59,10 @@ def profile():
          eventDetails['Start Time'] = event.start_time
          eventDetails['End Time'] = event.end_time
       
-      return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails)
+      if 'admin' in session:
+         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = True)
+      else:
+         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = False)       
    else:
       return redirect(url_for("index"))
 
@@ -68,8 +73,10 @@ def buildings():
         buildings = []
         for b in buildings_query:
             buildings.append(b.building_name)
-        return render_template("buildings.html", loggedin = isLoggedIn(),
-                                username = cas.username, buildings=buildings)
+        if 'admin' in session:
+           return render_template("buildings.html", loggedin = isLoggedIn(), username = cas.username, buildings=buildings, admin = True)
+        else: 
+           return render_template("buildings.html", loggedin = isLoggedIn(), username = cas.username, buildings=buildings, admin = False)
     else:
       return redirect(url_for("index"))
 
@@ -81,16 +88,19 @@ def rooms():
 
         # returns a dictionary of keys = rooms, objects = availability
         rooms_query = getRooms(building_object)
-        rooms = {}
-        for r in rooms_query:
-           rooms[r.room_name] = rooms_query[r]
-        return render_template("rooms.html", loggedin = isLoggedIn(),
-                                username = cas.username, building=building, rooms=rooms)
+        rooms = []
+        for r in rooms_query.keys():
+            if rooms_query[r]:
+                rooms.append(r.room_name)
+        if 'admin' in session:
+           return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username, building=building, rooms=rooms, admin = True)
+        else:
+           return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username, building=building, rooms=rooms, admin = False)
     else:
        return redirect(url_for("index"))
 
 @app.route('/bookRoom', methods=['GET', 'POST'])
-def bookRoom(): 
+def bookRoom():
    THIRTY_MIN = 30
 
    loggedin = False
@@ -99,7 +109,6 @@ def bookRoom():
       building = request.args.get('building')
       room = str(request.args.get('room'))
       room_object = getRoomObject(room, building)
-
       number = displayBookingButtons(room_object) # number of buttons to display
       times = []
       fullTimes = [] # military time
@@ -112,12 +121,16 @@ def bookRoom():
          fullTimes.append(str(time))
       print(times)
       print(fullTimes)
-      return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes)
+      if 'admin' in session:
+         return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = True)
+      else:
+         return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = False)
+         
    else:
       return redirect(url_for("index"))
-   
+
 @app.route('/viewRoom', methods=['GET', 'POST'])
-def viewRoom(): 
+def viewRoom():
    if isLoggedIn():
       building = request.args.get('building')
       room = request.args.get('room')
@@ -126,10 +139,13 @@ def viewRoom():
       # TODO: get schedule from the database #
       times = ['1:00 PM', '1:30 PM', '3:00 PM', '3:30 PM']
       length = len(times)
-      return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, isAvailable = isAvailable, length = length)
+      if 'admin' in session:
+         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, isAvailable = isAvailable, length = length, admin = True)
+      else:
+         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, isAvailable = isAvailable, length = length, admin = False)
    else:
       return redirect(url_for("index"))
-
+   
 @app.route('/confirmation', methods=['GET', 'POST'])
 def confirmation():
     if isLoggedIn():
@@ -139,7 +155,7 @@ def confirmation():
         time = str(request.args.get('fullTime'))
         print("THIS IS THE TIME", time)
         # assuming 'username' means netid
-        user = getUserObject(cas.username)
+        user = getUser(cas.username)
         print("THIS IS THE USER", user)
         room_object = getRoomObject(room, building)
         year = int(time[0:4])
@@ -154,7 +170,10 @@ def confirmation():
         print("confirmatino" + str(type(user)))
         error = bookRoomAdHoc(user, room_object, end_time)
 
-        return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time)
+        if 'admin' in session:
+           return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = True)
+        else:
+           return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = False)
     else:
       return redirect(url_for("index"))
 
