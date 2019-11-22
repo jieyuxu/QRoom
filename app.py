@@ -61,12 +61,11 @@ def profile():
       if event is not None:
          eventDetails['Start Time'] = event.start_time
          eventDetails['End Time'] = event.end_time
-
       if 'admin' in session:
          print('here')
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = False)
-      else:
          return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = True)
+      else:
+         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = False)
    else:
       return redirect(url_for("index"))
 
@@ -188,7 +187,7 @@ def admin():
         buildings = []
         for b in buildings_query:
             buildings.append(b.building_name)
-
+        print(buildings)
         addMessage = ""
         if 'addMessage' in request.args:
             addMessage = request.args.get('addMessage')
@@ -231,29 +230,32 @@ def handleSchedule():
     if isLoggedIn():
         if request.method == 'POST':
             bookFlag = False
-            building_id = request.form('building')
-            room_id = request.form('room-id')
-            start_year = request.form('starting-year-id')
-            start_month = request.form('starting-month-id')
-            start_day = request.form('starting-day-id')
-            start_hour = request.form('starting-hour-id')
-            start_minutes = request.form('starting-min-id')
-            end_year = request.form('ending-year-id')
-            end_month = request.form('ending-month-id')
-            end_day = request.form('ending-day-id')
-            end_hour = request.form('ending-hour-id')
-            end_minutes = request.form('ending-min-id')
+            print("printing request form", request.form.items())
+            for key, val in request.form.items():
+               print(key, val)
+            building_id = request.form['building']
+            room_id = request.form['room-id']
+            start_year = request.form['starting-year-id']
+            start_month = request.form['starting-month-id']
+            start_day = request.form['starting-day-id']
+            start_hour = request.form['starting-hour-id']
+            start_minutes = request.form['starting-min-id']
+            end_year = request.form['ending-year-id']
+            end_month = request.form['ending-month-id']
+            end_day = request.form['ending-day-id']
+            end_hour = request.form['ending-hour-id']
+            end_minutes = request.form['ending-min-id']
 
             # check that the room id is in the building
-            building_object = getBuildingObject(building_id)
-            room_object = getRoomObject(room_id, building_object)
+            # building_object = getBuildingObject(building_id)
+            room_object = getRoomObject(room_id, building_id)
             if room_object is None:
                 roomMessage = 'Please enter a valid room.'
                 return redirect(url_for("admin", addMessage = '', bookMessage = roomMessage, addFlag = False, bookFlag = bookFlag))
 
             # make a datetime object for the start and end
-            start = datetime(start_year, start_month, start_day, start_hour, start_minutes)
-            end = datetime(end_year, end_month, end_day, end_hour, end_minutes)
+            start = datetime(int(start_year), int(start_month), int(start_day), int(start_hour), int(start_minutes))
+            end = datetime(int(end_year), int(end_month), int(end_day), int(end_hour), int(end_minutes))
             current_user = getUserObject(cas.username)
 
             eventMessage = bookRoomSchedule(current_user, room_object, start, end)
