@@ -76,7 +76,7 @@ def displayBookingButtons(room):
     group = getGroup(room)
 
     current_time = datetime.now()
-
+    
     if not isGroupOpen(group, current_time):
         return ZERO_BUTTONS
 
@@ -248,6 +248,7 @@ def getRoomObject(room_name, building_name):
                 .filter(Rooms.room_name == room_name)\
                 .filter(Rooms.building_id == building.building_id)\
                 .first()
+    print(room)
     return room
 
 # gets user object from net id

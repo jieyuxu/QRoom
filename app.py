@@ -16,7 +16,7 @@ sess = flask_scoped_session(session_factory, app)
 cas = CAS(app)
 app.config['CAS_SERVER'] = "https://fed.princeton.edu/cas/login"
 app.config['CAS_AFTER_LOGIN'] = 'caslogin'
-app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:1234/caslogout'
+app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:8000/caslogout'
 app.config['CAS_LOGIN_ROUTE'] = '/cas'
 #########################################
 
@@ -99,7 +99,6 @@ def bookRoom():
       building = request.args.get('building')
       room = str(request.args.get('room'))
       room_object = getRoomObject(room, building)
-
       number = displayBookingButtons(room_object) # number of buttons to display
       times = []
       fullTimes = [] # military time
@@ -139,7 +138,7 @@ def confirmation():
         time = str(request.args.get('fullTime'))
         print("THIS IS THE TIME", time)
         # assuming 'username' means netid
-        user = getUserObject(cas.username)
+        user = getUser(cas.username)
         print("THIS IS THE USER", user)
         room_object = getRoomObject(room, building)
         year = int(time[0:4])

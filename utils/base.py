@@ -12,6 +12,6 @@ Base = declarative_base()
 # url = 'postgresql://postgres:{}@localhost:5555/qroom'.format(password)
 
 # url = 'postgresql://postgresql-rectangular-86196'
-url = 'postgresql://localhost:5432'
+url = 'postgresql://localhost/mydb'
 engine = create_engine(url)
 session_factory = sessionmaker(bind=engine)
