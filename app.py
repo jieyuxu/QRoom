@@ -137,15 +137,35 @@ def viewRoom():
    if isLoggedIn():
       building = request.args.get('building')
       room = request.args.get('room')
-      # TODO: get if room is available from the database #
+      print('building: ', building)
+      print('room ', room)
+      # get current time and get delta 30
+      # get until 0:00
+      time = get30(datetime.now())
+      # get all events in room for a certain day 
+      events = getEvents(getRoomObject(room, building))
+      print('printing all events')
+      print(events)
+      times_blocked = []
+      dictionary = {}
+      count = 0
+      for e in events:
+         print (count)
+         # print("hi " + str(e))
+         print("curr object", e)
+         times_blocked.append([e.start_time, e.end_time])
+         count = count + 1
+      while time.hour != 0:
+         for t in times_blocked:
+            dictionary[time] = isOpen(t[0], t[1], time)
+         time = add30(time)
+
       isAvailable = False
-      # TODO: get schedule from the database #
-      times = ['1:00 PM', '1:30 PM', '3:00 PM', '3:30 PM']
-      length = len(times)
+      length = len(dictionary)
       if 'admin' in session:
-         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, isAvailable = isAvailable, length = length, admin = True)
+         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, length = length, admin = True)
       else:
-         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, isAvailable = isAvailable, length = length, admin = False)
+         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, length = length, admin = False)
    else:
       return redirect(url_for("index"))
 

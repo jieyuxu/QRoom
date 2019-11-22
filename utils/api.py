@@ -257,3 +257,6 @@ def getUserObject(net_id):
                 .filter(Users.net_id == net_id)\
                 .first()
     return user
+
+def isOpen(start, end, time):
+    return ((time >= start) and (time <= end))
