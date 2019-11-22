@@ -9,9 +9,10 @@
        </div>
    
        <div class="list-group">
-         {% for time in times: %}
-            <a href={{url_for('confirmation', building=building, room=room, time=time)}} class="list-group-item list-group-item-action">{{time}}</a>
+         {% for key, value in times.items(): %}
+            {{key}}
+            {{value}}
          {% endfor %}
-         </div>
+      </div>
 </body>
  {% endblock %}
