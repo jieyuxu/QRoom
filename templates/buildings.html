@@ -5,7 +5,7 @@
     <!-- <link href="themify-icons.css" rel="stylesheet"> -->
 {% endblock %}
 {% block content %}
-<div class="section light-bg mt-5 pt-5" id="buildings">
+<div class="section mt-5 pt-5" id="buildings">
    <div class="container">
        <div class="section-title pl-3">
             <h3>Locations</h3>
@@ -18,7 +18,6 @@
                         <div class="card-body">
                           <div class="media">
                             <!-- the logo; can replace with a logo of choice-->
-                            <span class="ti-face-smile gradient-fill ti-3x mr-3"></span>
                             <div class="media-body">
                               <h5 class="card-title"><a href={{url_for('rooms', building=building)}}>{{building}}</a></h5>
                               <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
