@@ -89,10 +89,9 @@ def rooms():
 
         # returns a dictionary of keys = rooms, objects = availability
         rooms_query = getRooms(building_object)
-        rooms = []
+        rooms = {}
         for r in rooms_query.keys():
-            if rooms_query[r]:
-                rooms.append(r.room_name)
+            rooms[r.room_name] = rooms_query[r]
         if 'admin' in session:
            return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username, building=building, rooms=rooms, admin = True)
         else:
