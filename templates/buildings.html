@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+{% block extracss%}
+    <!-- Main css -->
+    <link href="../static/css/style.css" rel="stylesheet">
+    <!-- <link href="themify-icons.css" rel="stylesheet"> -->
+{% endblock %}
 {% block content %}
-<div class="section light-bg mt-5 pt-5" id="buildings">
+<div class="section mt-5 pt-5" id="buildings">
    <div class="container">
        <div class="section-title pl-3">
             <h3>Locations</h3>
@@ -9,13 +14,18 @@
          <div class="col col-md-12">
             <div class="card-deck">
             {% for building in buildings: %}
-                  <div class="card" style="width: 18rem;">
+                  <div class="card features" style="width: 18rem;">
                         <div class="card-body">
-                          <h5 class="card-title"><a href={{url_for('rooms', building=building)}}>{{building}}</a></h5>
-                          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                          <a href="{{url_for('rooms', building=building)}}" class="card-link">Book Room</a>
-                          <a href="http://www.google.com/maps" class="card-link">Locate</a>
+                          <div class="media">
+                            <!-- the logo; can replace with a logo of choice-->
+                            <div class="media-body">
+                              <h5 class="card-title"><a href={{url_for('rooms', building=building)}}>{{building}}</a></h5>
+                              <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                              <a href="{{url_for('rooms', building=building)}}" class="card-link">Book Room</a>
+                              <a href="http://www.google.com/maps" class="card-link">Locate</a>
+                            </div>
+                          </div>
                         </div>
                       </div>
             {% endfor %}

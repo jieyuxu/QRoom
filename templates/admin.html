@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="section light-bg mt-5 pt-5" id="rooms">
+   <div class="container">
+       <div class="section-title">
+            <h2>Admin Portal</h2>
+       </div>
+       
+       <h3>Add Another Admin</h3>
+       <form action = "/handleAddUser" method = "post">
+	 <div class="form-group">
+	   <label for="newAdmin">User to add as admin:</label>
+	   <input type="newAdmin" class="form-control" name="admin-id" id="newAdmin" placeholder="Enter user's netid">
+	 </div>
+	 <button action="submit" class="btn btn-default">Submit</button>
+       </form>
+
+       <h3>Book a Room in Advance</h3>
+       <form action = "{{ url_for('handleSchedule') }}" method = "post">
+         <div class="form-group">
+         </div>
+       </form>
+
+
+</div>
+ {% endblock %}
