@@ -129,12 +129,6 @@ def bookRoom():
    else:
       return redirect(url_for("index"))
 
-@app.route('/viewRoom')
-def viewRoom(): 
-      return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes)
-   else:
-      return redirect(url_for("index"))
-
 @app.route('/viewRoom', methods=['GET', 'POST'])
 def viewRoom():
    if isLoggedIn():
