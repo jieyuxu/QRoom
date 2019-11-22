@@ -1,11 +1,11 @@
 from flask import Flask, request, render_template, url_for, redirect
 from flask import session
-from flask_cas import CAS
-from flask_cas import login_required
 import os
 from utils.api import *
 from flask_sqlalchemy_session import flask_scoped_session
 from utils.base import session_factory
+from CAS import CAS
+from CAS import login_required
 
 app = Flask(__name__)
 app.secret_key = 'stop bothering me honey'
@@ -56,7 +56,7 @@ def profile():
       if event is not None:
          eventDetails['Start Time'] = event.start_time
          eventDetails['End Time'] = event.end_time
-      
+
       return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails)
    else:
       return redirect(url_for("index"))
@@ -91,7 +91,7 @@ def rooms():
        return redirect(url_for("index"))
 
 @app.route('/bookRoom', methods=['GET', 'POST'])
-def bookRoom(): 
+def bookRoom():
    THIRTY_MIN = 30
 
    loggedin = False
@@ -115,9 +115,9 @@ def bookRoom():
       return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes)
    else:
       return redirect(url_for("index"))
-   
+
 @app.route('/viewRoom', methods=['GET', 'POST'])
-def viewRoom(): 
+def viewRoom():
    if isLoggedIn():
       building = request.args.get('building')
       room = request.args.get('room')
