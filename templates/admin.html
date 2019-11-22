@@ -14,13 +14,83 @@
 	 </div>
 	 <button action="submit" class="btn btn-default">Submit</button>
        </form>
+       {% if addMessage|length %}
+         <h4>User could not be added as admin.</h4>
+       {% endif %}
+       {% if addSucess %}
+         <h4>User was added successfully as admin.</h4>
+       {% endif %}
 
        <h3>Book a Room in Advance</h3>
-       <form action = "{{ url_for('handleSchedule') }}" method = "post">
+       <form action = "/handleSchedule" method = "post">
          <div class="form-group">
+           <input list="buildings" name="building">
+	   <datalist id="browsers">
+	     {% for building in buildings %}
+	     <option value="{{building}}" name="building">
+	     {% endfor %}
+	   </datalist>
+	 </div>
+	 <div class="form-group">
+           <label for="room">Rooms:</label>
+           <input type="room" class="form-control" name="room-id" id="room" placeholder="Enter desired room">
          </div>
-       </form>
+	 
+	 <div class="form-group">
+           <label for="startingYear">Starting Year:</label>
+           <input type="startingYear" class="form-control" name="starting-year-id" id="startingYear" placeholder="Enter year of start date">
+         </div>
+	  <div class="form-group">
+           <label for="startingMonth">Starting Month:</label>
+           <input type="startingMonth" class="form-control" name="starting-month-id" id="startingMonth" placeholder="Enter month of start date">
+         </div>
+	  <div class="form-group">
+           <label for="startingDate">Starting Date:</label>
+           <input type="startingDate" class="form-control" name="starting-date-id" id="startingDate" placeholder="Enter start date">
+         </div>
+	  <div class="form-group">
+           <label for="startingYear">Starting Hour:</label>
+           <input type="startingHour" class="form-control" name="starting-hour-id" id="startingHour" placeholder="Enter starting hour">
+         </div>
 
+	 <div class="form-group">
+           <label for="startingMin">Starting Minute:</label>
+           <input type="startingMin" class="form-control" name="starting-min-id" id="startingMin" placeholder="Enter starting minute">
+         </div>
+
+	 <div class="form-group">
+           <label for="endingYear">Ending Year:</label>
+           <input type="endingYear" class="form-control" name="ending-year-id" id="endingYear" placeholder="Enter year of end date">
+	 </div>
+         
+	 <div class="form-group">
+           <label for="endingMonth">Ending Month:</label>
+           <input type="endingMonth" class="form-control" name="ending-month-id" id="endingMonth" placeholder="Enter month of end date">
+         </div>
+
+          <div class="form-group">
+           <label for="endingDate">Ending Date:</label>
+           <input type="endingDate" class="form-control" name="ending-date-id" id="endingDate" placeholder="Enter end date">
+         </div>
+
+          <div class="form-group">
+           <label for="endingYear">Ending Hour:</label>
+           <input type="endingHour" class="form-control" name="ending-hour-id" id="endingHour" placeholder="Enter ending hour">
+         </div>
+
+         <div class="form-group">
+           <label for="endingMin">Ending Minute:</label>
+           <input type="endingMin" class="form-control" name="ending-min-id" id="endingMin" placeholder="Enter ending minute">
+         </div>
+
+         <button action="submit" class="btn btn-default">Submit</button>
+       </form>
+       {% if bookMessage|length %}
+         <h4>Room could not be booked.</h4>
+       {% endif %}
+       {% if bookSucess %}
+         <h4>Room has been booked succesfully.</h4>
+       {% endif %}
 
 </div>
  {% endblock %}

@@ -116,7 +116,7 @@ def getUser(net_id):
 
     if user is None:
         print("it tis none")
-        user = Users(net_id= net_id, contact = '', admin = False)
+        user = Users(net_id= net_id, contact = '', admin = True)
         sess.add(user)
         sess.commit()
     return user

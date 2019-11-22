@@ -24,7 +24,6 @@ app.config['CAS_LOGIN_ROUTE'] = '/cas'
 def index():
    if isLoggedIn():
       return redirect(url_for('profile'))
-      session['admin'] = True
 
    return render_template("index.html",loggedin = isLoggedIn(), admin = False)
 
@@ -41,7 +40,6 @@ def caslogin():
       user = getUser(str(cas.username))
       if isAdmin(user):
          session['admin'] = cas.username
-         print('i got here')
    return redirect(url_for('profile'))
 
 @app.route('/caslogout')
@@ -63,10 +61,9 @@ def profile():
          eventDetails['End Time'] = event.end_time
 
       if 'admin' in session:
-         print('here')
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = False)
-      else:
          return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = True)
+      else:
+         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = False)
    else:
       return redirect(url_for("index"))
 
@@ -138,35 +135,15 @@ def viewRoom():
    if isLoggedIn():
       building = request.args.get('building')
       room = request.args.get('room')
-      print('building: ', building)
-      print('room ', room)
-      # get current time and get delta 30
-      # get until 0:00
-      time = get30(datetime.now())
-      # get all events in room for a certain day 
-      events = getEvents(getRoomObject(room, building))
-      print('printing all events')
-      print(events)
-      times_blocked = []
-      dictionary = {}
-      count = 0
-      for e in events:
-         print (count)
-         # print("hi " + str(e))
-         print("curr object", e)
-         times_blocked.append([e.start_time, e.end_time])
-         count = count + 1
-      while time.hour != 0:
-         for t in times_blocked:
-            dictionary[time] = isOpen(t[0], t[1], time)
-         time = add30(time)
-
+      # TODO: get if room is available from the database #
       isAvailable = False
-      length = len(dictionary)
+      # TODO: get schedule from the database #
+      times = ['1:00 PM', '1:30 PM', '3:00 PM', '3:30 PM']
+      length = len(times)
       if 'admin' in session:
-         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, length = length, admin = True)
+         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, isAvailable = isAvailable, length = length, admin = True)
       else:
-         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, length = length, admin = False)
+         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, isAvailable = isAvailable, length = length, admin = False)
    else:
       return redirect(url_for("index"))
 
@@ -203,26 +180,11 @@ def confirmation():
 
 @app.route('/admin', methods = ['GET', 'POST'])
 def admin():
-    if isLoggedIn():
+    if isLoggedIn:
         buildings_query = getBuildings()
         buildings = []
         for b in buildings_query:
             buildings.append(b.building_name)
-
-        addMessage = ""
-        if 'addMessage' in request.args:
-            addMessage = request.args.get('addMessage')
-
-        bookMessage = ""
-        if 'bookMessage' in request.args:
-            addMessage = request.args.get('bookMessage')
-
-        bookFlag = False
-        addFlag = False
-        if 'bookFlag' in request.args:
-            bookFlag = request.args.get('bookFlag')
-        if 'addFlag' in request.args:
-            addFlag = request.args.get('addFlag')
 
         return render_template("admin.html", loggedin = isLoggedIn(), username = cas.username, admin = isAdmin, addMessage = addMessage, bookMessage = bookMessage, buildings = buildings, addSuccess = addFlag, bookSuccess = bookFlag)
     else:
@@ -235,10 +197,8 @@ def handleAddUser():
             addFlag = False
             admin = request.form['admin-id']
             print(admin)
-            current_user = getUser(cas.username)
+            current_user = getUserObject(cas.username)
             errorMsg = addAdmin(current_user, admin)
-            added_user = getUser(admin)
-            print("is user an admin?", added_user.admin)
             if errorMsg == '':
                 addFlag = True
             isAdmin = ('admin' in session is True)
@@ -269,7 +229,7 @@ def handleSchedule():
             room_object = getRoomObject(room_id, building_object)
             if room_object is None:
                 roomMessage = 'Please enter a valid room.'
-                return redirect(url_for("admin", addMessage = '', bookMessage = roomMessage, addFlag = False, bookFlag = bookFlag))
+                return redirect(url_for("admin", bookMessage = roomMessage, bookFlag = bookFlag))
 
             # make a datetime object for the start and end
             start = datetime(start_year, start_month, start_day, start_hour, start_minutes)
@@ -278,10 +238,10 @@ def handleSchedule():
 
             eventMessage = bookRoomSchedule(current_user, room_object, start, end)
             if eventMessage != '':
-                return redirect(url_for("admin", addMessage = '', bookMessage = eventMessage, addFlag = False, bookFlag = bookFlag))
+                return redirect(url_for("admin", bookMessage = eventMessage, bookFlag = bookFlag))
 
             bookFlag = True
-            return redirect(url_for("admin", addMessage = '', bookMessage = eventMessage, addFlag = False, bookFlag = bookFlag))
+            return redirect(url_for("admin", bookMessage = eventMessage, bookFlag = bookFlag))
 
 
 def isLoggedIn():
