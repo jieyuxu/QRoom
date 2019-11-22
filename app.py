@@ -19,7 +19,6 @@ app.config['CAS_AFTER_LOGIN'] = 'caslogin'
 app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:8000/caslogout'
 app.config['CAS_LOGIN_ROUTE'] = '/cas'
 #########################################
-
 @app.route('/')
 def index():
    if isLoggedIn():
