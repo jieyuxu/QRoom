@@ -1,9 +1,9 @@
-from .database import Buildings, Rooms, Events, Groups, Users
-from .base import Session, engine, Base
+from utils.database import Buildings, Rooms, Events, Groups, Users
 from datetime import datetime, timedelta
 from sqlalchemy import or_, and_
+from flask_sqlalchemy_session import current_session
 
-sess = Session()
+sess = current_session
 
 def markPassed():
     current_time = datetime.now()
@@ -48,8 +48,15 @@ def isAvailable(room):
         return True
     return isLater(datetime.now(), event.start_time)
 
-def getDelta(date_time, delta):
-    return date_time + (datetime.min - date_time) % timedelta(minutes=delta)
+def get30(date_time):
+    # print("current date time:", date_time)
+    # print("datetime.min - date_time", datetime.min - date_time)
+    # print("timedelta", timedelta(minutes=delta))
+
+    return date_time + (datetime.min - date_time) % timedelta(minutes=30)
+
+def add30(date_time):
+    return date_time + timedelta(minutes=30)
 
 def getGroup(room):
     group_id = room.group_id
@@ -62,7 +69,6 @@ def getGroup(room):
 def displayBookingButtons(room):
     FOUR_BUTTONS = 4
     ZERO_BUTTONS = 0
-    THIRTY_MIN = 30
 
     markPassed()
     existEvent, event = findEarliest(room)
@@ -70,12 +76,15 @@ def displayBookingButtons(room):
     group = getGroup(room)
 
     current_time = datetime.now()
-
+    
     if not isGroupOpen(group, current_time):
         return ZERO_BUTTONS
 
     for i in range(4):
-        time = getDelta(current_time, THIRTY_MIN + THIRTY_MIN * i)
+        if i == 0:
+            time = get30(datetime.now())
+        else: 
+            time = add30(time)
         isOpen = isGroupOpen(group, time)
         if not isOpen:
             return i
@@ -106,13 +115,18 @@ def getUser(net_id):
             .first()
 
     if user is None:
+        print("it tis none")
         user = Users(net_id= net_id, contact = '', admin = False)
         sess.add(user)
         sess.commit()
-
     return user
 
+def getUserEvent(net_id):
+    event = sess.query(Events).filter(Events.net_id == net_id).first()    
+    return event        
+
 def isAdmin(user):
+    print(type(user))
     return user.admin
 
 def updateContact(user, contact):
@@ -151,7 +165,7 @@ def isAvailableScheduled(start_time, end_time, room):
 
     return True
 
-def bookRoomSchedule(user, room, start_time, end_time, session, event_title = ''):
+def bookRoomSchedule(user, room, start_time, end_time, event_title = ''):
     if not isAdmin(user):
         return "NOT ADMIN"
     if not isAvailableScheduled(start_time, end_time, room):
@@ -171,15 +185,14 @@ def addAdmin(user, net_id):
     sess.commit()
     return ""
 
-def releaseEvent(event, session):
+def releaseEvent(event):
     sess.delete(event)
     sess.commit()
 
 def bookRoomAdHoc(user1, room, button_end_time):
-    sess = Session()
     current_time = datetime.now()
-
-    if not user1.admin and hasBooked(user):
+    print(type(user1))
+    if not isAdmin(user1) and hasBooked(user1):
         return "You have already booked a room at this time. Release previous room to book another one."
     if not isGroupOpen(getGroup(room), current_time):
         return "SYS FAILURE: Group not open at current time"
@@ -195,8 +208,7 @@ def bookRoomAdHoc(user1, room, button_end_time):
                     end_time = button_end_time, room = room, passed = False)
 
     sess.add(event)
-    sess.commit()
-    sess.close()
+    sess.commit() 
 
     return ''
 
@@ -236,6 +248,7 @@ def getRoomObject(room_name, building_name):
                 .filter(Rooms.room_name == room_name)\
                 .filter(Rooms.building_id == building.building_id)\
                 .first()
+    print(room)
     return room
 
 # gets user object from net id
@@ -244,5 +257,3 @@ def getUserObject(net_id):
                 .filter(Users.net_id == net_id)\
                 .first()
     return user
-
-sess.close()

@@ -8,8 +8,8 @@
        </div>
    
        <div class="list-group">
-         {% for i in range(times| length) %}
-            <a href={{url_for('confirmation', building=building, room=room, time=times[i], fullTime=fullTimes[i])}} class="list-group-item list-group-item-action">{{time}}</a>
+         {% for time in times %}
+            <a href={{url_for('confirmation', building=building, room=room, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action">{{time}}</a>
          {% endfor %}
          </div>
 </div>

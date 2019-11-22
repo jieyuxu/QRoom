@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer, DateTime, Time, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from .base import Base
+from utils.base import Base
 
 # Create our database model
 class Buildings(Base):
@@ -22,6 +22,7 @@ class Rooms(Base):
     group_id = Column(Integer, ForeignKey('groups.group_id'), nullable=False)
 
     events = relationship("Events", backref='room')
+    
 
 
 class Events(Base):
