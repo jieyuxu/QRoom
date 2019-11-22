@@ -20,7 +20,7 @@ firestone = Buildings(building_name = "Firestone")
 frist = Buildings(building_name = "Frist")
 lewis = Buildings(building_name = "Lewis")
 
-group1 = Groups(open_time = time(0,00,00), close_time = time(23,00,00))
+group1 = Groups(open_time = time(0,00,00), close_time = time(19,00,00))
 group2 = Groups(open_time = time(0,00,00), close_time = time(20,00,00))
 
 

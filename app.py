@@ -81,10 +81,9 @@ def rooms():
 
         # returns a dictionary of keys = rooms, objects = availability
         rooms_query = getRooms(building_object)
-        rooms = []
-        for r in rooms_query.keys():
-            if rooms_query[r]:
-                rooms.append(r.room_name)
+        rooms = {}
+        for r in rooms_query:
+           rooms[r.room_name] = rooms_query[r]
         return render_template("rooms.html", loggedin = isLoggedIn(),
                                 username = cas.username, building=building, rooms=rooms)
     else:
@@ -105,11 +104,12 @@ def bookRoom():
       times = []
       fullTimes = [] # military time
       for i in range(number):
-          time = getDelta(datetime.now(), THIRTY_MIN + THIRTY_MIN * i)
-          print("time:", time)
-          print("i:", i)
-          times.append(str(time)[11:16])
-          fullTimes.append(str(time))
+         if i == 0:
+            time = get30(datetime.now())
+         else:
+            time = add30(time)
+         times.append(str(time)[11:16])
+         fullTimes.append(str(time))
       print(times)
       print(fullTimes)
       return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes)
@@ -150,6 +150,8 @@ def confirmation():
         end_time = datetime(year, month, day, hour, minute, 0, 0)
 
         # updates database, returns empty string if successful
+        print("username:" + cas.username)
+        print("confirmatino" + str(type(user)))
         error = bookRoomAdHoc(user, room_object, end_time)
 
         return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time)
