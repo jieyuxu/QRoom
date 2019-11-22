@@ -69,7 +69,6 @@ def getGroup(room):
 def displayBookingButtons(room):
     FOUR_BUTTONS = 4
     ZERO_BUTTONS = 0
-    THIRTY_MIN = 30
 
     markPassed()
     existEvent, event = findEarliest(room)
@@ -116,10 +115,10 @@ def getUser(net_id):
             .first()
 
     if user is None:
+        print("it tis none")
         user = Users(net_id= net_id, contact = '', admin = False)
         sess.add(user)
         sess.commit()
-    print(type(user))
     return user
 
 def getUserEvent(net_id):
@@ -127,6 +126,7 @@ def getUserEvent(net_id):
     return event        
 
 def isAdmin(user):
+    print(type(user))
     return user.admin
 
 def updateContact(user, contact):
@@ -191,7 +191,7 @@ def releaseEvent(event):
 
 def bookRoomAdHoc(user1, room, button_end_time):
     current_time = datetime.now()
-
+    print(type(user1))
     if not isAdmin(user1) and hasBooked(user1):
         return "You have already booked a room at this time. Release previous room to book another one."
     if not isGroupOpen(getGroup(room), current_time):

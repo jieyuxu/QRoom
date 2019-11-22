@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, url_for, redirect
 from flask import session
-from flask_cas import CAS
-from flask_cas import login_required
+from CAS import CAS
+from CAS import login_required
 import os
 from utils.api import *
 from flask_sqlalchemy_session import flask_scoped_session
@@ -81,10 +81,9 @@ def rooms():
 
         # returns a dictionary of keys = rooms, objects = availability
         rooms_query = getRooms(building_object)
-        rooms = []
-        for r in rooms_query.keys():
-            if rooms_query[r]:
-                rooms.append(r.room_name)
+        rooms = {}
+        for r in rooms_query:
+           rooms[r.room_name] = rooms_query[r]
         return render_template("rooms.html", loggedin = isLoggedIn(),
                                 username = cas.username, building=building, rooms=rooms)
     else:
@@ -151,6 +150,8 @@ def confirmation():
         end_time = datetime(year, month, day, hour, minute, 0, 0)
 
         # updates database, returns empty string if successful
+        print("username:" + cas.username)
+        print("confirmatino" + str(type(user)))
         error = bookRoomAdHoc(user, room_object, end_time)
 
         return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time)
