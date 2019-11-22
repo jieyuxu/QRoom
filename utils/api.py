@@ -251,6 +251,19 @@ def getRoomObject(room_name, building_name):
     print(room)
     return room
 
+# get associated event object given event_id
+def getEventObject(event_id):
+    event = sess.query(Events).filter(Events.event_id == event_id).first()
+    return event
+    
+# get associated building name and room name from room_id
+def getBuildingRoomName(room_id):
+    room = sess.query(Rooms).filter(Rooms.room_id == room_id).first()
+    roomname = room.room_name
+    building = sess.query(Buildings).filter(Buildings.building_id == room.building_id).first()
+    buildingname = building.building_name
+    return [buildingname, roomname]
+
 # gets user object from net id
 def getUserObject(net_id):
     user = sess.query(Users)\

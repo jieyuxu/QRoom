@@ -3,14 +3,15 @@
 <div class="section light-bg mt-5 pt-5" id="features">
     <div class="container">
         <div class="section-title pl-4">
-            <h3>Your Bookings</h3>
+            <h3>Current Booking</h3>
             {% if event.items() %}
                 <div class="card-deck">
                     <div class="card" style="width: 18rem;">
                                 <div class="card-body">
-                                <h5 class="card-title"><a href={{url_for('rooms', building=building)}}></a>Your current booking</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                                <span><h5 class="card-title">{{building}}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Room {{room}}</h6>
                                 <p class="card-text">{% for key, val in event.items() %}{{key}}: {{val}}<br>{% endfor %}</p>
+                                <a href={{url_for('releaseRoom', building=building, room=room, eventid=eventid)}} class="btn btn-info">Release Room</a>
                                 </div>
                             </div>
                     </div>

@@ -58,14 +58,23 @@ def profile():
    if isLoggedIn():
       event = getUserEvent(session['username'])
       eventDetails = {}
+      buildingname=''
+      roomname=''
+      eventid=''
       if event is not None:
          eventDetails['Start Time'] = event.start_time
          eventDetails['End Time'] = event.end_time
+         room = getBuildingRoomName(event.room_id)
+         buildingname = room[0]
+         roomname = room[1]
+         eventid = event.event_id
+
       if 'admin' in session:
-         print('here')
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = True)
+         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, 
+                                 event=eventDetails, eventid=eventid, building=buildingname, room=roomname, admin = True)
       else:
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, event=eventDetails, admin = False)
+         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, 
+                                 event=eventDetails, eventid=eventid, building=buildingname, room=roomname, admin = False)
    else:
       return redirect(url_for("index"))
 
@@ -91,14 +100,15 @@ def rooms():
 
         # returns a dictionary of keys = rooms, objects = availability
         rooms_query = getRooms(building_object)
-        rooms = []
+        rooms = {}
         for r in rooms_query.keys():
-            if rooms_query[r]:
-                rooms.append(r.room_name)
+           rooms[r.room_name] = rooms_query[r]
         if 'admin' in session:
-           return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username, building=building, rooms=rooms, admin = True)
+           return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username, 
+                                    building=building, rooms=rooms, admin = True)
         else:
-           return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username, building=building, rooms=rooms, admin = False)
+           return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username, 
+                                    building=building, rooms=rooms, admin = False)
     else:
        return redirect(url_for("index"))
 
@@ -198,6 +208,22 @@ def confirmation():
         else:
            return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = False)
     else:
+      return redirect(url_for("index"))
+
+@app.route('/releaseRoom', methods=['GET','DELETE'])
+def releaseRoom():
+   if isLoggedIn():
+      eventid = request.args.get('eventid')
+      buildingname = request.args.get('building')
+      roomname = request.args.get('room')
+      event = getEventObject(eventid)
+      releaseEvent(event)
+   
+      if 'admin' in session:
+         return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, admin = True)
+      else:          
+         return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, admin = False)
+   else:
       return redirect(url_for("index"))
 
 @app.route('/admin', methods = ['GET', 'POST'])
