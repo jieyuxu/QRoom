@@ -7,17 +7,20 @@
     <div class="container">
         <div class="section-title pl-4">
             <h3>Current Booking</h3>
-            {% if event.items() %}
-                <div class="card-deck">
-                    <div class="card" style="width: 18rem;">
-                                <div class="card-body">
-                                <span><h5 class="card-title">{{building}}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Room {{room}}</h6>
-                                <p class="card-text">{% for key, val in event.items() %}{{key}}: {{val}}<br>{% endfor %}</p>
-                                <a href={{url_for('releaseRoom', building=building, room=room, eventid=eventid)}} class="btn btn-info">Release Room</a>
-                                </div>
-                            </div>
-                    </div>
+            {% if event is defined %}
+              {% if event.items() %}
+                  <div class="card-deck">
+                      <div class="card" style="width: 18rem;">
+                                  <div class="card-body">
+                                  <span><h5 class="card-title">{{building}}</h5>
+                                  <h6 class="card-subtitle mb-2 text-muted">Room {{room}}</h6>
+                                  <p class="card-text">{% for key, val in event.items() %}{{key}}: {{val}}<br>{% endfor %}</p>
+                                  <a href={{url_for('currentBooking', building=building, room=room, fullTime=event['End Time'])}} class="btn btn-info">Get Info</a>
+                                  <a href={{url_for('releaseRoom', building=building, room=room, eventid=eventid)}} class="btn btn-info">Release Room</a>
+                                  </div>
+                              </div>
+                      </div>
+              {% endif %}
             {% endif %}
         </div>
     </div>

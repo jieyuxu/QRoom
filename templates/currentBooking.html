@@ -10,27 +10,22 @@
          <h2> Current Booking Information </h2>
          {{building}}
          {{room}}
-         {{start_time}}
-         {{end_time}}
-	 <!-- {% if error|length %}
-	    <h2>Failure to confirm.</h2>
-	 {% else %}
-	    <h2>Confirmed!</h2>
-	    <h3>{{building}} - {{room}}</h3>
-		<h2>{{fullTime}}</h2>
-		<p>Redirecting you to your profile in 5 seconds. Click <a href="/profile">here</a> to redirect now.</p>
-	 {% endif %} -->
-       <!-- </div> -->
+         <br>
+         end time : {{time}}
+        <br>
+         Total Seconds Booked: {{seconds}}
+
+         <button onclick="myFunction()">Get Notifications</button>
+   <script>
+     function myFunction() {
+       setInterval(function(){
+         alert("10 minutes left"); }, 2);
+     }
+
+  </script>
+
 </body>
  {% endblock %}
  {% block extrajs %}
- <script>
-      window.setTimeout(function(){
 
-        // Move to a new location or you can do something else
-        window.location.href = "/profile";
-
-        }, 5500);
-
-  </script>
  {% endblock %}

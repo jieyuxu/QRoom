@@ -15,7 +15,7 @@
 
        <div class="list-group list-group-flush">
          {% for time in times %}
-            <a href={{url_for('currentBooking', building=building, room=room, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action">{{time}}</a>
+            <a href={{url_for('confirmation', building=building, room=room, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action">{{time}}</a>
          {% endfor %}
         </div>
 </div>

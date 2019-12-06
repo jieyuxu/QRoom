@@ -67,6 +67,12 @@ def profile():
       if event is not None:
          eventDetails['Start Time'] = event.start_time
          eventDetails['End Time'] = event.end_time
+         # check end time
+         if datetime.now() > event.end_time:
+             if 'admin' in session:
+                return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, admin = True)
+             else:
+                return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, admin = False)
          room = getBuildingRoomName(event.room_id)
          buildingname = room[0]
          roomname = room[1]
@@ -238,7 +244,8 @@ def releaseRoom():
       buildingname = request.args.get('building')
       roomname = request.args.get('room')
       event = getEventObject(eventid)
-      releaseEvent(event)
+      if event is not None:
+          releaseEvent(event)
 
       if 'admin' in session:
          return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, admin = True)
@@ -335,21 +342,24 @@ def handleSchedule():
 @app.route('/currentBooking', methods = ['GET', 'POST'])
 def currentBooking():
     if isLoggedIn():
-        buildingname = request.args.get('building')
-        roomname = request.args.get('room')
+        building = request.args.get('building')
+        print(building)
+        room = request.args.get('room')
+        print(room)
         time = str(request.args.get('fullTime'))
+        print(time)
         year = int(time[0:4])
         month = int(time[5:7])
         day = int(time[8:10])
         hour = int(time[11:13])
         minute = int(time[14:16])
         end_time = datetime(year, month, day, hour, minute, 0, 0)
-
+        seconds = (end_time - datetime.now()).total_seconds()
 
         if 'admin' in session:
-            return render_template("currentBooking.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = True)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], admin = True)
         else:
-            return render_template("currentBooking.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = False)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], admin = False)
 
     else:
        return redirect(url_for("index"))
