@@ -69,10 +69,12 @@ def profile():
          eventDetails['End Time'] = event.end_time
          # check end time
          if datetime.now() > event.end_time:
+             releaseEvent(event)
              if 'admin' in session:
                 return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, admin = True)
              else:
                 return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, admin = False)
+
          room = getBuildingRoomName(event.room_id)
          buildingname = room[0]
          roomname = room[1]
