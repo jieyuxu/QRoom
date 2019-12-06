@@ -42,10 +42,14 @@ def isGroupOpen(group, event_time):
     return ((event_time.time() >= start) and (event_time.time() <= end))
 
 def isAvailable(room):
+    group = getGroup(room)
+    if not isGroupOpen(group, datetime.now()):
+        return False
     markPassed()
     existEvent, event = findEarliest(room)
     if not existEvent:
         return True
+
     return isLater(datetime.now(), event.start_time)
 
 def get30(date_time):
@@ -76,14 +80,14 @@ def displayBookingButtons(room):
     group = getGroup(room)
 
     current_time = datetime.now()
-    
+
     if not isGroupOpen(group, current_time):
         return ZERO_BUTTONS
 
     for i in range(4):
         if i == 0:
             time = get30(datetime.now())
-        else: 
+        else:
             time = add30(time)
         isOpen = isGroupOpen(group, time)
         if not isOpen:
@@ -122,8 +126,8 @@ def getUser(net_id):
     return user
 
 def getUserEvent(net_id):
-    event = sess.query(Events).filter(Events.net_id == net_id).first()    
-    return event        
+    event = sess.query(Events).filter(Events.net_id == net_id).first()
+    return event
 
 def isAdmin(user):
     print(type(user))
@@ -208,7 +212,7 @@ def bookRoomAdHoc(user1, room, button_end_time):
                     end_time = button_end_time, room = room, passed = False)
 
     sess.add(event)
-    sess.commit() 
+    sess.commit()
 
     return ''
 
@@ -224,6 +228,7 @@ def getRooms(building):
             .filter(Rooms.building_id == building.building_id)\
             .all()
     dict = {}
+
     for r in rooms:
         dict[r] = isAvailable(r)
 
@@ -255,7 +260,7 @@ def getRoomObject(room_name, building_name):
 def getEventObject(event_id):
     event = sess.query(Events).filter(Events.event_id == event_id).first()
     return event
-    
+
 # get associated building name and room name from room_id
 def getBuildingRoomName(room_id):
     room = sess.query(Rooms).filter(Rooms.room_id == room_id).first()

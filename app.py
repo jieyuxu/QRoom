@@ -6,6 +6,7 @@ from flask_sqlalchemy_session import flask_scoped_session
 from utils.base import session_factory
 from CAS import CAS
 from CAS import login_required
+from pywebpush import webpush, WebPushException
 
 app = Flask(__name__)
 app.secret_key = 'stop bothering me honey'
@@ -19,6 +20,7 @@ app.config['CAS_AFTER_LOGIN'] = 'caslogin'
 app.config['CAS_AFTER_LOGOUT'] = 'http://princeton-qroom.herokuapp.com/caslogout'
 app.config['CAS_LOGIN_ROUTE'] = '/cas'
 #########################################
+
 @app.route('/')
 def index():
    if isLoggedIn():
@@ -69,10 +71,10 @@ def profile():
          eventid = event.event_id
 
       if 'admin' in session:
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, 
+         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
                                  event=eventDetails, eventid=eventid, building=buildingname, room=roomname, admin = True)
       else:
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, 
+         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
                                  event=eventDetails, eventid=eventid, building=buildingname, room=roomname, admin = False)
    else:
       return redirect(url_for("index"))
@@ -103,10 +105,10 @@ def rooms():
         for r in rooms_query.keys():
            rooms[r.room_name] = rooms_query[r]
         if 'admin' in session:
-           return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username, 
+           return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username,
                                     building=building, rooms=rooms, admin = True)
         else:
-           return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username, 
+           return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username,
                                     building=building, rooms=rooms, admin = False)
     else:
        return redirect(url_for("index"))
@@ -151,7 +153,7 @@ def viewRoom():
       # get current time and get delta 30
       # get until 0:00
       time = get30(datetime.now())
-      # get all events in room for a certain day 
+      # get all events in room for a certain day
       events = getEvents(getRoomObject(room, building))
       print('printing all events')
       print(events)
@@ -199,7 +201,7 @@ def confirmation():
 
         # updates database, returns empty string if successful
         print("username:" + cas.username)
-        print("confirmatino" + str(type(user)))
+        print("confirmation" + str(type(user)))
         error = bookRoomAdHoc(user, room_object, end_time)
 
         if 'admin' in session:
@@ -217,10 +219,10 @@ def releaseRoom():
       roomname = request.args.get('room')
       event = getEventObject(eventid)
       releaseEvent(event)
-   
+
       if 'admin' in session:
          return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, admin = True)
-      else:          
+      else:
          return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, admin = False)
    else:
       return redirect(url_for("index"))
@@ -309,6 +311,28 @@ def handleSchedule():
 
             bookFlag = True
             return redirect(url_for("admin", addMessage = '', bookMessage = eventMessage, addFlag = False, bookFlag = bookFlag))
+
+@app.route('/currentBooking', methods = ['GET', 'POST'])
+def currentBooking():
+    if isLoggedIn():
+        buildingname = request.args.get('building')
+        roomname = request.args.get('room')
+        time = str(request.args.get('fullTime'))
+        year = int(time[0:4])
+        month = int(time[5:7])
+        day = int(time[8:10])
+        hour = int(time[11:13])
+        minute = int(time[14:16])
+        end_time = datetime(year, month, day, hour, minute, 0, 0)
+
+
+        if 'admin' in session:
+            return render_template("currentBooking.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = True)
+        else:
+            return render_template("currentBooking.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = False)
+
+    else:
+       return redirect(url_for("index"))
 
 
 def isLoggedIn():
