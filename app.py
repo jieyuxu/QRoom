@@ -335,8 +335,8 @@ def handleSchedule():
 @app.route('/currentBooking', methods = ['GET', 'POST'])
 def currentBooking():
     if isLoggedIn():
-        buildingname = request.args.get('building')
-        roomname = request.args.get('room')
+        building = request.args.get('building')
+        room = request.args.get('room')
         time = str(request.args.get('fullTime'))
         year = int(time[0:4])
         month = int(time[5:7])
