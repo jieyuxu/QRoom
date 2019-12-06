@@ -22,6 +22,6 @@ url = 'postgresql://postgres:{}@localhost:5555/qroom'.format(password)
 # url = os.environ['DATABASE_URL']
 
 # url = 'postgresql+psycopg2://bob:hi@localhost/mydb'
-url = 'postgresql://localhost/mydb'
+# url = 'postgresql://localhost/mydb'
 engine = create_engine(url)
 session_factory = sessionmaker(bind=engine)
