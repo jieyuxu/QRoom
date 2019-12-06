@@ -22,4 +22,34 @@
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
+</script>
+
+<script>
+  function checkEvents() {
+    console.log('in checkEvents');
+    end = event['End Time'];
+    console.log(end);
+    year = int(end[0:4]);
+    month = int(end[5:7]);
+    day = int(end[8:10]);
+    hour = int(end[11:13]);
+    minute = int(end[14:16]);
+    end_time = datetime(year, month, day, hour, minute, 0, 0);
+    now_time = datetime.now();
+
+    if (end_time > now_time) event = null;
+
+    return event;
+  }
+
+
+  function setup() {
+    if event.items():
+      event = checkEvents();
+  }
+
+
+  $('document').ready(setup);
+</script>
 {% endblock %}
