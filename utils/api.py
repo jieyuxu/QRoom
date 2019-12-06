@@ -1,5 +1,5 @@
 from utils.database import Buildings, Rooms, Events, Groups, Users
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from sqlalchemy import or_, and_
 from flask_sqlalchemy_session import current_session
 
@@ -38,12 +38,26 @@ def isLater(current_time, start_time):
 def isGroupOpen(group, event_time):
     start = group.open_time
     end = group.close_time
+    x = time(event_time.hour, event_time.minute, event_time.second, 00)
+    """Return true if x is in the range [start, end]"""
+    if start <= end:
+        return start <= x <= end
+    else:
+        return start <= x or x <= end
 
-    return ((event_time.time() >= start) and (event_time.time() <= end))
+# def isGroupOpen(group, event_time):
+#     start = group.open_time
+#     end = group.close_time
+#     print(event_time.time())
+#     print(start)
+#     print(end)
+#
+#     return ((event_time.time() >= start) and (event_time.time() <= end))
 
 def isAvailable(room):
     group = getGroup(room)
-    if not isGroupOpen(group, datetime.now()):
+    if isGroupOpen(group, datetime.now()) == False:
+        print('hi')
         return False
     markPassed()
     existEvent, event = findEarliest(room)
