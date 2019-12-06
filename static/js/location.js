@@ -13,7 +13,7 @@ var options = {
   maximumAge: 0,
 };
 
-function error() {
+function error(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
   alert("The application needs your current location to book a room.")
 }
