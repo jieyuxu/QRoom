@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, Time, Boolean, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime, Time, Boolean, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from utils.base import Base
 
@@ -8,6 +8,8 @@ class Buildings(Base):
 
     building_id = Column(Integer, primary_key=True)
     building_name = Column(String(120), unique=True)
+    latitude = Column(Float)
+    longitude = Column(Float)
 
     # a building can be associated with more than 1 room
     rooms = relationship("Rooms", backref='building')

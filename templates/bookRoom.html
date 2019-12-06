@@ -7,6 +7,7 @@
 {% block content %}
 <div class="section mt-5 pt-5" id="rooms">
    <div class="container">
+       <span class="building" building="{{building}}"></span>
        <div class="section-title">
             <center><h3>{{building}} - {{room}}</h3></center>
             <h4>Available Times</h4>
@@ -14,9 +15,13 @@
    
        <div class="list-group list-group-flush">
          {% for time in times %}
-            <a href={{url_for('confirmation', building=building, room=room, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action">{{time}}</a>
+         <form method="post">
+            <a href={{url_for('confirmation', building=building, room=room, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action" onclick="checkLocation()">{{time}}</a>
+        </form>
          {% endfor %}
-         </div>
+        </div>
 </div>
- {% endblock %}
-
+{% endblock %}
+{% block extrajs %}
+<script src="../static/js/location.js"></script>
+{% endblock %}

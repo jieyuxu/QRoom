@@ -16,12 +16,12 @@ print('commited stuff')
 Base.metadata.create_all(engine)
 
 #4 - populate database
-firestone = Buildings(building_name = "Firestone")
-frist = Buildings(building_name = "Frist")
-lewis = Buildings(building_name = "Lewis")
+firestone = Buildings(building_name = "Firestone", latitude=40.3496, longitude=74.6574)
+frist = Buildings(building_name = "Frist", latitude=40.3468, longitude=74.6552)
+lewis = Buildings(building_name = "Lewis", latitude=40.3461, longitude=74.6526)
 
-group1 = Groups(open_time = time(0,00,00), close_time = time(23,00,00))
-group2 = Groups(open_time = time(0,00,00), close_time = time(20,00,00))
+group1 = Groups(open_time = time(8,00,00), close_time = time(00,00,00))
+group2 = Groups(open_time = time(8,00,00), close_time = time(20,00,00))
 
 
 room1 = Rooms(building = firestone, room_name = '101', group = group1)
