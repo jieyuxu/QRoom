@@ -12,12 +12,10 @@
             <center><h3>{{building}} - {{room}}</h3></center>
             <h4>Available Times</h4>
        </div>
-   
+
        <div class="list-group list-group-flush">
          {% for time in times %}
-         <form method="post">
-            <a href={{url_for('confirmation', building=building, room=room, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action" onclick="checkLocation()">{{time}}</a>
-        </form>
+            <a href={{url_for('currentBooking', building=building, room=room, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action">{{time}}</a>
          {% endfor %}
         </div>
 </div>

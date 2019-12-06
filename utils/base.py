@@ -16,25 +16,12 @@ url = 'postgresql://postgres:{}@localhost:5555/qroom'.format(password)
 
 # the values of those depend on your setup
 
-# export POSTGRES_URL="127.0.0.1:5432"
-# export POSTGRES_USER="postgres"
-# export POSTGRES_PW="dbpw"
-# export POSTGRES_DB="mydb"
-
-# POSTGRES_URL = get_env_variable("POSTGRES_URL")
-# POSTGRES_USER = get_env_variable("POSTGRES_USER")
-# POSTGRES_PW = get_env_variable("POSTGRES_PW")
-# POSTGRES_DB = get_env_variable("POSTGRES_DB")
-
 # url = 'postgresql+psycopg2://user:password@hostname/mydb'
 
 # THIS URL IS FOR HEROKU POSTGRES. PLEASE COMMENT ONLY, DON'T DELETE
 # url = os.environ['DATABASE_URL']
 
-<<<<<<< HEAD
-url = 'postgresql+psycopg2://localhost/mydb'
-=======
 # url = 'postgresql+psycopg2://bob:hi@localhost/mydb'
->>>>>>> ed2fae230827a52dae3f3d0e5fe94d090d230227
+url = 'postgresql://localhost/mydb'
 engine = create_engine(url)
 session_factory = sessionmaker(bind=engine)
