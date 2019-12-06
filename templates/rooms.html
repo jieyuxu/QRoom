@@ -12,11 +12,15 @@
    
        <div class="list-group list-group-flush">
           {% for key, value in rooms.items(): %}
-            <a href={{url_for('bookRoom', building=building, room=key)}} class="list-group-item list-group-item-action">
-              Room {{key}}
+            <!-- <a href={{url_for('bookRoom', building=building, room=key)}} class="list-group-item list-group-item-action">
+              Room {{key}} -->
             {%if value %}
+            <a href={{url_for('bookRoom', building=building, room=key)}} class="list-group-item list-group-item-action">
+                Room {{key}}
               <span class="badge badge-success float-right">Available</span>
             {% else %}
+              <a class="list-group-item list-group-item-action">
+                Room {{key}}
               <span class="badge badge-danger float-right">Unavailable</span>
             {%endif%}</a>
           {% endfor %}
