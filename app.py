@@ -302,16 +302,8 @@ def handleSchedule():
                print(key, val)
             building_id = request.form['building']
             room_id = request.form['room-id']
-            start_year = request.form['starting-year-id']
-            start_month = request.form['starting-month-id']
-            start_day = request.form['starting-day-id']
-            start_hour = request.form['starting-hour-id']
-            start_minutes = request.form['starting-min-id']
-            end_year = request.form['ending-year-id']
-            end_month = request.form['ending-month-id']
-            end_day = request.form['ending-day-id']
-            end_hour = request.form['ending-hour-id']
-            end_minutes = request.form['ending-min-id']
+            start_time = request.form['start-time']
+            end_time = request.form['end-time']
 
             # check that the room id is in the building
             # building_object = getBuildingObject(building_id)
@@ -321,6 +313,18 @@ def handleSchedule():
                 return redirect(url_for("admin", addMessage = '', bookMessage = roomMessage, addFlag = False, bookFlag = bookFlag))
 
             # make a datetime object for the start and end
+            start_year = start_time[:4]
+            start_month = start_time[5:7]
+            start_day = start_time[8:10]
+            start_hour = start_time[11:13]
+            start_minutes = start_time[14:16]
+
+            end_year = end_time[:4]
+            end_month= end_time[5:7]
+            end_day = end_time[8:10]
+            end_hour = end_time[11:13]
+            end_minutes = end_time[14:16]
+
             start = datetime(int(start_year), int(start_month), int(start_day), int(start_hour), int(start_minutes))
             end = datetime(int(end_year), int(end_month), int(end_day), int(end_hour), int(end_minutes))
             current_user = getUserObject(cas.username)
