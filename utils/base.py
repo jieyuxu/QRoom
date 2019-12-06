@@ -31,6 +31,10 @@ url = 'postgresql://postgres:{}@localhost:5555/qroom'.format(password)
 # THIS URL IS FOR HEROKU POSTGRES. PLEASE COMMENT ONLY, DON'T DELETE
 # url = os.environ['DATABASE_URL']
 
+<<<<<<< HEAD
+url = 'postgresql+psycopg2://localhost/mydb'
+=======
 # url = 'postgresql+psycopg2://bob:hi@localhost/mydb'
+>>>>>>> ed2fae230827a52dae3f3d0e5fe94d090d230227
 engine = create_engine(url)
 session_factory = sessionmaker(bind=engine)
