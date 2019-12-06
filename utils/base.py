@@ -29,6 +29,6 @@ Base = declarative_base()
 # url = 'postgresql+psycopg2://user:password@hostname/mydb'
 
 
-url = 'postgresql+psycopg2://bob:hi@localhost/mydb'
+url = 'postgresql+psycopg2://localhost/mydb'
 engine = create_engine(url)
 session_factory = sessionmaker(bind=engine)
