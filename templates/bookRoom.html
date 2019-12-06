@@ -1,16 +1,22 @@
 {% extends 'base.html' %}
+{% block extracss%}
+    <!-- Main css -->
+    <link href="../static/css/style.css" rel="stylesheet">
+    <!-- <link href="themify-icons.css" rel="stylesheet"> -->
+{% endblock %}
 {% block content %}
-<div class="section light-bg mt-5 pt-5" id="rooms">
+<div class="section mt-5 pt-5" id="rooms">
    <div class="container">
        <div class="section-title">
             <center><h3>{{building}} - {{room}}</h3></center>
             <h4>Available Times</h4>
        </div>
    
-       <div class="list-group">
+       <div class="list-group list-group-flush">
          {% for time in times %}
             <a href={{url_for('confirmation', building=building, room=room, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action">{{time}}</a>
          {% endfor %}
          </div>
 </div>
  {% endblock %}
+

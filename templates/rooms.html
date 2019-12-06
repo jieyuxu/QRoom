@@ -1,17 +1,24 @@
 {% extends 'base.html' %}
+{% block extracss%}
+    <link href="../static/css/style.css" rel="stylesheet">
+{% endblock %}
 {% block content %}
-<div class="section light-bg mt-5 pt-5" id="rooms">
+<div class="section mt-5 pt-5" id="rooms">
    <div class="container">
        <div class="section-title">
             <center><h3>{{building}}</h3></center>
             <h4>All Rooms</h4>
        </div>
    
-       <div class="list-group">
+       <div class="list-group list-group-flush">
           {% for key, value in rooms.items(): %}
             <a href={{url_for('bookRoom', building=building, room=key)}} class="list-group-item list-group-item-action">
-              {{key}}
-            {{value}} </a>
+              Room {{key}}
+            {%if value %}
+              <span class="badge badge-success float-right">Available</span>
+            {% else %}
+              <span class="badge badge-danger float-right">Unavailable</span>
+            {%endif%}</a>
           {% endfor %}
       </div>
   </div>

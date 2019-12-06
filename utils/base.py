@@ -6,7 +6,7 @@ import os
 
 Base = declarative_base()
 
-# password = pgpasslib.getpass('localhost', 5432, 'qroom', 'postgres')
+# password = pgpasslib.getpass('localhost', 5555, 'qroom', 'postgres')
 # if not password:
 #     raise ValueError('Did not find a password in the .pgpass file')
 
@@ -28,7 +28,13 @@ Base = declarative_base()
 
 # url = 'postgresql+psycopg2://user:password@hostname/mydb'
 
+# THIS URL IS FOR HEROKU POSTGRES. PLEASE COMMENT ONLY, DON'T DELETE
+url = os.environ['DATABASE_URL']
 
+<<<<<<< HEAD
 url = 'postgresql+psycopg2://localhost/mydb'
+=======
+# url = 'postgresql+psycopg2://bob:hi@localhost/mydb'
+>>>>>>> ed2fae230827a52dae3f3d0e5fe94d090d230227
 engine = create_engine(url)
 session_factory = sessionmaker(bind=engine)

@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+{% block extracss%}
+    <!-- Main css -->
+    <link href="../static/css/style.css" rel="stylesheet">
+    <!-- <link href="themify-icons.css" rel="stylesheet"> -->
+{% endblock %}
 {% block content %}
-<div class="section light-bg mt-5 pt-5" id="rooms">
+<div class="section mt-5 pt-5" id="rooms">
    <div class="container">
        <div class="section-title">
             <h2>Admin Portal</h2>
@@ -18,102 +23,132 @@
           </div>
         {% endif %}
        <form action = "/handleAddUser" method = "post">
-	 <div class="form-group">
-	   <label for="newAdmin">User to add as admin:</label>
-	   <input type="newAdmin" class="form-control" name="admin-id" id="newAdmin" placeholder="Enter user's netid">
-	 </div>
-	 <button action="submit" class="btn btn-default">Submit</button>
+          <div class="form-group">
+            <label for="newAdmin">User to add as admin:</label>
+            <input type="newAdmin" class="form-control" name="admin-id" id="newAdmin" placeholder="Enter user's netid">
+          </div>
+          <button action="submit" class="btn btn-primary">Submit</button>
        </form>
-       <h3>Book a Room in Advance</h3>
+       <h3 class="mt-4">Book a Room in Advance</h3>
+       {% if bookMessage %}
+        <div class="alert alert-danger" role="alert">
+            Room could not be booked.
+        </div>
+       {% endif %}
+        {% if bookSuccess %}
+          <div class="alert alert-danger" role="alert">
+              Room has been booked succesfully.
+          </div>
+        {% endif %}
        <form action = "/handleSchedule" method = "post">
-         <div class="form-group">
-           <select name="building">
-            {% for building in buildings %}
-              <option value="{{building}}" name="choice">{{building}}</option>
-            {% endfor %}
-           </select>
-	 </div>
-	 <div class="form-group row">
-           <label class="col-sm-2 col-form-label" for="room">Rooms:</label>
-           <div class="col-sm-10">
-              <input type="room" class="form-control" name="room-id" id="room" placeholder="Enter desired room">
+        <div class="row">
+            <div class="col col-md-6">
+                <div class="form-group">
+                    <select class="form-control" name="building">
+                     {% for building in buildings %}
+                       <option value="{{building}}" name="choice">{{building}}</option>
+                     {% endfor %}
+                    </select>
+                 </div>
             </div>
-    </div>
-	 <div class="form-group row">
-           <label class="col-sm-2 col-form-label" for="startingYear">Starting Year:</label>
-           <div class="col-sm-10">
-              <input type="startingYear" class="form-control" name="starting-year-id" id="startingYear" placeholder="Enter year of start date">
+            <div class="col col-md-6">
+                <div class="form-group row">
+                    <label class="col-form-label" for="room">Room:</label>
+                    <div class="col-sm-10">
+                       <input type="room" class="form-control" name="room-id" id="room" placeholder="Enter desired room">
+                     </div>
+                </div>
             </div>
-         </div>
-	  <div class="form-group row">
-           <label class="col-sm-2 col-form-label" for="startingMonth">Starting Month:</label>
-           <div class="col-sm-10">
-              <input type="startingMonth" class="form-control" name="starting-month-id" id="startingMonth" placeholder="Enter month of start date">
-            </div>
-         </div>
-	  <div class="form-group row">
-           <label class="col-sm-2 col-form-label" for="startingDate">Starting Date:</label>
-           <div class="col-sm-10">
-              <input type="startingDate" class="form-control" name="starting-day-id" id="startingDate" placeholder="Enter start date">
-            </div>
-         </div>
-	  <div class="form-group row">
-           <label class="col-sm-2 col-form-label" for="startingYear">Starting Hour:</label>
-           <div class="col-sm-10">
-              <input type="startingHour" class="form-control" name="starting-hour-id" id="startingHour" placeholder="Enter starting hour">
-            </div>
-         </div>
-
-	 <div class="form-group row">
-           <label class="col-sm-2 col-form-label" for="startingMin">Starting Minute:</label>
-           <div class="col-sm-10">
-              <input type="startingMin" class="form-control" name="starting-min-id" id="startingMin" placeholder="Enter starting minute">
-            </div>
-         </div>
-
-	 <div class="form-group row">
-           <label class="col-sm-2 col-form-label" for="endingYear">Ending Year:</label>
-           <div class="col-sm-10">
-              <input type="endingYear" class="form-control" name="ending-year-id" id="endingYear" placeholder="Enter year of end date">
-            </div>
-	 </div>
-         
-	 <div class="form-group row">
-           <label class="col-sm-2 col-form-label" for="endingMonth">Ending Month:</label>
-           <div class="col-sm-10">
-              <input type="endingMonth" class="form-control" name="ending-month-id" id="endingMonth" placeholder="Enter month of end date">
-            </div>
-         </div>
-
-          <div class="form-group row">
-           <label class="col-sm-2 col-form-label" for="endingDate">Ending Date:</label>
-           <div class="col-sm-10">
-              <input type="endingDate" class="form-control" name="ending-day-id" id="endingDate" placeholder="Enter end date">
-            </div>
-         </div>
-
-          <div class="form-group row">
-           <label class="col-sm-2 col-form-label" for="endingYear">Ending Hour:</label>
-           <div class="col-sm-10">
-              <input type="endingHour" class="form-control" name="ending-hour-id" id="endingHour" placeholder="Enter ending hour">
-            </div>
-         </div>
-
-         <div class="form-group row">
-           <label class="col-sm-2 col-form-label" for="endingMin">Ending Minute:</label>
-           <div class="col-sm-10">
-              <input type="endingMin" class="form-control" name="ending-min-id" id="endingMin" placeholder="Enter ending minute">
-            </div>
-         </div>
-
+        </div>
+        <div class="row">
+          <div class="col col-md-4">
+              <div class="form-group row">
+                  <label class="col-form-label" for="startingYear">Starting Year:</label>
+                  <div class="col-sm-10">
+                     <input type="startingYear" class="form-control" name="starting-year-id" id="startingYear" placeholder="Enter year of start date">
+                   </div>
+              </div>
+          </div>
+          <div class="col col-md-4">
+              <div class="form-group row">
+                  <label class="col-form-label" for="startingMonth">Starting Month:</label>
+                  <div class="col-sm-10">
+                     <input type="startingMonth" class="form-control" name="starting-month-id" id="startingMonth" placeholder="Enter month of start date">
+                   </div>
+              </div>
+          </div>
+          <div class="col col-md-4">
+              <div class="form-group row">
+                  <label class="col-form-label" for="startingDate">Starting Day:</label>
+                  <div class="col-sm-10">
+                     <input type="startingDate" class="form-control" name="starting-day-id" id="startingDate" placeholder="Enter start date">
+                   </div>
+              </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-md-4">
+              <div class="form-group row">
+                  <label class="col-form-label" for="startingYear">Starting Hour:</label>
+                   <div class="col-sm-10">
+                     <input type="startingHour" class="form-control" name="starting-hour-id" id="startingHour" placeholder="Enter starting hour">
+                   </div>
+              </div>
+          </div>
+          <div class="col col-md-4">
+              <div class="form-group row">
+                  <label class="col-form-label " for="startingMin">Starting Minute:</label>
+                  <div class="col-sm-10">
+                     <input type="startingMin" class="form-control" name="starting-min-id" id="startingMin" placeholder="Enter starting minute">
+                   </div>
+              </div>
+          </div>
+          <div class="col col-md-4">
+              <div class="form-group row">
+                  <label class="col-form-label" for="endingYear">Ending Year:</label>
+                  <div class="col-sm-10">
+                     <input type="endingYear" class="form-control" name="ending-year-id" id="endingYear" placeholder="Enter year of end date">
+                   </div>
+              </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-md-4">
+              <div class="form-group row">
+                  <label class="col-form-label" for="endingMonth">Ending Month:</label>
+                  <div class="col-sm-10">
+                     <input type="endingMonth" class="form-control" name="ending-month-id" id="endingMonth" placeholder="Enter month of end date">
+                   </div>
+                </div>
+          </div>
+          <div class="col col-md-4">
+              <div class="form-group row">
+                  <label class="col-form-label" for="endingDate">Ending Date:</label>
+                  <div class="col-sm-10">
+                     <input type="endingDate" class="form-control" name="ending-day-id" id="endingDate" placeholder="Enter end date">
+                   </div>
+                </div>
+          </div>
+          <div class="col col-md-4">
+              <div class="form-group row">
+                  <label class="col-form-label" for="endingYear">Ending Hour:</label>
+                  <div class="col-sm-10">
+                     <input type="endingHour" class="form-control" name="ending-hour-id" id="endingHour" placeholder="Enter ending hour">
+                   </div>
+                </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-md-4">
+              <div class="form-group row">
+                  <label class="col-form-label" for="endingMin">Ending Minute:</label>
+                  <div class="col-sm-10">
+                     <input type="endingMin" class="form-control" name="ending-min-id" id="endingMin" placeholder="Enter ending minute">
+                   </div>
+                </div>
+          </div>
+        </div>
          <button action="submit" class="btn btn-primary">Submit</button>
        </form>
-       {% if bookMessage|length %}
-         <h4>Room could not be booked.</h4>
-       {% endif %}
-       {% if bookSucess %}
-         <h4>Room has been booked succesfully.</h4>
-       {% endif %}
-
 </div>
  {% endblock %}

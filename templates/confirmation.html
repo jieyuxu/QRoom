@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
+{% block extracss%}
+    <link href="../static/css/style.css" rel="stylesheet">
+{% endblock %}
 {% block content %}
-<div class="section light-bg mt-5 pt-5" id="confirmation">
+<div class="section mt-5 pt-5" id="confirmation">
    <div class="container">
        <div class="section-title">
 	 {% if error|length %}
@@ -8,8 +11,20 @@
 	 {% else %}
 	    <h2>Confirmed!</h2>
 	    <h3>{{building}} - {{room}}</h3>
-	    <h2>{{fullTime}}</h2>
+		<h2>{{fullTime}}</h2>
+		<p>Redirecting you to your profile in 5 seconds. Click <a href="/profile">here</a> to redirect now.</p>
 	 {% endif %}
        </div>
 </body>
+ {% endblock %}
+ {% block extrajs %}
+ <script>    
+      window.setTimeout(function(){
+ 
+        // Move to a new location or you can do something else
+        window.location.href = "/profile";
+
+        }, 5500);
+ 
+  </script>
  {% endblock %}
