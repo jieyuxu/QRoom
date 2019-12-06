@@ -221,6 +221,11 @@ def getBuildings():
     buildings = sess.query(Buildings).all()
     return buildings
 
+def getLatLong(building):
+    bldg = sess.query(Buildings)\
+        .filter(Buildings.building_name == building).one()
+    return bldg.latitude, bldg.longitude
+
 # get rooms assos with building object, return dictionary with key = room and
 # object = boolean for availability
 def getRooms(building):

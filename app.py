@@ -4,12 +4,13 @@ import os
 from utils.api import *
 from flask_sqlalchemy_session import flask_scoped_session
 from utils.base import session_factory
+from distance import distance
 from CAS import CAS
 from CAS import login_required
 from pywebpush import webpush, WebPushException
 
 app = Flask(__name__)
-app.secret_key = 'stop bothering me honey'
+app.secret_key = 'hello its me'
 # print(os.random(24))
 sess = flask_scoped_session(session_factory, app)
 
@@ -17,7 +18,8 @@ sess = flask_scoped_session(session_factory, app)
 cas = CAS(app)
 app.config['CAS_SERVER'] = "https://fed.princeton.edu/cas/login"
 app.config['CAS_AFTER_LOGIN'] = 'caslogin'
-app.config['CAS_AFTER_LOGOUT'] = 'http://princeton-qroom.herokuapp.com/caslogout'
+# app.config['CAS_AFTER_LOGOUT'] = 'http://princeton-qroom.herokuapp.com/caslogout'
+app.config['CAS_AFTER_LOGOUT'] = 'localhost:5000/caslogout'
 app.config['CAS_LOGIN_ROUTE'] = '/cas'
 #########################################
 
@@ -112,6 +114,24 @@ def rooms():
                                     building=building, rooms=rooms, admin = False)
     else:
        return redirect(url_for("index"))
+
+@app.route('/checkcoordinates', methods=['GET', 'POST'])
+def checkCoordinates():
+   print("received request")
+   if isLoggedIn() and request.method == 'POST':
+      if request.is_json:
+         content = request.get_json()
+         userLat = content['latitude']
+         userLong = content['longitude']
+         building = content['building']
+
+         bldgLat, bldgLong = getLatLong(building)
+         dist = distance(userLat, bldgLat, userLong, bldgLong)
+         if dist > 0.2:
+            return "You are too far away from " + building + " to book a room. You must be within 200 meters of a building to book a room."
+         # code to confirm location
+         return ""
+
 
 @app.route('/bookRoom', methods=['GET', 'POST'])
 def bookRoom():
