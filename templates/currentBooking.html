@@ -12,10 +12,15 @@
          {{room}}
          <br>
          end time : {{fullTime}}
+        <br>
+         {{seconds}}
+
+         <button onclick="myFunction()">Get Notifications</button>
    <script>
-      function checkTime(){
-        let end_time =
-      }
+     function myFunction() {
+       setInterval(function(){
+         alert("10 minutes left"); }, 2);
+     }
 
   </script>
 

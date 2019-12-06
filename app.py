@@ -344,12 +344,12 @@ def currentBooking():
         hour = int(time[11:13])
         minute = int(time[14:16])
         end_time = datetime(year, month, day, hour, minute, 0, 0)
-
+        seconds = (end_time - datetime.now()).total_seconds()
 
         if 'admin' in session:
-            return render_template("currentBooking.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = True)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = True)
         else:
-            return render_template("currentBooking.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = False)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = False)
 
     else:
        return redirect(url_for("index"))
