@@ -6,22 +6,34 @@
 <div class="section mt-5 pt-5" id="features">
     <div class="container">
         <div class="section-title pl-4">
-            <h3>Current Booking</h3>
-            {% if event is defined %}
-              {% if event.items() %}
-                  <div class="card-deck">
-                      <div class="card" style="width: 18rem;">
-                                  <div class="card-body">
-                                  <span><h5 class="card-title">{{building}}</h5>
-                                  <h6 class="card-subtitle mb-2 text-muted">Room {{room}}</h6>
-                                  <p class="card-text">{% for key, val in event.items() %}{{key}}: {{val}}<br>{% endfor %}</p>
-                                  <a href={{url_for('currentBooking', building=building, room=room, fullTime=event['End Time'])}} class="btn btn-info">Get Info</a>
-                                  <a href={{url_for('releaseRoom', building=building, room=room, eventid=eventid)}} class="btn btn-info">Release Room</a>
-                                  </div>
-                              </div>
-                      </div>
-              {% endif %}
-            {% endif %}
+          {% if admin %}
+              <h3>Current Bookings</h3>
+          {% else %}
+              <h3>Current Booking</h3>
+          {% endif %}
+
+          {% for event in events %}
+              <div class="card-deck">
+                  <div class="card" style="width: 18rem;">
+                          <div class="card-body">
+                              <span><h5 class="card-title">{{event['buildingName']}}</h5>
+                              <h6 class="card-subtitle mb-2 text-muted">Room {{event['roomName']}}</h6>
+                              <p class="card-text">
+                                  Start Time: {{event['StartTime']}}
+                                  End Time: {{event['EndTime']}}
+                              </p>
+                              <a href={{url_for('currentBooking', building=event['buildingName'],
+                              room=event['roomName'], fullTime=event['EndTime'])}}
+                              class="btn btn-info">Get Info</a>
+
+                              <a href={{url_for('releaseRoom', building=event['buildingName'],
+                              room=event['roomName'], eventid=event['eventId'])}}
+                              class="btn btn-info">Release Room</a>
+                          </div>
+                  </div>
+              </div>
+          {% endfor %}
+          
         </div>
     </div>
 </div>

@@ -35,29 +35,20 @@ def isLater(current_time, start_time):
         return True
     return False
 
+# taken from stack overflow
 def isGroupOpen(group, event_time):
     start = group.open_time
     end = group.close_time
     x = time(event_time.hour, event_time.minute, event_time.second, 00)
-    """Return true if x is in the range [start, end]"""
+    # Return true if x is in the range [start, end]
     if start <= end:
         return start <= x <= end
     else:
         return start <= x or x <= end
 
-# def isGroupOpen(group, event_time):
-#     start = group.open_time
-#     end = group.close_time
-#     print(event_time.time())
-#     print(start)
-#     print(end)
-#
-#     return ((event_time.time() >= start) and (event_time.time() <= end))
-
 def isAvailable(room):
     group = getGroup(room)
     if isGroupOpen(group, datetime.now()) == False:
-        print('hi')
         return False
     markPassed()
     existEvent, event = findEarliest(room)
@@ -66,11 +57,8 @@ def isAvailable(room):
 
     return isLater(datetime.now(), event.start_time)
 
+# taken from stack overflow
 def get30(date_time):
-    # print("current date time:", date_time)
-    # print("datetime.min - date_time", datetime.min - date_time)
-    # print("timedelta", timedelta(minutes=delta))
-
     return date_time + (datetime.min - date_time) % timedelta(minutes=30)
 
 def add30(date_time):
@@ -126,7 +114,6 @@ def hasBooked(user):
 # if user already exists, return user object
 # else makes new user objects with admin = False, add to database,
 # and returns new object
-
 def getUser(net_id):
     user = sess.query(Users)\
             .filter(Users.net_id == net_id)\
@@ -139,8 +126,9 @@ def getUser(net_id):
         sess.commit()
     return user
 
+# returns all events of a user, passed and unpassed
 def getUserEvent(net_id):
-    event = sess.query(Events).filter(Events.net_id == net_id).first()
+    event = sess.query(Events).filter(Events.net_id == net_id).all()
     return event
 
 def isAdmin(user):

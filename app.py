@@ -58,34 +58,36 @@ def caslogout():
 
 @app.route('/profile')
 def profile():
-   if isLoggedIn():
-      event = getUserEvent(session['username'])
-      eventDetails = {}
-      buildingname=''
-      roomname=''
-      eventid=''
-      if event is not None:
-         eventDetails['Start Time'] = event.start_time
-         eventDetails['End Time'] = event.end_time
-         # check end time
-         if datetime.now() > event.end_time:
-             if 'admin' in session:
-                return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, admin = True)
-             else:
-                return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, admin = False)
-         room = getBuildingRoomName(event.room_id)
-         buildingname = room[0]
-         roomname = room[1]
-         eventid = event.event_id
+    if isLoggedIn():
+        event_query = getUserEvent(session['username'])
+        buildingname=''
+        roomname=''
+        eventid=''
 
-      if 'admin' in session:
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
-                                 event=eventDetails, eventid=eventid, building=buildingname, room=roomname, admin = True)
-      else:
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
-                                 event=eventDetails, eventid=eventid, building=buildingname, room=roomname, admin = False)
-   else:
-      return redirect(url_for("index"))
+        # an array of eventDetails
+        events = []
+        for event in event_query:
+            # check end time and if it has passed
+            if (datetime.now() > event.end_time):
+              continue
+
+            eventDetails = {}
+            eventDetails['StartTime'] = event.start_time
+            eventDetails['EndTime'] = event.end_time
+            room = getBuildingRoomName(event.room_id)
+            eventDetails['buildingName'] = room[0]
+            eventDetails['roomName'] = room[1]
+            eventDetails['eventId'] = event.event_id
+            events.append(eventDetails)
+
+        if 'admin' in session:
+            return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
+                           events = events, admin = True)
+        else:
+            return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
+                           events = events, admin = False)
+    else:
+        return redirect(url_for("index"))
 
 @app.route('/buildings', methods=['GET', 'POST'])
 def buildings():
