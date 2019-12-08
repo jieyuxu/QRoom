@@ -7,7 +7,6 @@ from utils.base import session_factory
 from distance import distance
 from CAS import CAS
 from CAS import login_required
-from pywebpush import webpush, WebPushException
 
 app = Flask(__name__)
 app.secret_key = 'hello its me'
@@ -58,6 +57,8 @@ def caslogout():
 
 @app.route('/profile')
 def profile():
+    UTC = timezone('UTC')
+
     if isLoggedIn():
         event_query = getUserEvent(session['username'])
         buildingname=''
@@ -68,12 +69,19 @@ def profile():
         events = []
         for event in event_query:
             # check end time and if it has passed
-            if (datetime.now() > event.end_time):
+            if (datetime_now() > event.end_time):
               continue
 
             eventDetails = {}
-            eventDetails['StartTime'] = event.start_time
-            eventDetails['EndTime'] = event.end_time
+
+            st = (event.start_time).replace(tzinfo=UTC)
+            st = datetime_to_timezone(st, 'est')
+            eventDetails['StartTime'] = st
+
+            et = (event.end_time).replace(tzinfo=UTC)
+            et = datetime_to_timezone(et, 'est')
+            eventDetails['EST_EndTime'] = et
+            eventDetails['UTC_EndTime'] = event.end_time
             room = getBuildingRoomName(event.room_id)
             eventDetails['buildingName'] = room[0]
             eventDetails['roomName'] = room[1]
@@ -144,10 +152,8 @@ def checkCoordinates():
 @app.route('/bookRoom', methods=['GET', 'POST'])
 def bookRoom():
    THIRTY_MIN = 30
-
-   loggedin = False
-   if 'username' in session:
-      loggedin = True
+   EST = timezone('US/Eastern')
+   if isLoggedIn():
       building = request.args.get('building')
       room = str(request.args.get('room'))
       room_object = getRoomObject(room, building)
@@ -159,14 +165,15 @@ def bookRoom():
             time = get30(datetime.now())
          else:
             time = add30(time)
+
          times.append(str(time)[11:16])
-         fullTimes.append(str(time))
-      print(times)
-      print(fullTimes)
+         utc_time = datetime_to_timezone(time, 'utc')
+         fullTimes.append(str(utc_time))
+
       if 'admin' in session:
-         return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = True)
+         return render_template("bookRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = True)
       else:
-         return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = False)
+         return render_template("bookRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = False)
 
    else:
       return redirect(url_for("index"))
@@ -180,7 +187,7 @@ def viewRoom():
       print('room ', room)
       # get current time and get delta 30
       # get until 0:00
-      time = get30(datetime.now())
+      time = get30(datetime_now())
       # get all events in room for a certain day
       events = getEvents(getRoomObject(room, building))
       print('printing all events')
@@ -194,6 +201,7 @@ def viewRoom():
          print("curr object", e)
          times_blocked.append([e.start_time, e.end_time])
          count = count + 1
+
       while time.hour != 0:
          for t in times_blocked:
             dictionary[time] = isOpen(t[0], t[1], time)
@@ -214,17 +222,18 @@ def confirmation():
         building = request.args.get('building')
         room = request.args.get('room')
         # assuming time is a string form of datetime object, like '2021-08-28 05:55:59.342380'
-        time = str(request.args.get('fullTime'))
+        full_time = str(request.args.get('fullTime'))
+        time = str(request.args.get('time'))
         print("THIS IS THE TIME", time)
         # assuming 'username' means netid
         user = getUser(cas.username)
         print("THIS IS THE USER", user)
         room_object = getRoomObject(room, building)
-        year = int(time[0:4])
-        month = int(time[5:7])
-        day = int(time[8:10])
-        hour = int(time[11:13])
-        minute = int(time[14:16])
+        year = int(full_time[0:4])
+        month = int(full_time[5:7])
+        day = int(full_time[8:10])
+        hour = int(full_time[11:13])
+        minute = int(full_time[14:16])
         end_time = datetime(year, month, day, hour, minute, 0, 0)
 
         # updates database, returns empty string if successful
@@ -233,9 +242,9 @@ def confirmation():
         error = bookRoomAdHoc(user, room_object, end_time)
 
         if 'admin' in session:
-           return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = True)
+           return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = time, fullTime = full_time, admin = True)
         else:
-           return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = False)
+           return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = time, fullTime = full_time, admin = False)
     else:
       return redirect(url_for("index"))
 
@@ -345,23 +354,16 @@ def handleSchedule():
 def currentBooking():
     if isLoggedIn():
         building = request.args.get('building')
-        print(building)
         room = request.args.get('room')
-        print(room)
-        time = str(request.args.get('fullTime'))
-        print(time)
-        year = int(time[0:4])
-        month = int(time[5:7])
-        day = int(time[8:10])
-        hour = int(time[11:13])
-        minute = int(time[14:16])
-        end_time = datetime(year, month, day, hour, minute, 0, 0)
-        seconds = (end_time - datetime.now()).total_seconds()
+        est_end = request.args.get('est_end')
+        utc_end = request.args.get('utc_end')
+        dt_end = str_to_datetime(utc_end)
+        seconds = (dt_end - datetime_now()).total_seconds()
 
         if 'admin' in session:
-            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], admin = True)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(est_end)[11:16], admin = True)
         else:
-            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], admin = False)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(est_end)[11:16], admin = False)
 
     else:
        return redirect(url_for("index"))

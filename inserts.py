@@ -1,7 +1,8 @@
 from utils.database import Buildings, Rooms, Events, Groups, Users
 from utils.base import session_factory, engine, Base
-from datetime import time, datetime
+from datetime import time, datetime, date
 from utils.api import *
+from pytz import timezone
 
 # 2 - generate database schema
 # session = current_session
@@ -20,8 +21,11 @@ firestone = Buildings(building_name = "Firestone", latitude=40.3496, longitude=7
 frist = Buildings(building_name = "Frist", latitude=40.3468, longitude=74.6552)
 lewis = Buildings(building_name = "Lewis", latitude=40.3461, longitude=74.6526)
 
-group1 = Groups(open_time = time(8,00,00), close_time = time(5,00,00))
-group2 = Groups(open_time = time(8,00,00), close_time = time(20,00,00))
+# times must be in utc!
+group1 = Groups(open_time = time_to_timezone(time(8,00,00), 'utc'),
+                close_time = time_to_timezone(time(5,00,00), 'utc'))
+group2 = Groups(open_time = time_to_timezone(time(8,00,00), 'utc'),
+                close_time = time_to_timezone(time(20,00,00), 'utc'))
 
 
 room1 = Rooms(building = firestone, room_name = '101', group = group1)
@@ -33,8 +37,8 @@ bob = Users(net_id= "bob", contact = 'bob@princeton.edu', admin = True)
 paul = Users(net_id= "paul", contact = 'paul@princeton.edu', admin = False)
 
 event1 = Events(user = bob, event_title="Bob's birthday",
-start_time = datetime(2019, 11, 28, 23, 55, 59, 342380),
-end_time = datetime(2019, 11, 29, 23, 55, 59, 0),
+start_time = datetime_to_timezone(datetime(2019, 11, 28, 23, 55, 59, 342380), 'utc'),
+end_time = datetime_to_timezone(datetime(2019, 11, 29, 23, 55, 59, 0), 'utc'),
 room = room1, passed = False)
 
 # event2 = Events(user = bob, event_title="Bob's graduation",

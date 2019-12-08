@@ -20,10 +20,10 @@
                               <h6 class="card-subtitle mb-2 text-muted">Room {{event['roomName']}}</h6>
                               <p class="card-text">
                                   Start Time: {{event['StartTime']}}
-                                  End Time: {{event['EndTime']}}
+                                  End Time: {{event['EST_EndTime']}}
                               </p>
                               <a href={{url_for('currentBooking', building=event['buildingName'],
-                              room=event['roomName'], fullTime=event['EndTime'])}}
+                              room=event['roomName'], est_end=event['EST_EndTime'], utc_end=event['UTC_EndTime'])}}
                               class="btn btn-info">Get Info</a>
 
                               <a href={{url_for('releaseRoom', building=event['buildingName'],
@@ -33,7 +33,7 @@
                   </div>
               </div>
           {% endfor %}
-          
+
         </div>
     </div>
 </div>
