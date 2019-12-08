@@ -178,6 +178,7 @@ def viewRoom():
         building = request.args.get('building')
         room = request.args.get('room')
         markPassed()
+        group = getGroup(getRoomObject(room,building))
 
         # get current time and get delta 30
         time = get30(current_dt())
@@ -196,7 +197,7 @@ def viewRoom():
             for t in times_blocked:
                 check = time - timedelta(seconds=1)
 
-                if inRange(t[0], t[1], check):
+                if inRange(t[0], t[1], check) or not isGroupOpen(group,check):
                     dictionary[time] = False
                     break
 
