@@ -69,7 +69,7 @@ def profile():
         events = []
         for event in event_query:
             # check end time and if it has passed
-            if (datetime.now(timezone('US/Eastern')).replace(tzinfo=None) > event.end_time):
+            if (current_dt() > event.end_time):
               continue
 
             eventDetails = {}
@@ -157,7 +157,7 @@ def bookRoom():
       fullTimes = [] # military time
       for i in range(number):
          if i == 0:
-            time = get30(datetime.now(timezone('US/Eastern')).replace(tzinfo=None))
+            time = get30(current_dt())
          else:
             time = add30(time)
          times.append(str(time)[11:16])
@@ -181,7 +181,7 @@ def viewRoom():
       print('room ', room)
       # get current time and get delta 30
       # get until 0:00
-      time = get30(datetime.now(timezone('US/Eastern')).replace(tzinfo=None))
+      time = get30(current_dt())
       # get all events in room for a certain day
       events = getEvents(getRoomObject(room, building))
       print('printing all events')
@@ -357,7 +357,7 @@ def currentBooking():
         hour = int(time[11:13])
         minute = int(time[14:16])
         end_time = datetime(year, month, day, hour, minute, 0, 0)
-        seconds = (end_time - datetime.now(timezone('US/Eastern')).replace(tzinfo=None)).total_seconds()
+        seconds = (end_time - current_dt()).total_seconds()
 
         if 'admin' in session:
             return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], admin = True)

@@ -7,8 +7,11 @@ from pytz import timezone
 
 sess = current_session
 
+def current_dt():
+    return datetime.now(timezone('US/Eastern')).replace(tzinfo=None)
+
 def markPassed():
-    current_time = datetime.now(timezone('US/Eastern')).replace(tzinfo=None)
+    current_time = current_dt()
     passed_events = sess.query(Events) \
                     .filter(Events.end_time < current_time) \
                     .filter(Events.passed == False) \
@@ -19,6 +22,7 @@ def markPassed():
 
     sess.commit()
 
+# find earliest event of the room that has not passed
 def findEarliest(room):
     markPassed()
     min_event = sess.query(Events) \
@@ -32,40 +36,28 @@ def findEarliest(room):
 
     return True, min_event
 
+# which time is later?
 def isLater(current_time, start_time):
     if (start_time > current_time):
         return True
     return False
 
 # taken from stack overflow
+def isOpen(start, end, time):
+    # Return true if x is in the range [start, end]
+    if start <= end:
+        return start <= time <= end
+    else:
+        return start <= time or time <= end
+
+# is this event when the group is available?
 def isGroupOpen(group, event_time):
     start = group.open_time
     end = group.close_time
     x = time(event_time.hour, event_time.minute, event_time.second, 00)
-    # Return true if x is in the range [start, end]
-    if start <= end:
-        return start <= x <= end
-    else:
-        return start <= x or x <= end
+    return isOpen(start, end, x)
 
-def isAvailable(room):
-    group = getGroup(room)
-    if isGroupOpen(group, datetime.now(timezone('US/Eastern')).replace(tzinfo=None)) == False:
-        return False
-    markPassed()
-    existEvent, event = findEarliest(room)
-    if not existEvent:
-        return True
-
-    return isLater(datetime.now(timezone('US/Eastern')).replace(tzinfo=None), event.start_time)
-
-# taken from stack overflow
-def get30(date_time):
-    return date_time + (datetime.min - date_time) % timedelta(minutes=30)
-
-def add30(date_time):
-    return date_time + timedelta(minutes=30)
-
+# get group associated with room
 def getGroup(room):
     group_id = room.group_id
     group = sess.query(Groups)\
@@ -74,6 +66,25 @@ def getGroup(room):
 
     return group
 
+def isAvailable(room):
+    group = getGroup(room)
+    if isGroupOpen(group, current_dt()) == False:
+        return False
+    markPassed()
+    existEvent, event = findEarliest(room)
+    if not existEvent:
+        return True
+
+    return isLater(current_dt(), event.start_time)
+
+# taken from stack overflow
+def get30(date_time):
+    return date_time + (datetime.min - date_time) % timedelta(minutes=30)
+
+def add30(date_time):
+    return date_time + timedelta(minutes=30)
+
+# how many buttons to display?
 def displayBookingButtons(room):
     FOUR_BUTTONS = 4
     ZERO_BUTTONS = 0
@@ -83,14 +94,14 @@ def displayBookingButtons(room):
 
     group = getGroup(room)
 
-    current_time = datetime.now(timezone('US/Eastern')).replace(tzinfo=None)
+    current_time = current_dt()
 
     if not isGroupOpen(group, current_time):
         return ZERO_BUTTONS
 
     for i in range(4):
         if i == 0:
-            time = get30(datetime.now(timezone('US/Eastern')).replace(tzinfo=None))
+            time = get30(current_dt())
         else:
             time = add30(time)
         isOpen = isGroupOpen(group, time)
@@ -102,16 +113,43 @@ def displayBookingButtons(room):
 
     return FOUR_BUTTONS
 
+# has this user booked anything yet that has not passed
 def hasBooked(user):
     markPassed()
     events = sess.query(Events) \
             .filter(Events.net_id == user.net_id) \
+            .filter(Events.passed == False) \
             .all()
 
     if len(events) == 0:
         return False
 
     return True
+
+# booking the room on the spot
+def bookRoomAdHoc(user1, room, button_end_time):
+    current_time = current_dt()
+
+    print(type(user1))
+    if not isAdmin(user1) and hasBooked(user1):
+        return "You have already booked a room at this time. Release previous room to book another one."
+    if not isGroupOpen(getGroup(room), current_time):
+        return "SYS FAILURE: Group not open at current time"
+    if not isGroupOpen(getGroup(room), button_end_time):
+        return "SYS FAILURE: Group not open at button end time"
+
+    markPassed()
+    existEvent, event = findEarliest(room)
+    if existEvent and isLater(event.start_time, current_time):
+        return "SYS FAILURE: current time later than start time of booked event"
+
+    event = Events(user = user1, event_title="...", start_time = current_time,
+                    end_time = button_end_time, room = room, passed = False)
+
+    sess.add(event)
+    sess.commit()
+
+    return ''
 
 # if user already exists, return user object
 # else makes new user objects with admin = False, add to database,
@@ -140,6 +178,7 @@ def isAdmin(user):
 def updateContact(user, contact):
     user.contact = contact
 
+# can you schedule it at these times in the future?
 def isAvailableScheduled(start_time, end_time, room):
     group = getGroup(room)
 
@@ -147,7 +186,7 @@ def isAvailableScheduled(start_time, end_time, room):
         return False
 
     # shouldn't book an event that ends in the past
-    current_time = datetime.now(timezone('US/Eastern')).replace(tzinfo=None)
+    current_time = current_dt()
     if (end_time < current_time):
         return False
 
@@ -173,6 +212,7 @@ def isAvailableScheduled(start_time, end_time, room):
 
     return True
 
+# admin booking room for the future
 def bookRoomSchedule(user, room, start_time, end_time, event_title = ''):
     if not isAdmin(user):
         return "NOT ADMIN"
@@ -196,29 +236,6 @@ def addAdmin(user, net_id):
 def releaseEvent(event):
     sess.delete(event)
     sess.commit()
-
-def bookRoomAdHoc(user1, room, button_end_time):
-    current_time = datetime.now(timezone('US/Eastern')).replace(tzinfo=None)
-    print(type(user1))
-    if not isAdmin(user1) and hasBooked(user1):
-        return "You have already booked a room at this time. Release previous room to book another one."
-    if not isGroupOpen(getGroup(room), current_time):
-        return "SYS FAILURE: Group not open at current time"
-    if not isGroupOpen(getGroup(room), button_end_time):
-        return "SYS FAILURE: Group not open at button end time"
-
-    markPassed()
-    existEvent, event = findEarliest(room)
-    if existEvent and isLater(event.start_time, current_time):
-        return "SYS FAILURE: current time later than start time of booked event"
-
-    event = Events(user = user1, event_title="...", start_time = current_time,
-                    end_time = button_end_time, room = room, passed = False)
-
-    sess.add(event)
-    sess.commit()
-
-    return ''
 
 # get list of building objects
 def getBuildings():
@@ -284,6 +301,3 @@ def getUserObject(net_id):
                 .filter(Users.net_id == net_id)\
                 .first()
     return user
-
-def isOpen(start, end, time):
-    return ((time >= start) and (time <= end))
