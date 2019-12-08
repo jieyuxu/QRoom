@@ -43,9 +43,12 @@ def isLater(current_time, start_time):
     return False
 
 # taken from stack overflow
-def isOpen(start, end, time):
+def inRange(start, end, time):
     # Return true if x is in the range [start, end]
     if start <= end:
+        print([start,end, time])
+        print(start <= time)
+        print(time <= end)
         return start <= time <= end
     else:
         return start <= time or time <= end
@@ -55,7 +58,7 @@ def isGroupOpen(group, event_time):
     start = group.open_time
     end = group.close_time
     x = time(event_time.hour, event_time.minute, event_time.second, 00)
-    return isOpen(start, end, x)
+    return inRange(start, end, x)
 
 # get group associated with room
 def getGroup(room):

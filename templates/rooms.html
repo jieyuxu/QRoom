@@ -9,7 +9,7 @@
             <center><h3>{{building}}</h3></center>
             <h4>All Rooms</h4>
        </div>
-   
+
        <div class="list-group list-group-flush">
           {% for key, value in rooms.items(): %}
             <a href={{url_for('bookRoom', building=building, room=key)}} class="list-group-item list-group-item-action">
@@ -21,5 +21,6 @@
             {%endif%}</a>
           {% endfor %}
       </div>
+
   </div>
  {% endblock %}

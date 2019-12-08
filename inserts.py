@@ -33,8 +33,8 @@ bob = Users(net_id= "bob", contact = 'bob@princeton.edu', admin = True)
 paul = Users(net_id= "paul", contact = 'paul@princeton.edu', admin = False)
 
 event1 = Events(user = bob, event_title="Bob's birthday",
-start_time = datetime(2019, 11, 28, 23, 55, 59, 342380),
-end_time = datetime(2019, 11, 29, 23, 55, 59, 0),
+start_time = datetime(2020, 11, 28, 23, 55, 59, 342380),
+end_time = datetime(2020, 11, 29, 23, 55, 59, 0),
 room = room1, passed = False)
 
 # event2 = Events(user = bob, event_title="Bob's graduation",

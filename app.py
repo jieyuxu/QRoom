@@ -174,40 +174,45 @@ def bookRoom():
 
 @app.route('/viewRoom', methods=['GET', 'POST'])
 def viewRoom():
-   if isLoggedIn():
-      building = request.args.get('building')
-      room = request.args.get('room')
-      print('building: ', building)
-      print('room ', room)
-      # get current time and get delta 30
-      # get until 0:00
-      time = get30(current_dt())
-      # get all events in room for a certain day
-      events = getEvents(getRoomObject(room, building))
-      print('printing all events')
-      print(events)
-      times_blocked = []
-      dictionary = {}
-      count = 0
-      for e in events:
-         print (count)
-         # print("hi " + str(e))
-         print("curr object", e)
-         times_blocked.append([e.start_time, e.end_time])
-         count = count + 1
-      while time.hour != 0:
-         for t in times_blocked:
-            dictionary[time] = isOpen(t[0], t[1], time)
-         time = add30(time)
+    if isLoggedIn():
+        building = request.args.get('building')
+        room = request.args.get('room')
+        markPassed()
 
-      isAvailable = False
-      length = len(dictionary)
-      if 'admin' in session:
-         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, length = length, admin = True)
-      else:
-         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, length = length, admin = False)
-   else:
-      return redirect(url_for("index"))
+        # get current time and get delta 30
+        time = get30(current_dt())
+        print(time)
+
+        # get all events in room for a certain day
+        events = getEvents(getRoomObject(room, building))
+        times_blocked = []
+
+        for e in events:
+            times_blocked.append([e.start_time, e.end_time])
+            print([e.start_time, e.end_time])
+
+            dictionary = {}
+        while time.hour != 0:
+            for t in times_blocked:
+                check = time - timedelta(seconds=1)
+
+                if inRange(t[0], t[1], check):
+                    dictionary[time] = False
+                    break
+
+            if time not in dictionary.keys():
+                dictionary[time] = True
+
+            time = add30(time)
+
+        isAvailable = False
+
+        if 'admin' in session:
+            return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, admin = True)
+        else:
+            return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, admin = False)
+    else:
+        return redirect(url_for("index"))
 
 @app.route('/confirmation', methods=['GET', 'POST'])
 def confirmation():
