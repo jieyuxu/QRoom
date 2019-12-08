@@ -2,11 +2,13 @@ from utils.database import Buildings, Rooms, Events, Groups, Users
 from datetime import datetime, timedelta, time
 from sqlalchemy import or_, and_
 from flask_sqlalchemy_session import current_session
+from pytz import timezone
+
 
 sess = current_session
 
 def markPassed():
-    current_time = datetime.now()
+    current_time = datetime.now(timezone('US/Eastern')).replace(tzinfo=None)
     passed_events = sess.query(Events) \
                     .filter(Events.end_time < current_time) \
                     .filter(Events.passed == False) \
@@ -48,14 +50,14 @@ def isGroupOpen(group, event_time):
 
 def isAvailable(room):
     group = getGroup(room)
-    if isGroupOpen(group, datetime.now()) == False:
+    if isGroupOpen(group, datetime.now(timezone('US/Eastern')).replace(tzinfo=None)) == False:
         return False
     markPassed()
     existEvent, event = findEarliest(room)
     if not existEvent:
         return True
 
-    return isLater(datetime.now(), event.start_time)
+    return isLater(datetime.now(timezone('US/Eastern')).replace(tzinfo=None), event.start_time)
 
 # taken from stack overflow
 def get30(date_time):
@@ -81,14 +83,14 @@ def displayBookingButtons(room):
 
     group = getGroup(room)
 
-    current_time = datetime.now()
+    current_time = datetime.now(timezone('US/Eastern')).replace(tzinfo=None)
 
     if not isGroupOpen(group, current_time):
         return ZERO_BUTTONS
 
     for i in range(4):
         if i == 0:
-            time = get30(datetime.now())
+            time = get30(datetime.now(timezone('US/Eastern')).replace(tzinfo=None))
         else:
             time = add30(time)
         isOpen = isGroupOpen(group, time)
@@ -145,7 +147,7 @@ def isAvailableScheduled(start_time, end_time, room):
         return False
 
     # shouldn't book an event that ends in the past
-    current_time = datetime.now()
+    current_time = datetime.now(timezone('US/Eastern')).replace(tzinfo=None)
     if (end_time < current_time):
         return False
 
@@ -196,7 +198,7 @@ def releaseEvent(event):
     sess.commit()
 
 def bookRoomAdHoc(user1, room, button_end_time):
-    current_time = datetime.now()
+    current_time = datetime.now(timezone('US/Eastern')).replace(tzinfo=None)
     print(type(user1))
     if not isAdmin(user1) and hasBooked(user1):
         return "You have already booked a room at this time. Release previous room to book another one."
