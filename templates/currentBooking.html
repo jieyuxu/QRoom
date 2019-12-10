@@ -6,12 +6,12 @@
 <div class="section mt-5 pt-5" id="confirmation">
    <div class="container">
        <div class="section-title">
-
-         <h2> Current Booking Information </h2>
-         {{building}}
-         {{room}}
-         {{start_time}}
-         {{end_time}}
+         <div class="h2"> Current Booking Information </div>
+         <p>Building: {{building}}</p>
+         <p>Room: {{room}}</p>
+         <p>Start Time: {{start_time}}</p>
+         <p>End Time: {{end_time}}</p>
+        </div>
 	 <!-- {% if error|length %}
 	    <h2>Failure to confirm.</h2>
 	 {% else %}
@@ -21,16 +21,9 @@
 		<p>Redirecting you to your profile in 5 seconds. Click <a href="/profile">here</a> to redirect now.</p>
 	 {% endif %} -->
        <!-- </div> -->
-</body>
  {% endblock %}
  {% block extrajs %}
  <script>
-      window.setTimeout(function(){
-
-        // Move to a new location or you can do something else
-        window.location.href = "/profile";
-
-        }, 5500);
 
   </script>
  {% endblock %}

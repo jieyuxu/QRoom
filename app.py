@@ -7,7 +7,7 @@ from utils.base import session_factory
 from distance import distance
 from CAS import CAS
 from CAS import login_required
-from pywebpush import webpush, WebPushException
+# from pywebpush import webpush, WebPushException
 
 app = Flask(__name__)
 app.secret_key = 'hello its me'
