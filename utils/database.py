@@ -14,7 +14,6 @@ class Buildings(Base):
     # a building can be associated with more than 1 room
     rooms = relationship("Rooms", backref='building')
 
-
 class Rooms(Base):
     __tablename__= "rooms"
 

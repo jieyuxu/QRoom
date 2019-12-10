@@ -9,7 +9,7 @@ Base = declarative_base()
 # password = pgpasslib.getpass('localhost', 5555, 'qroom', 'postgres')
 # if not password:
 #     raise ValueError('Did not find a password in the .pgpass file')
-#
+
 # url = 'postgresql://postgres:{}@localhost:5555/qroom'.format(password)
 
 # url = 'postgresql://postgresql-rectangular-86196'
@@ -19,7 +19,7 @@ Base = declarative_base()
 # url = 'postgresql+psycopg2://user:password@hostname/mydb'
 
 # THIS URL IS FOR HEROKU POSTGRES. PLEASE COMMENT ONLY, DON'T DELETE
-# url = os.environ['DATABASE_URL']
+url = os.environ['DATABASE_URL']
 
 # url = 'postgresql+psycopg2://bob:hi@localhost/mydb'
 # url = 'postgresql://localhost/mydb'
