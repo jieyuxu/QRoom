@@ -7,7 +7,8 @@ from utils.base import session_factory
 from distance import distance
 from CAS import CAS
 from CAS import login_required
-# from pywebpush import webpush, WebPushException
+from pywebpush import webpush, WebPushException
+from pytz import timezone
 
 app = Flask(__name__)
 app.secret_key = 'hello its me'
@@ -58,28 +59,36 @@ def caslogout():
 
 @app.route('/profile')
 def profile():
-   if isLoggedIn():
-      event = getUserEvent(session['username'])
-      eventDetails = {}
-      buildingname=''
-      roomname=''
-      eventid=''
-      if event is not None:
-         eventDetails['Start Time'] = event.start_time
-         eventDetails['End Time'] = event.end_time
-         room = getBuildingRoomName(event.room_id)
-         buildingname = room[0]
-         roomname = room[1]
-         eventid = event.event_id
+    if isLoggedIn():
+        event_query = getUserEvent(session['username'])
+        buildingname=''
+        roomname=''
+        eventid=''
 
-      if 'admin' in session:
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
-                                 event=eventDetails, eventid=eventid, building=buildingname, room=roomname, admin = True)
-      else:
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
-                                 event=eventDetails, eventid=eventid, building=buildingname, room=roomname, admin = False)
-   else:
-      return redirect(url_for("index"))
+        # an array of eventDetails
+        events = []
+        for event in event_query:
+            # check end time and if it has passed
+            if (current_dt() > event.end_time):
+              continue
+
+            eventDetails = {}
+            eventDetails['StartTime'] = event.start_time
+            eventDetails['EndTime'] = event.end_time
+            room = getBuildingRoomName(event.room_id)
+            eventDetails['buildingName'] = room[0]
+            eventDetails['roomName'] = room[1]
+            eventDetails['eventId'] = event.event_id
+            events.append(eventDetails)
+
+        if 'admin' in session:
+            return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
+                           events = events, admin = True)
+        else:
+            return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
+                           events = events, admin = False)
+    else:
+        return redirect(url_for("index"))
 
 @app.route('/buildings', methods=['GET', 'POST'])
 def buildings():
@@ -148,7 +157,7 @@ def bookRoom():
       fullTimes = [] # military time
       for i in range(number):
          if i == 0:
-            time = get30(datetime.now())
+            time = get30(current_dt())
          else:
             time = add30(time)
          times.append(str(time)[11:16])
@@ -165,40 +174,46 @@ def bookRoom():
 
 @app.route('/viewRoom', methods=['GET', 'POST'])
 def viewRoom():
-   if isLoggedIn():
-      building = request.args.get('building')
-      room = request.args.get('room')
-      print('building: ', building)
-      print('room ', room)
-      # get current time and get delta 30
-      # get until 0:00
-      time = get30(datetime.now())
-      # get all events in room for a certain day
-      events = getEvents(getRoomObject(room, building))
-      print('printing all events')
-      print(events)
-      times_blocked = []
-      dictionary = {}
-      count = 0
-      for e in events:
-         print (count)
-         # print("hi " + str(e))
-         print("curr object", e)
-         times_blocked.append([e.start_time, e.end_time])
-         count = count + 1
-      while time.hour != 0:
-         for t in times_blocked:
-            dictionary[time] = isOpen(t[0], t[1], time)
-         time = add30(time)
+    if isLoggedIn():
+        building = request.args.get('building')
+        room = request.args.get('room')
+        markPassed()
+        group = getGroup(getRoomObject(room,building))
 
-      isAvailable = False
-      length = len(dictionary)
-      if 'admin' in session:
-         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, length = length, admin = True)
-      else:
-         return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, length = length, admin = False)
-   else:
-      return redirect(url_for("index"))
+        # get current time and get delta 30
+        time = get30(current_dt())
+        print(time)
+
+        # get all events in room for a certain day
+        events = getEvents(getRoomObject(room, building))
+        times_blocked = []
+
+        for e in events:
+            times_blocked.append([e.start_time, e.end_time])
+            print([e.start_time, e.end_time])
+
+            dictionary = {}
+        while time.hour != 0:
+            for t in times_blocked:
+                check = time - timedelta(seconds=1)
+
+                if inRange(t[0], t[1], check) or not isGroupOpen(group,check):
+                    dictionary[time] = False
+                    break
+
+            if time not in dictionary.keys():
+                dictionary[time] = True
+
+            time = add30(time)
+
+        isAvailable = False
+
+        if 'admin' in session:
+            return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, admin = True)
+        else:
+            return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, admin = False)
+    else:
+        return redirect(url_for("index"))
 
 @app.route('/confirmation', methods=['GET', 'POST'])
 def confirmation():
@@ -238,7 +253,8 @@ def releaseRoom():
       buildingname = request.args.get('building')
       roomname = request.args.get('room')
       event = getEventObject(eventid)
-      releaseEvent(event)
+      if event is not None:
+          releaseEvent(event)
 
       if 'admin' in session:
          return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, admin = True)
@@ -335,21 +351,24 @@ def handleSchedule():
 @app.route('/currentBooking', methods = ['GET', 'POST'])
 def currentBooking():
     if isLoggedIn():
-        buildingname = request.args.get('building')
-        roomname = request.args.get('room')
+        building = request.args.get('building')
+        print(building)
+        room = request.args.get('room')
+        print(room)
         time = str(request.args.get('fullTime'))
+        print(time)
         year = int(time[0:4])
         month = int(time[5:7])
         day = int(time[8:10])
         hour = int(time[11:13])
         minute = int(time[14:16])
         end_time = datetime(year, month, day, hour, minute, 0, 0)
-
+        seconds = (end_time - current_dt()).total_seconds()
 
         if 'admin' in session:
-            return render_template("currentBooking.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = True)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], admin = True)
         else:
-            return render_template("currentBooking.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = False)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], admin = False)
 
     else:
        return redirect(url_for("index"))

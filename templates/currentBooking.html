@@ -6,24 +6,24 @@
 <div class="section mt-5 pt-5" id="confirmation">
    <div class="container">
        <div class="section-title">
-         <div class="h2"> Current Booking Information </div>
-         <p>Building: {{building}}</p>
-         <p>Room: {{room}}</p>
-         <p>Start Time: {{start_time}}</p>
-         <p>End Time: {{end_time}}</p>
-        </div>
-	 <!-- {% if error|length %}
-	    <h2>Failure to confirm.</h2>
-	 {% else %}
-	    <h2>Confirmed!</h2>
-	    <h3>{{building}} - {{room}}</h3>
-		<h2>{{fullTime}}</h2>
-		<p>Redirecting you to your profile in 5 seconds. Click <a href="/profile">here</a> to redirect now.</p>
-	 {% endif %} -->
-       <!-- </div> -->
- {% endblock %}
- {% block extrajs %}
- <script>
 
+          <div class="h2"> Current Booking Information </div>
+            <p>Building: {{building}}</p>
+            <p>Room: {{room}}</p>
+            <!-- <p>Start Time: {{start_time}}</p>
+            <p>End Time: {{end_time}}</p> -->
+        </div>
+         <br>
+         End time : {{time}}
+        <br>
+         Total Seconds Booked: {{seconds}}
+
+         <button onclick="myFunction()">Get Notifications</button>
+   <script>
+     function myFunction() {
+       setInterval(function(){
+         alert("10 minutes left"); }, 2);
+     }
   </script>
+</body>
  {% endblock %}
