@@ -7,9 +7,12 @@
    <div class="container">
        <div class="section-title">
 
-         <h2> Current Booking Information </h2>
-         {{building}}
-         {{room}}
+          <div class="h2"> Current Booking Information </div>
+            <p>Building: {{building}}</p>
+            <p>Room: {{room}}</p>
+            <!-- <p>Start Time: {{start_time}}</p>
+            <p>End Time: {{end_time}}</p> -->
+        </div>
          <br>
          End time : {{time}}
         <br>
@@ -21,11 +24,6 @@
        setInterval(function(){
          alert("10 minutes left"); }, 2);
      }
-
   </script>
-
 </body>
- {% endblock %}
- {% block extrajs %}
-
  {% endblock %}
