@@ -136,7 +136,9 @@ def checkCoordinates():
 
          bldgLat, bldgLong = getLatLong(building)
          dist = distance(userLat, bldgLat, userLong, bldgLong)
-         if dist > 0.2:
+         dist = dist / 1000 
+         print("distance is", dist)
+         if dist > 11:
             return "You are too far away from " + building + " to book a room. You must be within 200 meters of a building to book a room."
          # code to confirm location
          return ""
@@ -153,6 +155,8 @@ def bookRoom():
       room = str(request.args.get('room'))
       room_object = getRoomObject(room, building)
       number = displayBookingButtons(room_object) # number of buttons to display
+
+      latitude, longitude = getLatLong(building)
       times = []
       fullTimes = [] # military time
       for i in range(number):
@@ -165,9 +169,11 @@ def bookRoom():
       print(times)
       print(fullTimes)
       if 'admin' in session:
-         return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = True)
+         return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building,\
+          room=room, times = times, fullTimes = fullTimes, admin = True, latitude=latitude, longitude=longitude)
       else:
-         return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = False)
+         return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, \
+         room=room, times = times, fullTimes = fullTimes, admin = False, latitude=latitude, longitude=longitude)
 
    else:
       return redirect(url_for("index"))
