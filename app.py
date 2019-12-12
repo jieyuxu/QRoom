@@ -8,8 +8,17 @@ from distance import distance
 from CAS import CAS
 from CAS import login_required
 from pywebpush import webpush, WebPushException
+from flask_mail import Message, Mail
+
 
 app = Flask(__name__)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'qroomteam@gmail.com'
+app.config['MAIL_PASSWORD'] = 'WeLoveBob123'
+
+mail = Mail(app)
 app.secret_key = 'hello its me'
 # print(os.random(24))
 sess = flask_scoped_session(session_factory, app)
@@ -287,6 +296,20 @@ def handleAddUser():
             print("is user an admin?", added_user.admin)
             if errorMsg == '':
                 addFlag = True
+                recipient = added_user.admin.strip() + "@princeton.edu"
+                msg = Message('QRoom Admin',
+                  sender='qroomteam@gmail.com',
+                  recipients=[recipient])
+                msg.body = 'You have been added as an admin.'
+                try:
+                   mail.send(msg)
+                except SMTPRecipientsRefused, e:
+                   errorMsg = 'Recipient refused: invalid Princeton netid. User not added as admin successfully.'
+                   addFlag = False
+                except SMTPException, e:
+                   errorMsg = 'Mail not sent: user not added as admin successfully.'
+                   addFlag = False
+                   
             isAdmin = ('admin' in session is True)
             return redirect(url_for("admin", addMessage = errorMsg, bookMessage = '', addFlag = addFlag, bookFlag = False))
     else:
