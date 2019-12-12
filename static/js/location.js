@@ -3,7 +3,7 @@ window.onload = function(){
     navigator.geolocation.getCurrentPosition(showPosition, error, options);
   } else { 
     alert("The application needs your current location to book a room.")
-    return false
+    window.location = '/profile';
   }
 };
 
