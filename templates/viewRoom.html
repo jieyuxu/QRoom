@@ -11,22 +11,22 @@
      <span class="building" building="{{building}}"></span>
      <div class="section-title">
           <center><h3>{{building}} - {{room}}</h3></center>
-          <h4>Available Times</h4>
-          <h4> Current Available: {{isAvailable}} </h4
+          <h4>Schedule</h4>
      </div>
 
     <div class="list-group list-group-flush">
          {% for key, value in times.items(): %}
-            <div class="list-group-item list-group-item-action">{{key}}</div>
+            <div class="list-group-item list-group-item-action">{{key}}
             {%if value %}
               <span class="badge badge-success float-right">Available</span>
             {% else %}
               <span class="badge badge-danger float-right">Unavailable</span>
             {%endif%}
+            </div>
          {% endfor %}
     </div>
 </div>
 {% endblock %}
 {% block extrajs %}
-<script src="../static/js/location.js"></script>
+<script src="../static/js/reload.js"></script>
 {% endblock %}

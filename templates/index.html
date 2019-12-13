@@ -10,6 +10,7 @@
             <p class="tagline">Scan. Reserve. Go.</p>
         </div>
         <div class="img-holder mt-3"><img src="../static/images/iphonex.png" alt="phone" class="img-fluid"></div>
+        <div id="scrollpast"></div>
     </header>
     <div class="section light-bg" id="features">
         <div class="container">
@@ -36,7 +37,7 @@
                         <div>
 
                             <h2>Plan ahead.</h2>
-                            <p class="lead">You can instantly view which study spaces are available ahead of time, minimizing time wasted.</p>   
+                            <p class="lead">You can instantly view which study spaces are available ahead of time, minimizing time wasted.</p>
                         </div>
                     </div>
                 </div>
@@ -58,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-              
+
             </div>
 
 
@@ -183,5 +184,29 @@
     </footer>
 {% endblock %}
 {% block extrajs %}
-<script src="js/script.js"></script>
+<!-- <script src="../static/js/script.js"></script> -->
+<script>
+  $(document).ready(function(){
+  $('.navbar-brand').css('color', 'white');
+  $('.nav-link').css('color', 'white');
+   var scroll_start = 0;
+   var startchange = $('#scrollpast');
+   var offset = startchange.offset();
+    if (startchange.length){
+   $(document).scroll(function() {
+      scroll_start = $(this).scrollTop();
+      if(scroll_start > offset.top) {
+          $('.nav-menu').css('background-color', 'rgba(0,0,0,0.7)');
+
+       } else {
+         $('.nav-menu').css('background-color', 'transparent');
+          $('.nav-link').css('color', 'white');
+          $("#authbtn").css('color', 'white');
+          $("#authbtn").css('border-color', 'white');
+          $('.navbar-brand').css('color', 'white');
+       }
+   });
+    }
+});
+</script>
 {% endblock %}

@@ -11,20 +11,41 @@
        </div>
 
        <div class="list-group list-group-flush">
+         <div class="card-deck">
           {% for key, value in rooms.items(): %}
             <!-- <a href={{url_for('bookRoom', building=building, room=key)}} class="list-group-item list-group-item-action">
               Room {{key}} -->
-            {%if value %}
-            <a href={{url_for('bookRoom', building=building, room=key)}} class="list-group-item list-group-item-action">
-                Room {{key}}
-              <span class="badge badge-success float-right">Available</span>
-            {% else %}
-              <a class="list-group-item list-group-item-action">
-                Room {{key}}
-              <span class="badge badge-danger float-right">Unavailable</span>
-            {%endif%}</a>
+              <div class="card features">
+                <div class="card-body">
+                <div class="card-title">
+                  {% if value %}
+                        <h5><a href={{url_for('bookRoom', building=building, room=key)}}>
+                          Room {{key}}</a>
+                          <span class="badge badge-success float-right" style="font-size: 50%;">Available</span>
+                        </h5>
+
+                  {% else %}
+                    <h5><a>
+                      Room {{key}}
+                      <span class="badge badge-danger float-right" style="font-size: 50%;">Unavailable</span>
+                    </a></h5>
+                  {% endif %}
+                </div>
+                <p class="card-text"></p>
+                {% if value %}
+                  <a href={{url_for('bookRoom', building=building, room=key)}} class="btn btn-primary float-right">
+                    Book</a>
+                {% endif %}
+                <a href={{url_for('viewRoom', building= building, room=key)}}
+                  class="btn btn-info float-right mr-2">View Room Schedule</a>
+              </div>
+              </div>
           {% endfor %}
+          </div>
       </div>
 
   </div>
  {% endblock %}
+{% block extrajs %}
+  <script src="../static/js/reload.js"></script>
+{% endblock %}

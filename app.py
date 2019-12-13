@@ -124,26 +124,6 @@ def rooms():
     else:
        return redirect(url_for("index"))
 
-@app.route('/checkcoordinates', methods=['GET', 'POST'])
-def checkCoordinates():
-   print("received request")
-   if isLoggedIn() and request.method == 'POST':
-      if request.is_json:
-         content = request.get_json()
-         userLat = content['latitude']
-         userLong = content['longitude']
-         building = content['building']
-
-         bldgLat, bldgLong = getLatLong(building)
-         dist = distance(userLat, bldgLat, userLong, bldgLong)
-         dist = dist / 1000 
-         print("distance is", dist)
-         if dist > 11:
-            return "You are too far away from " + building + " to book a room. You must be within 200 meters of a building to book a room."
-         # code to confirm location
-         return ""
-
-
 @app.route('/bookRoom', methods=['GET', 'POST'])
 def bookRoom():
    THIRTY_MIN = 30
@@ -184,7 +164,12 @@ def viewRoom():
         building = request.args.get('building')
         room = request.args.get('room')
         markPassed()
-        group = getGroup(getRoomObject(room,building))
+        print(room)
+        print(building)
+        room_object = getRoomObject(room,building)
+        if room_object is None:
+            print('hi')
+        group = getGroup(room_object)
 
         # get current time and get delta 30
         time = get30(current_dt())
