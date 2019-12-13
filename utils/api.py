@@ -88,24 +88,34 @@ def displayBookingButtons(room):
     FOUR_BUTTONS = 4
     ZERO_BUTTONS = 0
 
+    # mark events as passed
     markPassed()
+
+    # find the next earliest event in room
     existEvent, event = findEarliest(room)
 
+    # get the room's group
     group = getGroup(room)
 
     current_time = datetime.now()
 
+    # if the room is not open, return buttons.
     if not isGroupOpen(group, current_time):
         return ZERO_BUTTONS
 
+    # else,
     for i in range(4):
+        # get the next 00 or 30 minute
         if i == 0:
             time = get30(datetime.now())
         else:
             time = add30(time)
+
+        # make sure the room is open at this time
         isOpen = isGroupOpen(group, time)
         if not isOpen:
             return i
+        # if there is a later event, make sure this time is before that start time.
         if existEvent:
             if isLater(event.start_time, time):
                 return i
@@ -122,6 +132,12 @@ def hasBooked(user):
         return False
 
     return True
+
+# def updateEvent(eventid, endtime):
+#     event = getEventObject(eventid)
+#     event
+#
+#
 
 # if user already exists, return user object
 # else makes new user objects with admin = False, add to database,

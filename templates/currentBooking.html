@@ -6,24 +6,33 @@
 <div class="section mt-5 pt-5" id="confirmation">
    <div class="container">
        <div class="section-title">
+         <span class="eventid" eventid={{eventid}}></span>
 
          <h2> Current Booking Information </h2>
          {{building}}
          {{room}}
          <br>
-         end time : {{time}}
-        <br>
-         Total Seconds Booked: {{seconds}}
-
-         <button onclick="myFunction()">Get Notifications</button>
-   <script>
-     function myFunction() {
-       setInterval(function(){
-         alert("10 minutes left"); }, 2);
-     }
-
-  </script>
+         End time : {{time}}
+      </div>
+    </div>
+</div>
+<div id="modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Alert!</h5>
+      </div>
+      <div class="modal-body">
+        <p>You have 10 minutes left. Will you be occupying the room for longer?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="extend-button"">Yes, extend my stay.</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No, let it expire.</button>
+      </div>
+    </div>
+  </div>
+</div>
  {% endblock %}
  {% block extrajs %}
-
+<script src="../static/js/notification.js"></script>
  {% endblock %}
