@@ -57,6 +57,11 @@ def inRange(start, end, time):
 def isGroupOpen(group, event_time):
     start = group.open_time
     end = group.close_time
+    print('start', start)
+    print('end', end)
+    print(event_time)
+    print('hour', event_time.hour)
+
     x = time(event_time.hour, event_time.minute, event_time.second, 00)
     return inRange(start, end, x)
 
@@ -164,7 +169,7 @@ def getUser(net_id):
 
     if user is None:
         print("it tis none")
-        user = Users(net_id= net_id, contact = '', admin = True)
+        user = Users(net_id= net_id, contact = net_id + '@princeton.edu', admin = False)
         sess.add(user)
         sess.commit()
     return user
@@ -230,6 +235,7 @@ def bookRoomSchedule(user, room, start_time, end_time, event_title = ''):
 
 def addAdmin(user, net_id):
     if not isAdmin(user):
+        print ("not an admin")
         return "NOT ADMIN"
     new_user = getUser(net_id)
     new_user.admin = True

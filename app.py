@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for, redirect
+from flask import Flask, request, render_template, url_for, redirect, current_app
 from flask import session
 import os
 from utils.api import *
@@ -8,9 +8,22 @@ from distance import distance
 from CAS import CAS
 from CAS import login_required
 from pywebpush import webpush, WebPushException
-from pytz import timezone
+from flask_mail import Message, Mail
+import smtplib
+#import threading
 
 app = Flask(__name__)
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'qroomteam@gmail.com'
+app.config['MAIL_PASSWORD'] = 'WeLoveBob123'
+
+mail = Mail(app)
+
+
+
 app.secret_key = 'hello its me'
 # print(os.random(24))
 sess = flask_scoped_session(session_factory, app)
@@ -256,48 +269,80 @@ def releaseRoom():
 
 @app.route('/admin', methods = ['GET', 'POST'])
 def admin():
-    if isLoggedIn():
-        buildings_query = getBuildings()
-        buildings = []
-        for b in buildings_query:
-            buildings.append(b.building_name)
-        print(buildings)
-        addMessage = ""
-        if 'addMessage' in request.args:
-            addMessage = request.args.get('addMessage')
+   if isLoggedIn():
+      # query buildings for the admin template
+      buildings_query = getBuildings()
+      buildings = []
+      for b in buildings_query:
+         buildings.append(b.building_name)
+      print(buildings)
 
-        bookMessage = ""
-        if 'bookMessage' in request.args:
-            addMessage = request.args.get('bookMessage')
+      addMessage = ""
+      if 'addMessage' in request.args:
+         addMessage = request.args.get('addMessage')
 
-        bookFlag = False
-        addFlag = False
-        if 'bookFlag' in request.args:
-            bookFlag = request.args.get('bookFlag')
-        if 'addFlag' in request.args:
-            addFlag = request.args.get('addFlag')
+      bookMessage = ""
+      if 'bookMessage' in request.args:
+         bookMessage = request.args.get('bookMessage')
 
-        return render_template("admin.html", loggedin = isLoggedIn(), username = cas.username, admin = isAdmin, addMessage = addMessage, bookMessage = bookMessage, buildings = buildings, addSuccess = addFlag, bookSuccess = bookFlag)
-    else:
-        return redirect(url_for("index"))
+      bookFlag = False
+      addFlag = False
+      if 'bookFlag' in request.args:
+         bookFlag = request.args.get('bookFlag')
+      if 'addFlag' in request.args:
+         print("request.args found an AddFlag")
+         addFlag = request.args.get('addFlag')
+         print("addflag", addFlag)
+
+      return render_template("admin.html", loggedin = isLoggedIn(), username = cas.username, admin = isAdmin, addMessage = addMessage, bookMessage = bookMessage, buildings = buildings, addSuccess = addFlag, bookSuccess = bookFlag)
+   else:
+      return redirect(url_for("index"))
 
 @app.route('/handleAddUser', methods = ['GET', 'POST'])
 def handleAddUser():
-    if isLoggedIn():
-        if request.method == 'POST':
-            addFlag = False
-            admin = request.form['admin-id']
-            print(admin)
-            current_user = getUser(cas.username)
-            errorMsg = addAdmin(current_user, admin)
-            added_user = getUser(admin)
-            print("is user an admin?", added_user.admin)
-            if errorMsg == '':
-                addFlag = True
-            isAdmin = ('admin' in session is True)
+   if isLoggedIn():
+      if request.method == 'POST':
+
+         addFlag = False
+         admin = request.form['admin-id']
+         print(admin)
+         current_user = session['username']
+         print(current_user)
+
+         current_user_object = getUser(current_user)
+         
+         if (admin is None or admin.strip() == ""):
+            errorMsg = "Please enter an admin netid. User not added."
+
+         else:
+            admin = admin.strip()
+            recipient = admin + "@princeton.edu"
+            msg = Message('QRoom Admin',
+                  sender='qroomteam@gmail.com',
+                  recipients=[recipient])
+            msg.body = 'You have been added as an admin.'
+
+            try: 
+               mail.send(msg)
+               print("I sent the mail")
+               errorMsg = addAdmin(current_user_object, admin)
+               
+               if errorMsg == "":
+                  addFlag = True
+
+            except Exception as e:
+               print("failed to send mail to user")
+               print("Exception received, ", str(e))
+               errorMsg = "Could not contact the user."
+
+            #isAdmin = ('admin' in session is True)
+            print("in handle user, ", errorMsg)
             return redirect(url_for("admin", addMessage = errorMsg, bookMessage = '', addFlag = addFlag, bookFlag = False))
-    else:
-        return redirect(url_for("index"))
+         
+      else:
+         print("Error in handle add user: not a post request")
+   else:
+      return redirect(url_for("index"))
 
 @app.route('/handleSchedule', methods = ['GET', 'POST'])
 def handleSchedule():
@@ -309,16 +354,8 @@ def handleSchedule():
                print(key, val)
             building_id = request.form['building']
             room_id = request.form['room-id']
-            start_year = request.form['starting-year-id']
-            start_month = request.form['starting-month-id']
-            start_day = request.form['starting-day-id']
-            start_hour = request.form['starting-hour-id']
-            start_minutes = request.form['starting-min-id']
-            end_year = request.form['ending-year-id']
-            end_month = request.form['ending-month-id']
-            end_day = request.form['ending-day-id']
-            end_hour = request.form['ending-hour-id']
-            end_minutes = request.form['ending-min-id']
+            start_time = request.form['start-time']
+            end_time = request.form['end-time']
 
             # check that the room id is in the building
             # building_object = getBuildingObject(building_id)
@@ -328,11 +365,38 @@ def handleSchedule():
                 return redirect(url_for("admin", addMessage = '', bookMessage = roomMessage, addFlag = False, bookFlag = bookFlag))
 
             # make a datetime object for the start and end
-            start = datetime(int(start_year), int(start_month), int(start_day), int(start_hour), int(start_minutes))
-            end = datetime(int(end_year), int(end_month), int(end_day), int(end_hour), int(end_minutes))
-            current_user = getUserObject(cas.username)
+            start_year = start_time[:4]
+            start_month = start_time[5:7]
+            start_day = start_time[8:10]
+            start_hour = start_time[11:13]
+            start_minutes = start_time[14:16]
+            start_meridiem = start_time[20:22]
 
-            eventMessage = bookRoomSchedule(current_user, room_object, start, end)
+            end_year = end_time[:4]
+            end_month= end_time[5:7]
+            end_day = end_time[8:10]
+            end_hour = end_time[11:13]
+            end_minutes = end_time[14:16]
+            end_meridiem = end_time[20:22]
+
+            starting_hour = int(start_hour)
+            ending_hour = int(end_hour)
+
+            if (start_meridiem == "AM" and starting_hour == 12):
+               starting_hour = 0
+            if (start_meridiem == "PM" and starting_hour >= 1 and starting_hour < 12):
+               starting_hour += 12
+            if (end_meridiem == "AM" and ending_hour == 12):
+               ending_hour = 0
+            if (end_meridiem == "PM" and ending_hour >= 1 and ending_hour < 12):
+               ending_hour += 12
+
+            start = datetime(int(start_year), int(start_month), int(start_day), starting_hour, int(start_minutes))
+            end = datetime(int(end_year), int(end_month), int(end_day), ending_hour, int(end_minutes))
+            current_user = session['username']
+            current_user_object = getUser(current_user)
+
+            eventMessage = bookRoomSchedule(current_user_object, room_object, start, end)
             if eventMessage != '':
                 return redirect(url_for("admin", addMessage = '', bookMessage = eventMessage, addFlag = False, bookFlag = bookFlag))
 
