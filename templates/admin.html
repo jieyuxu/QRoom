@@ -14,10 +14,10 @@
        <h3>Add Another Admin</h3>
        {% if addMessage %}
         <div class="alert alert-danger" role="alert">
-          User could not be added as admin.
+          {{addMessage}}
         </div>
         {% endif %}
-        {% if addSuccess %}
+        {% if addSuccess == "True"%}
           <div class="alert alert-success" role="alert">
             User was added successfully as admin.
           </div>
@@ -32,11 +32,11 @@
        <h3 class="mt-4">Book a Room in Advance</h3>
        {% if bookMessage %}
         <div class="alert alert-danger" role="alert">
-            Room could not be booked.
+            {{bookMessage}}
         </div>
        {% endif %}
-        {% if bookSuccess %}
-          <div class="alert alert-danger" role="alert">
+        {% if bookSuccess  == "True" %}
+          <div class="alert alert-success" role="alert">
               Room has been booked succesfully.
           </div>
         {% endif %}

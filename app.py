@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for, redirect
+from flask import Flask, request, render_template, url_for, redirect, current_app
 from flask import session
 import os
 from utils.api import *
@@ -10,16 +10,21 @@ from CAS import login_required
 from pywebpush import webpush, WebPushException
 from flask_mail import Message, Mail
 import smtplib
+#import threading
 
 
 app = Flask(__name__)
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'qroomteam@gmail.com'
 app.config['MAIL_PASSWORD'] = 'WeLoveBob123'
 
 mail = Mail(app)
+
+
+
 app.secret_key = 'hello its me'
 # print(os.random(24))
 sess = flask_scoped_session(session_factory, app)
@@ -259,62 +264,80 @@ def releaseRoom():
 
 @app.route('/admin', methods = ['GET', 'POST'])
 def admin():
-    if isLoggedIn():
-        buildings_query = getBuildings()
-        buildings = []
-        for b in buildings_query:
-            buildings.append(b.building_name)
-        print(buildings)
-        addMessage = ""
-        if 'addMessage' in request.args:
-            addMessage = request.args.get('addMessage')
+   if isLoggedIn():
+      # query buildings for the admin template
+      buildings_query = getBuildings()
+      buildings = []
+      for b in buildings_query:
+         buildings.append(b.building_name)
+      print(buildings)
 
-        bookMessage = ""
-        if 'bookMessage' in request.args:
-            addMessage = request.args.get('bookMessage')
+      addMessage = ""
+      if 'addMessage' in request.args:
+         addMessage = request.args.get('addMessage')
 
-        bookFlag = False
-        addFlag = False
-        if 'bookFlag' in request.args:
-            bookFlag = request.args.get('bookFlag')
-        if 'addFlag' in request.args:
-            addFlag = request.args.get('addFlag')
+      bookMessage = ""
+      if 'bookMessage' in request.args:
+         bookMessage = request.args.get('bookMessage')
 
-        return render_template("admin.html", loggedin = isLoggedIn(), username = cas.username, admin = isAdmin, addMessage = addMessage, bookMessage = bookMessage, buildings = buildings, addSuccess = addFlag, bookSuccess = bookFlag)
-    else:
-        return redirect(url_for("index"))
+      bookFlag = False
+      addFlag = False
+      if 'bookFlag' in request.args:
+         bookFlag = request.args.get('bookFlag')
+      if 'addFlag' in request.args:
+         print("request.args found an AddFlag")
+         addFlag = request.args.get('addFlag')
+         print("addflag", addFlag)
+
+      return render_template("admin.html", loggedin = isLoggedIn(), username = cas.username, admin = isAdmin, addMessage = addMessage, bookMessage = bookMessage, buildings = buildings, addSuccess = addFlag, bookSuccess = bookFlag)
+   else:
+      return redirect(url_for("index"))
 
 @app.route('/handleAddUser', methods = ['GET', 'POST'])
 def handleAddUser():
-    if isLoggedIn():
-        if request.method == 'POST':
-            addFlag = False
-            admin = request.form['admin-id']
-            print(admin)
-            current_user = getUser(cas.username)
-            errorMsg = addAdmin(current_user, admin)
-            added_user = getUser(admin)
-            print("is user an admin?", added_user.admin)
-            if errorMsg == '':
-                addFlag = True
-                recipient = added_user.admin.strip() + "@princeton.edu"
-                msg = Message('QRoom Admin',
+   if isLoggedIn():
+      if request.method == 'POST':
+
+         addFlag = False
+         admin = request.form['admin-id']
+         print(admin)
+         current_user = session['username']
+         print(current_user)
+
+         current_user_object = getUser(current_user)
+         
+         if (admin is None or admin.strip() == ""):
+            errorMsg = "Please enter an admin netid. User not added."
+
+         else:
+            admin = admin.strip()
+            recipient = admin + "@princeton.edu"
+            msg = Message('QRoom Admin',
                   sender='qroomteam@gmail.com',
                   recipients=[recipient])
-                msg.body = 'You have been added as an admin.'
-                try:
-                   mail.send(msg)
-                except smtplib.SMTPRecipientsRefused:
-                   errorMsg = 'Recipient refused: invalid Princeton netid. User not added as admin successfully.'
-                   addFlag = False
-                except smtplib.SMTPException:
-                   errorMsg = 'Mail not sent: user not added as admin successfully.'
-                   addFlag = False
-                   
-            isAdmin = ('admin' in session is True)
+            msg.body = 'You have been added as an admin.'
+
+            try: 
+               mail.send(msg)
+               print("I sent the mail")
+               errorMsg = addAdmin(current_user_object, admin)
+               
+               if errorMsg == "":
+                  addFlag = True
+
+            except Exception as e:
+               print("failed to send mail to user")
+               print("Exception received, ", str(e))
+               errorMsg = "Could not contact the user."
+
+            #isAdmin = ('admin' in session is True)
+            print("in handle user, ", errorMsg)
             return redirect(url_for("admin", addMessage = errorMsg, bookMessage = '', addFlag = addFlag, bookFlag = False))
-    else:
-        return redirect(url_for("index"))
+         
+      else:
+         print("Error in handle add user: not a post request")
+   else:
+      return redirect(url_for("index"))
 
 @app.route('/handleSchedule', methods = ['GET', 'POST'])
 def handleSchedule():
