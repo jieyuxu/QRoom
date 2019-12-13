@@ -348,6 +348,7 @@ def currentBooking():
         print(room)
         time = str(request.args.get('fullTime'))
         print(time)
+        eventid = request.args.get('eventid')
         year = int(time[0:4])
         month = int(time[5:7])
         day = int(time[8:10])
@@ -357,9 +358,9 @@ def currentBooking():
         seconds = (end_time - current_dt()).total_seconds()
 
         if 'admin' in session:
-            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], admin = True)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], eventid = eventid, admin = True)
         else:
-            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], admin = False)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], eventid = eventid, admin = False)
 
     else:
        return redirect(url_for("index"))
@@ -370,6 +371,73 @@ def isLoggedIn():
    if 'username' in session:
       return True
    return False
+
+@app.route('/checkTime', methods=['GET', 'POST'])
+def checkTime():
+    print("in check time")
+    if isLoggedIn() and request.method == 'POST':
+        if request.is_json:
+            content = request.get_json()
+            eventid = content['eventid']
+            endtime = getEventObject(eventid).end_time
+
+        if endtime < datetime.now():
+            releaseEvent(getEventObject(eventid))
+            return "Expired"
+        elif (datetime.now() - endtime) <= timedelta(0, 0, 0, 0, 10, 0, 0):
+            print("should show modal")
+            return "True"
+        else:
+            return "False"
+    else:
+        return redirect(url_for("index"))
+
+
+@app.route('/extendStay', methods=['GET', 'POST'])
+def extendStay():
+    print("in extend stay")
+    if isLoggedIn():
+        if request.is_json:
+            THIRTY_MIN = 30
+            loggedin = True
+            print("getting content")
+            content = request.get_json()
+            print("getting eventid")
+            eventid = content['eventid']
+            event = getEventObject(eventid)
+
+            roomid = event.room_id
+            result = getBuildingRoomName(roomid)
+
+            print("getting room")
+            room = getRoomObject(result[1], result[0])
+            building=result[0]
+
+            url = '/bookRoom?building=' + building + '&room=' + result[1]
+
+            return url
+
+            #
+            # number = displayBookingButtons(room) # number of buttons to display
+            # times = []
+            # fullTimes = [] # military time
+            # for i in range(number):
+            #     if i == 0:
+            #         continue
+            #     else:
+            #         time = add30(time)
+            #     times.append(str(time)[11:16])
+            #     fullTimes.append(str(time))
+            #     print(times)
+            #     print(fullTimes)
+            # if 'admin' in session:
+            #     print('rendering bookroom')
+            #     return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = True)
+            # else:
+            #     return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = False)
+    else:
+        print("in redirect")
+        return redirect(url_for("index"))
 
 if __name__ == '__main__':
    app.run(host='0.0.0.0', port=8000, debug = True)
