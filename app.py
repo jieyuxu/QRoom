@@ -365,15 +365,29 @@ def handleSchedule():
             start_day = start_time[8:10]
             start_hour = start_time[11:13]
             start_minutes = start_time[14:16]
+            start_meridiem = start_time[20:22]
 
             end_year = end_time[:4]
             end_month= end_time[5:7]
             end_day = end_time[8:10]
             end_hour = end_time[11:13]
             end_minutes = end_time[14:16]
+            end_meridiem = end_time[20:22]
 
-            start = datetime(int(start_year), int(start_month), int(start_day), int(start_hour), int(start_minutes))
-            end = datetime(int(end_year), int(end_month), int(end_day), int(end_hour), int(end_minutes))
+            starting_hour = int(start_hour)
+            ending_hour = int(end_hour)
+
+            if (start_meridiem == "AM" and starting_hour == 12):
+               starting_hour = 0
+            if (start_meridiem == "PM" and starting_hour >= 1 and starting_hour < 12):
+               starting_hour += 12
+            if (end_meridiem == "AM" and ending_hour == 12):
+               ending_hour = 0
+            if (end_meridiem == "PM" and ending_hour >= 1 and ending_hour < 12):
+               ending_hour += 12
+
+            start = datetime(int(start_year), int(start_month), int(start_day), starting_hour, int(start_minutes))
+            end = datetime(int(end_year), int(end_month), int(end_day), ending_hour, int(end_minutes))
             current_user = session['username']
             current_user_object = getUser(current_user)
 

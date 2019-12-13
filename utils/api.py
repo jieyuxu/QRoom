@@ -38,6 +38,11 @@ def isLater(current_time, start_time):
 def isGroupOpen(group, event_time):
     start = group.open_time
     end = group.close_time
+    print('start', start)
+    print('end', end)
+    print(event_time)
+    print('hour', event_time.hour)
+
     x = time(event_time.hour, event_time.minute, event_time.second, 00)
     """Return true if x is in the range [start, end]"""
     if start <= end:
