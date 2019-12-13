@@ -374,9 +374,10 @@ def handleSchedule():
 
             start = datetime(int(start_year), int(start_month), int(start_day), int(start_hour), int(start_minutes))
             end = datetime(int(end_year), int(end_month), int(end_day), int(end_hour), int(end_minutes))
-            current_user = getUserObject(cas.username)
+            current_user = session['username']
+            current_user_object = getUser(current_user)
 
-            eventMessage = bookRoomSchedule(current_user, room_object, start, end)
+            eventMessage = bookRoomSchedule(current_user_object, room_object, start, end)
             if eventMessage != '':
                 return redirect(url_for("admin", addMessage = '', bookMessage = eventMessage, addFlag = False, bookFlag = bookFlag))
 
