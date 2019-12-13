@@ -1,18 +1,32 @@
 {% extends 'base.html' %}
+{% block extracss%}
+    <!-- Main css -->
+    <link href="../static/css/style.css" rel="stylesheet">
+    <!-- <link href="themify-icons.css" rel="stylesheet"> -->
+{% endblock %}
 {% block content %}
-<body class="section light-bg" id="rooms">
+
+<div class="section mt-5 pt-5" id="rooms">
    <div class="container">
-       <div class="section-title">
-            <h3>{{building}} - {{room}}</h3>
-            <h3>{{isAvailable}}</h3>
-            <h4>Available Times</h4>
-       </div>
-   
-       <div class="list-group">
+     <span class="building" building="{{building}}"></span>
+     <div class="section-title">
+          <center><h3>{{building}} - {{room}}</h3></center>
+          <h4>Schedule</h4>
+     </div>
+
+    <div class="list-group list-group-flush">
          {% for key, value in times.items(): %}
-            {{key}}
-            {{value}}
+            <div class="list-group-item list-group-item-action">{{key}}
+            {%if value %}
+              <span class="badge badge-success float-right">Available</span>
+            {% else %}
+              <span class="badge badge-danger float-right">Unavailable</span>
+            {%endif%}
+            </div>
          {% endfor %}
-      </div>
-</body>
- {% endblock %}
+    </div>
+</div>
+{% endblock %}
+{% block extrajs %}
+<script src="../static/js/reload.js"></script>
+{% endblock %}
