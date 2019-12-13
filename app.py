@@ -374,7 +374,7 @@ def isLoggedIn():
 
 @app.route('/checkTime', methods=['GET', 'POST'])
 def checkTime():
-    print("in check time")
+    # print("in check time")
     if isLoggedIn() and request.method == 'POST':
         if request.is_json:
             content = request.get_json()
@@ -385,7 +385,7 @@ def checkTime():
             releaseEvent(getEventObject(eventid))
             return "Expired"
         elif (datetime.now() - endtime) <= timedelta(0, 0, 0, 0, 10, 0, 0):
-            print("should show modal")
+            # print("should show modal")
             return "True"
         else:
             return "False"
@@ -396,7 +396,9 @@ def checkTime():
 @app.route('/extendStay', methods=['GET', 'POST'])
 def extendStay():
     print("in extend stay")
-    if isLoggedIn():
+    print("am i logged in?", isLoggedIn())
+    print("request method", request.method)
+    if isLoggedIn() and request.method == 'POST':
         if request.is_json:
             THIRTY_MIN = 30
             loggedin = True
@@ -414,9 +416,8 @@ def extendStay():
             building=result[0]
 
             url = '/bookRoom?building=' + building + '&room=' + result[1]
-
+            print(url)
             return url
-
             #
             # number = displayBookingButtons(room) # number of buttons to display
             # times = []
