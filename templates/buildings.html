@@ -2,7 +2,11 @@
 {% block extracss%}
     <!-- Main css -->
     <link href="../static/css/style.css" rel="stylesheet">
-    <!-- <link href="themify-icons.css" rel="stylesheet"> -->
+    <style>
+    .card-deck .card {
+      max-width: calc(25% - 30px);
+    }
+    </style>
 {% endblock %}
 {% block content %}
 <div class="section mt-5 pt-5" id="buildings">
@@ -14,13 +18,13 @@
          <div class="col col-md-12">
             <div class="card-deck">
             {% for building in buildings: %}
-                  <div class="card features" style="width: 18rem;">
+                  <div class="card features" style="width: 25rem;">
                         <div class="card-body">
                           <div class="media">
                             <!-- the logo; can replace with a logo of choice-->
                             <div class="media-body">
                               <h5 class="card-title"><a href={{url_for('rooms', building=building)}}>{{building}}</a></h5>
-                              <h6 class="card-subtitle mb-2 text-muted">Card Subtitle</h6>
+                              <h6 class="card-subtitle mb-2 text-muted">Hours</h6>
                               <p class="card-text">
                                 time open and closed to be put soon and maybe some other data
                               </p>

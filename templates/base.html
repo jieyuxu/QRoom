@@ -27,7 +27,13 @@ URI     : https://colorlib.com
     <link rel="stylesheet" href="../static/css/themify-icons.css">
     <!-- Owl carousel -->
     <link rel="stylesheet" href="../static/css/owl.carousel.min.css">
-    {% block extracss %}{% endblock %}
+    <style>
+    .navbar-collapse.collapse.in{
+        background-color: black;
+      }
+    </style>
+    {% block extracss %}
+    {% endblock %}
 </head>
 
 <body data-spy="scroll" data-target="#navbar" data-offset="30">
@@ -57,7 +63,7 @@ URI     : https://colorlib.com
                                     <li class="nav-item"> <a class="nav-link" href="#getstarted">GET STARTED</a> </li>
                                     <li class="nav-item"> <a class="nav-link" href="#faq">FAQ</a> </li>
                                     <li class="nav-item"> <a class="nav-link" href="#contact">CONTACT</a> </li>
-                                    <li class="nav-item"><a href="/login" class="btn btn-outline-light my-3 my-sm-0 ml-lg-3">Login</a></li>
+                                    <li class="nav-item"><a href="/login" id="authbtn" class="btn btn-outline-light my-3 my-sm-0 ml-lg-3">Login</a></li>
                                 {% endif %}
                             </ul>
                         </div>
@@ -68,13 +74,29 @@ URI     : https://colorlib.com
     </div>
 
     {% block content %}{% endblock %}
-        
+
     <!-- jQuery and Bootstrap -->
     <script src="../static/js/jquery-3.2.1.min.js"></script>
     <script src="../static/js/bootstrap.bundle.min.js"></script>
     <!-- Plugins JS -->
     <script src="../static/js/owl.carousel.min.js"></script>
+    <script>
+    $(".navbar-toggler").click(function () {
+      if ($(".navbar-toggle").hasClass("collapsed")) {
+        $(".nav-link").css('color', 'white');
+        $("#authbtn").css('color', 'white');
+        $("#authbtn").css('border-color', 'white');
+        $(".navbar-collapse").css('background-color', 'transparent');
+      } else {
+        $(".nav-link").css('color', 'black');
+        $("#authbtn").css('color', 'black');
+        $("#authbtn").css('border-color', 'black');
+        // $(".navbar-collapse").css('background-color', 'rgba(255,255,255,0.8)');
+      }
+      })
+    </script>
     <!-- Custom JS -->
+    </script>
     {% block extrajs %}{% endblock %}
 </body>
 
