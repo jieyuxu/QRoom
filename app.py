@@ -9,6 +9,7 @@ from CAS import CAS
 from CAS import login_required
 from pywebpush import webpush, WebPushException
 from flask_mail import Message, Mail
+import smtplib
 
 
 app = Flask(__name__)
@@ -303,10 +304,10 @@ def handleAddUser():
                 msg.body = 'You have been added as an admin.'
                 try:
                    mail.send(msg)
-                except SMTPRecipientsRefused, e:
+                except smtplib.SMTPRecipientsRefused:
                    errorMsg = 'Recipient refused: invalid Princeton netid. User not added as admin successfully.'
                    addFlag = False
-                except SMTPException, e:
+                except smtplib.SMTPException:
                    errorMsg = 'Mail not sent: user not added as admin successfully.'
                    addFlag = False
                    
