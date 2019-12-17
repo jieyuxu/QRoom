@@ -10,7 +10,6 @@ from CAS import login_required
 from pywebpush import webpush, WebPushException
 from flask_mail import Message, Mail
 import smtplib
-#import threading
 
 app = Flask(__name__)
 app.config['MAIL_USE_SSL'] = False
@@ -21,8 +20,6 @@ app.config['MAIL_USERNAME'] = 'qroomteam@gmail.com'
 app.config['MAIL_PASSWORD'] = 'WeLoveBob123'
 
 mail = Mail(app)
-
-
 
 app.secret_key = 'hello its me'
 # print(os.random(24))
@@ -78,28 +75,41 @@ def profile():
         roomname=''
         eventid=''
 
-        # an array of eventDetails
-        events = []
+        calender = {}
         for event in event_query:
             # check end time and if it has passed
             if (current_dt() > event.end_time):
               continue
 
+            # check if start month, year in dictionary
+            start_time = event.start_time
+            mon_yr = str(start_time.strftime("%B")) + ' ' + str(start_time.year)
+
+            if mon_yr in calender:
+                events = calender[mon_yr]
+            else:
+                events = []
+
+            # get event details, store into dictionary
             eventDetails = {}
-            eventDetails['StartTime'] = event.start_time
+            eventDetails['StartTime'] = start_time
             eventDetails['EndTime'] = event.end_time
             room = getBuildingRoomName(event.room_id)
             eventDetails['buildingName'] = room[0]
             eventDetails['roomName'] = room[1]
             eventDetails['eventId'] = event.event_id
+            eventDetails['title'] = event.event_title
+
+            # add dictionary into events assos. with month, year and add [back] to calender
             events.append(eventDetails)
+            calender[mon_yr] = events
 
         if 'admin' in session:
             return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
-                           events = events, admin = True)
+                           events = calender, admin = True)
         else:
             return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
-                           events = events, admin = False)
+                           events = calender, admin = False)
     else:
         return redirect(url_for("index"))
 
@@ -174,41 +184,48 @@ def bookRoom():
 @app.route('/viewRoom', methods=['GET', 'POST'])
 def viewRoom():
     if isLoggedIn():
+
         building = request.args.get('building')
         room = request.args.get('room')
         markPassed()
-        print(room)
-        print(building)
+
         room_object = getRoomObject(room,building)
-        if room_object is None:
-            print('hi')
         group = getGroup(room_object)
+        print(group.group_id)
 
         # get current time and get delta 30
-        time = get30(current_dt())
-        print(time)
+        counter_time = get30(current_dt())
 
         # get all events in room for a certain day
         events = getEvents(getRoomObject(room, building))
+        print(room)
+        print(building)
         times_blocked = []
 
         for e in events:
             times_blocked.append([e.start_time, e.end_time])
             print([e.start_time, e.end_time])
 
-            dictionary = {}
-        while time.hour != 0:
-            for t in times_blocked:
-                check = time - timedelta(seconds=1)
+        dictionary = {}
 
-                if inRange(t[0], t[1], check) or not isGroupOpen(group,check):
-                    dictionary[time] = False
+        while (counter_time.time() != time(0, 0)):
+            check = counter_time - timedelta(seconds=1)
+
+            if not isGroupOpen(group,check):
+                dictionary[counter_time] = False
+                counter_time = add30(counter_time)
+                continue
+
+            for t in times_blocked:
+                if inRange(t[0], t[1], check):
+                    dictionary[counter_time] = False
                     break
 
-            if time not in dictionary.keys():
-                dictionary[time] = True
+            # if still not added into dictionary
+            if counter_time not in dictionary.keys():
+                dictionary[counter_time] = True
 
-            time = add30(time)
+            counter_time = add30(counter_time)
 
         isAvailable = False
 
@@ -228,7 +245,7 @@ def confirmation():
         time = str(request.args.get('fullTime'))
         print("THIS IS THE TIME", time)
         # assuming 'username' means netid
-        user = getUser(cas.username)
+        user = getUser(session['username'])
         print("THIS IS THE USER", user)
         room_object = getRoomObject(room, building)
         year = int(time[0:4])
@@ -239,7 +256,7 @@ def confirmation():
         end_time = datetime(year, month, day, hour, minute, 0, 0)
 
         # updates database, returns empty string if successful
-        print("username:" + cas.username)
+        print("username:" + session['username'])
         print("confirmation" + str(type(user)))
         error = bookRoomAdHoc(user, room_object, end_time)
 
@@ -310,7 +327,7 @@ def handleAddUser():
          print(current_user)
 
          current_user_object = getUser(current_user)
-         
+
          if (admin is None or admin.strip() == ""):
             errorMsg = "Please enter an admin netid. User not added."
 
@@ -322,11 +339,11 @@ def handleAddUser():
                   recipients=[recipient])
             msg.body = 'You have been added as an admin.'
 
-            try: 
+            try:
                mail.send(msg)
                print("I sent the mail")
                errorMsg = addAdmin(current_user_object, admin)
-               
+
                if errorMsg == "":
                   addFlag = True
 
@@ -338,7 +355,7 @@ def handleAddUser():
             #isAdmin = ('admin' in session is True)
             print("in handle user, ", errorMsg)
             return redirect(url_for("admin", addMessage = errorMsg, bookMessage = '', addFlag = addFlag, bookFlag = False))
-         
+
       else:
          print("Error in handle add user: not a post request")
    else:
@@ -356,6 +373,10 @@ def handleSchedule():
             room_id = request.form['room-id']
             start_time = request.form['start-time']
             end_time = request.form['end-time']
+            title = request.form['title']
+
+            if title == '':
+                title = '< No Event Title >'
 
             # check that the room id is in the building
             # building_object = getBuildingObject(building_id)
@@ -396,7 +417,7 @@ def handleSchedule():
             current_user = session['username']
             current_user_object = getUser(current_user)
 
-            eventMessage = bookRoomSchedule(current_user_object, room_object, start, end)
+            eventMessage = bookRoomSchedule(current_user_object, room_object, start, end, title)
             if eventMessage != '':
                 return redirect(url_for("admin", addMessage = '', bookMessage = eventMessage, addFlag = False, bookFlag = bookFlag))
 

@@ -46,9 +46,6 @@ def isLater(current_time, start_time):
 def inRange(start, end, time):
     # Return true if x is in the range [start, end]
     if start <= end:
-        print([start,end, time])
-        print(start <= time)
-        print(time <= end)
         return start <= time <= end
     else:
         return start <= time or time <= end
@@ -57,10 +54,6 @@ def inRange(start, end, time):
 def isGroupOpen(group, event_time):
     start = group.open_time
     end = group.close_time
-    print('start', start)
-    print('end', end)
-    print(event_time)
-    print('hour', event_time.hour)
 
     x = time(event_time.hour, event_time.minute, event_time.second, 00)
     return inRange(start, end, x)
@@ -176,7 +169,10 @@ def getUser(net_id):
 
 # returns all events of a user, passed and unpassed
 def getUserEvent(net_id):
-    event = sess.query(Events).filter(Events.net_id == net_id).all()
+    event = sess.query(Events)\
+            .filter(Events.net_id == net_id)\
+            .order_by(Events.start_time)\
+            .all()
     return event
 
 def isAdmin(user):
@@ -190,21 +186,24 @@ def updateContact(user, contact):
 def isAvailableScheduled(start_time, end_time, room):
     group = getGroup(room)
 
+    if start_time > end_time:
+        return 'Start Time later than End Time'
+
     if (not isGroupOpen(group, start_time)) or (not isGroupOpen(group, end_time)):
-        return False
+        return 'Building is not Open'
 
     # shouldn't book an event that ends in the past
     current_time = current_dt()
     if (end_time < current_time):
-        return False
+        return 'Event End-Time has Passed'
 
     conditions1 = []
-    conditions1.append(Events.start_time < start_time)
+    conditions1.append(Events.start_time <= start_time)
     conditions1.append(Events.end_time > start_time)
     clause1 = and_(*conditions1)
 
     conditions2 = []
-    conditions2.append(Events.start_time > start_time)
+    conditions2.append(Events.start_time >= start_time)
     conditions2.append(Events.start_time < end_time)
     clause2 = and_(*conditions2)
 
@@ -216,16 +215,25 @@ def isAvailableScheduled(start_time, end_time, room):
             .all()
 
     if len(events) != 0:
-        return False
+        message = 'The Following Events Are Schduled During This Time: <br>'
+        for e in events:
+            message += '<br>'
+            message += str(e.event_title) + '<br>'
+            message += '&emsp; Booked By: ' + e.net_id + '<br>'
+            message += '&emsp; Start Time: ' + str(e.start_time) + '<br>'
+            message += '&emsp; End Time: ' + str(e.end_time) + '<br>'
 
-    return True
+        return message
+
+    return ''
 
 # admin booking room for the future
-def bookRoomSchedule(user, room, start_time, end_time, event_title = ''):
+def bookRoomSchedule(user, room, start_time, end_time, event_title = '<No Event Title>'):
     if not isAdmin(user):
         return "NOT ADMIN"
-    if not isAvailableScheduled(start_time, end_time, room):
-        return "TIME NOT AVAILABLE"
+    problem = isAvailableScheduled(start_time, end_time, room)
+    if problem != '':
+        return problem
     event = Events(user = user, event_title= event_title, start_time = start_time,
                     end_time = end_time, room = room, passed = False)
 
@@ -271,7 +279,9 @@ def getRooms(building):
 
 # get events given room object
 def getEvents(room):
-    events = sess.query(Events).all()
+    events = sess.query(Events)\
+            .filter(Events.room_id == room.room_id)\
+            .all()
     return events
 
 # get assosiated building object from building name
@@ -288,7 +298,6 @@ def getRoomObject(room_name, building_name):
                 .filter(Rooms.room_name == room_name)\
                 .filter(Rooms.building_id == building.building_id)\
                 .first()
-    print(room)
     return room
 
 # get associated event object given event_id
