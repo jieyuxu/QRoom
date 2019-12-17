@@ -9,8 +9,7 @@ from CAS import CAS
 from CAS import login_required
 from pywebpush import webpush, WebPushException
 from flask_mail import Message, Mail
-import smtplib
-#import threading
+import ldap
 
 
 app = Flask(__name__)
@@ -317,18 +316,37 @@ def handleAddUser():
                   recipients=[recipient])
             msg.body = 'You have been added as an admin.'
 
-            try: 
-               mail.send(msg)
-               print("I sent the mail")
-               errorMsg = addAdmin(current_user_object, admin)
-               
-               if errorMsg == "":
-                  addFlag = True
+            try:
+               l = ldap.open("127.0.0.1")
+               l.protocol_version = ldap.VERSION3
+            except ldap.LDAPError as e:
+               print("error opening ldap ", str(e))
+
+            baseDN = "dc=pu,dc=win,dc=princeton,dc=edu"
+            searchScope = ldap.sub
+            retrieveAttributes = None 
+            searchFilter = "uid=<admin>"
+
+            try:
+               ldap_result_id = l.search(baseDN, searchScope, searchFilter, retrieveAttributes)
+               result_type, result_data = l.result(ldap_result_id, 0)
+
+               if (result_data == []):
+                  print('not a valid admin netid')
+                  errorMsg = "Please enter a valid admin netid"
+
+               else:
+                  mail.send(msg)
+                  print("I sent the mail")
+                  errorMsg = addAdmin(current_user_object, admin)
+
+                  if errorMsg == "":
+                     addFlag = True
 
             except Exception as e:
-               print("failed to send mail to user")
+               print("Failed to validate/contact the user")
                print("Exception received, ", str(e))
-               errorMsg = "Could not contact the user."
+               errorMsg = "Could not validate or contact the user."
 
             #isAdmin = ('admin' in session is True)
             print("in handle user, ", errorMsg)
