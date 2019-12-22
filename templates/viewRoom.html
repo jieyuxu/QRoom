@@ -16,11 +16,19 @@
 
     <div class="list-group list-group-flush">
          {% for key, value in times.items(): %}
-             <div class="list-group-item list-group-item-action">{{key}}
-            {%if value %}
-              <span class="badge badge-success float-right">Available</span>
+            <div class="list-group-item list-group-item-action">{{key}}
+            <!-- value[0] is if room is available at certain time -->
+            <!-- value[1] is name of person who booked room, if applicable -->
+            {%if value[0] %}
+                <span class="badge badge-success float-right">Available</span>
             {% else %}
-              <span class="badge badge-danger float-right">Unavailable</span>
+                {% if admin and value[1]|length > 1 %}
+                    <span class="badge badge-danger float-right"> Booked by {{value[1]}} </span>
+                {% elif value[1]|length > 1 %}
+                    <span class="badge badge-danger float-right"> Booked </span>
+                {% else %}
+                    <span class="badge badge-danger float-right"> Closed </span>
+                {%endif%}
             {%endif%}
             </div>
          {% endfor %}
