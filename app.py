@@ -304,7 +304,7 @@ def handleAddUser():
          print(current_user)
 
          current_user_object = getUser(current_user)
-         
+
          if (admin is None or admin.strip() == ""):
             errorMsg = "Please enter an admin netid. User not added."
 
@@ -317,14 +317,15 @@ def handleAddUser():
             msg.body = 'You have been added as an admin.'
 
             try:
-               l = ldap.open("127.0.0.1")
+               # l = ldap.open("127.0.0.1")
+               l = ldap.initialize("ldaps://ldap.princeton.edu:636/")
                l.protocol_version = ldap.VERSION3
             except ldap.LDAPError as e:
                print("error opening ldap ", str(e))
 
-            baseDN = "dc=pu,dc=win,dc=princeton,dc=edu"
-            searchScope = ldap.sub
-            retrieveAttributes = None 
+            baseDN = "o=Princeton University,c=US"
+            searchScope = ldap.SCOPE_SUBTREE
+            retrieveAttributes = None
             searchFilter = "uid=<admin>"
 
             try:
@@ -351,7 +352,7 @@ def handleAddUser():
             #isAdmin = ('admin' in session is True)
             print("in handle user, ", errorMsg)
             return redirect(url_for("admin", addMessage = errorMsg, bookMessage = '', addFlag = addFlag, bookFlag = False))
-         
+
       else:
          print("Error in handle add user: not a post request")
    else:
