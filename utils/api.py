@@ -144,7 +144,7 @@ def bookRoomAdHoc(user1, room, button_end_time):
     if existEvent and isLater(event.start_time, current_time):
         return "SYS FAILURE: current time later than start time of booked event"
 
-    event = Events(user = user1, event_title="...", start_time = current_time,
+    event = Events(user = user1, event_title="QR Booking", start_time = current_time,
                     end_time = button_end_time, room = room, passed = False)
 
     sess.add(event)
@@ -190,7 +190,9 @@ def isAvailableScheduled(start_time, end_time, room):
         return 'Start Time later than End Time'
 
     if (not isGroupOpen(group, start_time)) or (not isGroupOpen(group, end_time)):
-        return 'Building is not Open'
+        message = 'Building is not open at Start or End Time <br><br> '
+        message += 'Building Hours: ' + str(group.open_time) + '-' + str(group.close_time)
+        return message
 
     # shouldn't book an event that ends in the past
     current_time = current_dt()

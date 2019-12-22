@@ -184,55 +184,56 @@ def bookRoom():
 @app.route('/viewRoom', methods=['GET', 'POST'])
 def viewRoom():
     if isLoggedIn():
+        START_TIME = 0
+        END_TIME = 1
+        BOOKER = 2
 
         building = request.args.get('building')
         room = request.args.get('room')
-        markPassed()
-
         room_object = getRoomObject(room,building)
         group = getGroup(room_object)
-        print(group.group_id)
+
+        markPassed()
 
         # get current time and get delta 30
         counter_time = get30(current_dt())
 
         # get all events in room for a certain day
         events = getEvents(getRoomObject(room, building))
-        print(room)
-        print(building)
         times_blocked = []
 
         for e in events:
-            times_blocked.append([e.start_time, e.end_time])
-            print([e.start_time, e.end_time])
+            times_blocked.append([e.start_time, e.end_time, e.net_id])
 
+        # dictionary of times with array object
+        # object: [boolean for availability, name of owner of event (else '')]
         dictionary = {}
 
         while (counter_time.time() != time(0, 0)):
             check = counter_time - timedelta(seconds=1)
 
             if not isGroupOpen(group,check):
-                dictionary[counter_time] = False
+                dictionary[counter_time] = [False, '']
                 counter_time = add30(counter_time)
                 continue
 
             for t in times_blocked:
-                if inRange(t[0], t[1], check):
-                    dictionary[counter_time] = False
+                if inRange(t[START_TIME], t[END_TIME], check):
+                    dictionary[counter_time] = [False, t[BOOKER]]
                     break
 
             # if still not added into dictionary
             if counter_time not in dictionary.keys():
-                dictionary[counter_time] = True
+                dictionary[counter_time] = [True, '']
 
             counter_time = add30(counter_time)
 
-        isAvailable = False
-
         if 'admin' in session:
-            return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, admin = True)
+            return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username,
+                                    building=building, room=room, times = dictionary, admin = True)
         else:
-            return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, times = dictionary, isAvailable = isAvailable, admin = False)
+            return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username,
+                                    building=building, room=room, times = dictionary, admin = False)
     else:
         return redirect(url_for("index"))
 
