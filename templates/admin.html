@@ -10,7 +10,7 @@
        <div class="section-title">
             <h2>Admin Portal</h2>
        </div>
-       
+
        <h3>Add Another Admin</h3>
        {% if addMessage %}
         <div class="alert alert-danger" role="alert">
@@ -32,7 +32,9 @@
        <h3 class="mt-4">Book a Room in Advance</h3>
        {% if bookMessage %}
         <div class="alert alert-danger" role="alert">
-            {{bookMessage}}
+          {% autoescape false %}
+              {{bookMessage}}
+          {% endautoescape %}
         </div>
        {% endif %}
         {% if bookSuccess  == "True" %}
@@ -41,6 +43,13 @@
           </div>
         {% endif %}
        <form action = "/handleSchedule" method = "post">
+        <div class="row">
+            <div class="col col-md-6">
+                <div class="form-group mb-4">
+                  <input type="title" class="form-control" name="title" id="title" placeholder="Enter Event Title">
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col col-md-6">
                 <div class="form-group">

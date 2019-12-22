@@ -24,7 +24,7 @@ shepperd = Buildings(building_name = "Sherrerd Hall", latitude=40.3495354, longi
 friend = Buildings(building_name = "Friend Center", latitude=40.3505495, longitude=-74.6543927)
 # @40.3423081,-74.6596026
 
-group1 = Groups(open_time = time(8,00,00), close_time = time(22,00,00))
+group1 = Groups(open_time = time(8,00,00), close_time = time(4,00,00))
 group2 = Groups(open_time = time(8,00,00), close_time = time(20,00,00))
 
 
@@ -37,7 +37,8 @@ room6 = Rooms(building = friend, room_name = '006', group = group2)
 
 bob = Users(net_id= "bob", contact = 'bob@princeton.edu', admin = True)
 paul = Users(net_id= "paul", contact = 'paul@princeton.edu', admin = False)
-saishaa = Users(net_id= "saishaa", contact="saishaa@princton.edu", admin = True)
+saishaa = Users(net_id= "saishaa", contact="saisha@princton.edu", admin = True)
+suki = Users(net_id= "sukiy", contact="sukiy@princton.edu", admin = True)
 
 event1 = Events(user = bob, event_title="Bob's birthday",
 start_time = datetime(2020, 11, 28, 23, 55, 59, 342380),
@@ -80,6 +81,7 @@ sess.add(room4)
 sess.add(bob)
 sess.add(paul)
 sess.add(saishaa)
+sess.add(suki)
 
 sess.add(event1)
 # sess.add(event2)
