@@ -41,7 +41,7 @@
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Exam date time</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Edit Reservation</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">×</span>
                                                     </button>
@@ -52,7 +52,7 @@
                                                         <div class="row">
                                                             <div class="col col-md-6">
                                                                 <div class="form-group mb-4">
-                                                                  <input type="title" class="form-control" name="title" id="title" placeholder="Enter Event Title">
+                                                                  <input type="title" class="form-control" name="title" id="title" placeholder="{{event['title']}}">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -70,7 +70,7 @@
                                                                 <div class="form-group row">
                                                                     <label class="col-form-label" for="room">Room:</label>
                                                                     <div class="col-sm-10">
-                                                                       <input type="room" class="form-control" name="room-id" id="room" placeholder="Enter desired room">
+                                                                       <input type="room" class="form-control" name="room-id" id="room" placeholder={{event['roomName']}}>
                                                                      </div>
                                                                 </div>
                                                             </div>
@@ -88,11 +88,20 @@
                                                               </div>
                                                         </div>
                                                           </div>
+
                                                       <script type="text/javascript">
                                                             $('#datetimepicker12').datetimepicker({
-                                                            defaultDate: new Date(),
-                                                            format: 'YYYY-MM-DD hh:mm:ss A'
-                                                        });
+                                                                defaultDate: new Date(
+                                                                    parseInt("{{event['start_year']|tojson}}"), 
+                                                                    parseInt("{{event['start_month']|tojson}}"),
+                                                                    parseInt("{{event['start_day']|tojson}}"),
+                                                                    parseInt("{{event['start_hour']|tojson}}"), 
+                                                                    parseInt("{{event['start_minutes']|tojson}}"),
+                                                                    parseInt("{{event['start_seconds']|tojson}}"),
+                                                                    0),
+                                                                format: 'YYYY-MM-DD hh:mm:ss A'
+                                                            });
+                                                            
                                                           </script>
                                                     </div>
                                                 
@@ -109,8 +118,15 @@
                                                             </div>
                                                       </div>
                                                       <script type="text/javascript">
-                                                        $('#datetimepicker13').datetimepicker({
-                                                            defaultDate: new Date(),
+                                                            $('#datetimepicker13').datetimepicker({
+                                                            defaultDate: new Date(
+                                                                    parseInt("{{event['end_year']|tojson}}"), 
+                                                                    parseInt("{{event['end_month']|tojson}}"),
+                                                                    parseInt("{{event['end_day']|tojson}}"),
+                                                                    parseInt("{{event['end_hour']|tojson}}"), 
+                                                                    parseInt("{{event['end_minutes']|tojson}}"),
+                                                                    parseInt("{{event['end_seconds']|tojson}}"),
+                                                                    0),
                                                             format: 'YYYY-MM-DD hh:mm:ss A'
                                                         });
                                                       </script>

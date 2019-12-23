@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for, redirect, current_app
+from flask import Flask, request, render_template, url_for, redirect, current_app, json
 from flask import session
 import os
 from utils.api import *
@@ -88,6 +88,7 @@ def profile():
 
          # check if start month, year in dictionary
          start_time = event.start_time
+         end_time = event.end_time
          mon_yr = str(start_time.strftime("%B")) + ' ' + str(start_time.year)
 
          if mon_yr in calender:
@@ -98,12 +99,26 @@ def profile():
          # get event details, store into dictionary
          eventDetails = {}
          eventDetails['StartTime'] = start_time
-         eventDetails['EndTime'] = event.end_time
+         eventDetails['EndTime'] = end_time
          room = getBuildingRoomName(event.room_id)
          eventDetails['buildingName'] = room[0]
          eventDetails['roomName'] = room[1]
          eventDetails['eventId'] = event.event_id
          eventDetails['title'] = event.event_title
+         
+         eventDetails['start_year'] = start_time.year
+         eventDetails['start_month'] = start_time.month
+         eventDetails['start_day'] = start_time.day
+         eventDetails['start_hour'] = start_time.hour
+         eventDetails['start_minutes'] = start_time.minute
+         eventDetails['start_seconds'] = start_time.second
+
+         eventDetails['end_year'] = end_time.year
+         eventDetails['end_month']= end_time.month
+         eventDetails['end_day'] = end_time.day
+         eventDetails['end_hour'] = end_time.hour
+         eventDetails['end_minutes'] = end_time.minute
+         eventDetails['end_seconds'] = end_time.second
 
          # add dictionary into events assos. with month, year and add [back] to calender
          events.append(eventDetails)
