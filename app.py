@@ -124,6 +124,10 @@ def profile():
          events.append(eventDetails)
          calender[mon_yr] = events
 
+         # calendar is a dictionary with key = a month/year string and value = events list
+         # events is a list of eventdetails dictionaries
+         # eventdetails is a dictionary containing all of the information for a specific event within the month/yr
+
       if 'admin' in session:
          return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = True, buildings = buildings)
       else:
@@ -203,8 +207,9 @@ def bookRoom():
 def editReservation():
    if isLoggedIn():
       if request.method == 'POST':
+         # room_id is a room number and building_id is the building name
          building_id = request.form['building']
-         room_id = request.form['room-id']
+         room_id = request.form['room-id'] 
          start_time = request.form['start-time']
          end_time = request.form['end-time']
          title = request.form['title']
@@ -214,6 +219,8 @@ def editReservation():
          if title == '':
             title = '< No Event Title >'
 
+         print("Room id", room_id)
+         print("Building id", building_id)
          # check that the room id is in the building
          # building_object = getBuildingObject(building_id)
          room_object = getRoomObject(room_id, building_id)

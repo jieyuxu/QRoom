@@ -187,14 +187,17 @@ def listAvailableScheduled(start_time, end_time, room):
     group = getGroup(room)
 
     if start_time > end_time:
+        print('Start time later than end time')
         return 'Start time later than end time'
 
     if (not isGroupOpen(group, start_time)) or (not isGroupOpen(group, end_time)):
+        print('Building is not open')
         return 'Building is not open'
 
     # shouldn't book an event that ends in the past
     current_time = current_dt()
     if (end_time < current_time):
+        print('Event end time has passed')
         return 'Event end time has passed'
 
     conditions1 = []
@@ -208,19 +211,28 @@ def listAvailableScheduled(start_time, end_time, room):
     clause2 = and_(*conditions2)
 
     clauses = [clause1, clause2]
-    combined = or_(*clauses)
+    timeClause = or_(*clauses)
+
+    # only display conflicts for the same room
+    conditions3 = []
+    conditions3.append(Events.room_id == room.room_id)
+    conditions3.append(timeClause)
+    combined = and_(*conditions3)
 
     events = sess.query(Events) \
             .filter(combined) \
             .all()
-
+    print('Printing overlapping events')
     return events
 
 # can you schedule it at these times in the future?
 def isAvailableScheduled(start_time, end_time, room):
     # list of events that overlap
+    print('entered is available scheduled, about to call list available scheduled')
     events = listAvailableScheduled(start_time, end_time, room)
-
+    if (isinstance(events, str)):
+        return events
+    print('returned from list available scheduled')
     if len(events) != 0:
         message = 'The following events are scheduled during this time: <br>'
         for e in events:
@@ -257,9 +269,11 @@ def isAvailableScheduledEdit(start_time, end_time, room, current_event):
 
 # admin booking room for the future
 def bookRoomSchedule(user, room, start_time, end_time, event_title = '<No Event Title>'):
+    print('Entered book room schedule, about to call is available scheduled')
     if not isAdmin(user):
         return "NOT ADMIN"
     problem = isAvailableScheduled(start_time, end_time, room)
+    print('returned from isAvailableScheduled')
     if problem != '':
         return problem
     event = Events(user = user, event_title= event_title, start_time = start_time,
