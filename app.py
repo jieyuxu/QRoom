@@ -69,49 +69,52 @@ def caslogout():
 
 @app.route('/profile')
 def profile():
-    if isLoggedIn():
-        event_query = getUserEvent(session['username'])
-        buildingname=''
-        roomname=''
-        eventid=''
+   if isLoggedIn():
+      event_query = getUserEvent(session['username'])
+      buildingname=''
+      roomname=''
+      eventid=''
 
-        calender = {}
-        for event in event_query:
-            # check end time and if it has passed
-            if (current_dt() > event.end_time):
-              continue
+      buildings_query = getBuildings()
+      buildings = []
+      for b in buildings_query:
+         buildings.append(b.building_name)
 
-            # check if start month, year in dictionary
-            start_time = event.start_time
-            mon_yr = str(start_time.strftime("%B")) + ' ' + str(start_time.year)
+      calender = {}
+      for event in event_query:
+         # check end time and if it has passed
+         if (current_dt() > event.end_time):
+            continue
 
-            if mon_yr in calender:
-                events = calender[mon_yr]
-            else:
-                events = []
+         # check if start month, year in dictionary
+         start_time = event.start_time
+         mon_yr = str(start_time.strftime("%B")) + ' ' + str(start_time.year)
 
-            # get event details, store into dictionary
-            eventDetails = {}
-            eventDetails['StartTime'] = start_time
-            eventDetails['EndTime'] = event.end_time
-            room = getBuildingRoomName(event.room_id)
-            eventDetails['buildingName'] = room[0]
-            eventDetails['roomName'] = room[1]
-            eventDetails['eventId'] = event.event_id
-            eventDetails['title'] = event.event_title
+         if mon_yr in calender:
+            events = calender[mon_yr]
+         else:
+            events = []
 
-            # add dictionary into events assos. with month, year and add [back] to calender
-            events.append(eventDetails)
-            calender[mon_yr] = events
+         # get event details, store into dictionary
+         eventDetails = {}
+         eventDetails['StartTime'] = start_time
+         eventDetails['EndTime'] = event.end_time
+         room = getBuildingRoomName(event.room_id)
+         eventDetails['buildingName'] = room[0]
+         eventDetails['roomName'] = room[1]
+         eventDetails['eventId'] = event.event_id
+         eventDetails['title'] = event.event_title
 
-        if 'admin' in session:
-            return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
-                           events = calender, admin = True)
-        else:
-            return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username,
-                           events = calender, admin = False)
-    else:
-        return redirect(url_for("index"))
+         # add dictionary into events assos. with month, year and add [back] to calender
+         events.append(eventDetails)
+         calender[mon_yr] = events
+
+      if 'admin' in session:
+         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = True, buildings = buildings)
+      else:
+         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = False, buildings = buildings)
+   else:
+      return redirect(url_for("index"))
 
 @app.route('/buildings', methods=['GET', 'POST'])
 def buildings():
@@ -183,8 +186,74 @@ def bookRoom():
 
 @app.route('/editReservation', methods=['GET', 'POST'])
 def editReservation():
-   # MODAL STUFF
+   if isLoggedIn():
+      if request.method == 'POST':
+         building_id = request.form['building']
+         room_id = request.form['room-id']
+         start_time = request.form['start-time']
+         end_time = request.form['end-time']
+         title = request.form['title']
+         event_id = request.form['eventid']
+         print("Event_id " + event_id)
 
+         if title == '':
+            title = '< No Event Title >'
+
+         # check that the room id is in the building
+         # building_object = getBuildingObject(building_id)
+         room_object = getRoomObject(room_id, building_id)
+         if room_object is None:
+            print("Must enter a valid room")
+            return redirect(url_for('profile'))
+            #roomMessage = 'Please enter a valid room.'
+         
+         event_object = getEventObject(event_id)
+         if event_object is None:
+            print("This should not occur! Invalid event")
+            return redirect(url_for('profile'))
+
+         # make a datetime object for the start and end
+         start_year = start_time[:4]
+         start_month = start_time[5:7]
+         start_day = start_time[8:10]
+         start_hour = start_time[11:13]
+         start_minutes = start_time[14:16]
+         start_meridiem = start_time[20:22]
+
+         end_year = end_time[:4]
+         end_month= end_time[5:7]
+         end_day = end_time[8:10]
+         end_hour = end_time[11:13]
+         end_minutes = end_time[14:16]
+         end_meridiem = end_time[20:22]
+
+         starting_hour = int(start_hour)
+         ending_hour = int(end_hour)
+
+         if (start_meridiem == "AM" and starting_hour == 12):
+            starting_hour = 0
+         if (start_meridiem == "PM" and starting_hour >= 1 and starting_hour < 12):
+            starting_hour += 12
+         if (end_meridiem == "AM" and ending_hour == 12):
+            ending_hour = 0
+         if (end_meridiem == "PM" and ending_hour >= 1 and ending_hour < 12):
+            ending_hour += 12
+
+         start = datetime(int(start_year), int(start_month), int(start_day), starting_hour, int(start_minutes))
+         end = datetime(int(end_year), int(end_month), int(end_day), ending_hour, int(end_minutes))
+         current_user = session['username']
+         current_user_object = getUser(current_user)
+
+         problem = editRoomSchedule(current_user_object, room_object, start, end, event_object, title)
+         if problem != '':
+            print(problem)
+            return redirect(url_for('profile'))
+         
+         # no problem, reservation was successfully edited
+         return redirect(url_for('profile'))
+   
+   else:
+        return redirect(url_for("index"))
 
 @app.route('/viewRoom', methods=['GET', 'POST'])
 def viewRoom():
