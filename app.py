@@ -208,6 +208,7 @@ def bookRoom():
 def editReservation():
    if isLoggedIn():
       if request.method == 'POST':
+         adminStatus = 'admin' in session
          # room_id is a room number and building_id is the building name
          building_id = request.form['building']
          room_id = request.form['room-id'] 
@@ -215,10 +216,14 @@ def editReservation():
          end_time = request.form['end-time']
          title = request.form['title']
          event_id = request.form['eventid']
-         print("Event_id " + event_id)
+         fullTime = "Start: " + start_time + " End: " + end_time
 
          if title == '':
             title = '< No Event Title >'
+
+         if not adminStatus:
+            errorMsg = "You do not have administrative access."
+            return render_template("editConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)
 
          print("Room id", room_id)
          print("Building id", building_id)
@@ -226,14 +231,24 @@ def editReservation():
          # building_object = getBuildingObject(building_id)
          room_object = getRoomObject(room_id, building_id)
          if room_object is None:
-            print("Must enter a valid room")
-            return redirect(url_for('profile'))
-            #roomMessage = 'Please enter a valid room.'
+            errorMsg = "Please enter a valid room."
+            return render_template("editConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)
          
          event_object = getEventObject(event_id)
          if event_object is None:
             print("This should not occur! Invalid event")
             return redirect(url_for('profile'))
+
+         regex = "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [A,P]M"
+         startMatch = re.search(regex, start_time)
+         endMatch = re.search(regex, end_time)
+         print(start_time)
+         if startMatch is None:
+            errorMsg = 'Please enter a valid start time. Select a time by clicking on the calendar icon, or enter a time in the format year-month-day hour:minutes:seconds AM/PM'
+            return render_template("editConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)
+         if endMatch is None:  
+            errorMsg = 'Please enter a valid end time. Select a time by clicking on the calendar icon, or enter a time in the format year:month:day:hour:minutes:seconds:milliseconds:AM/PM'
+            return render_template("editConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)
 
          # make a datetime object for the start and end
          start_year = start_time[:4]
@@ -267,13 +282,8 @@ def editReservation():
          current_user = session['username']
          current_user_object = getUser(current_user)
 
-         problem = editRoomSchedule(current_user_object, room_object, start, end, event_object, title)
-         if problem != '':
-            print(problem)
-            return redirect(url_for('profile'))
-         
-         # no problem, reservation was successfully edited
-         return redirect(url_for('profile'))
+         errorMsg = editRoomSchedule(current_user_object, room_object, start, end, event_object, title)
+         return render_template("editConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)
    
    else:
         return redirect(url_for("index"))
@@ -484,12 +494,14 @@ def handleSchedule():
          start_hour = start_time[11:13]
          start_minutes = start_time[14:16]
          start_meridiem = start_time[20:22]
+
          end_year = end_time[:4]
          end_month= end_time[5:7]
          end_day = end_time[8:10]
          end_hour = end_time[11:13]
          end_minutes = end_time[14:16]
          end_meridiem = end_time[20:22]
+
          starting_hour = int(start_hour)
          ending_hour = int(end_hour)
 
@@ -506,6 +518,7 @@ def handleSchedule():
          end = datetime(int(end_year), int(end_month), int(end_day), ending_hour, int(end_minutes))
          current_user = session['username']
          current_user_object = getUser(current_user)
+
          errorMsg = bookRoomSchedule(current_user_object, room_object, start, end, title)
 
          return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)

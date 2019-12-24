@@ -251,6 +251,7 @@ def isAvailableScheduledEdit(start_time, end_time, room, current_event):
     events = listAvailableScheduled(start_time, end_time, room)
 
     seenConflictBefore = False
+    message = ''
     if len(events) != 0:
         for e in events:
             if e.event_id != current_event.event_id:
@@ -263,9 +264,7 @@ def isAvailableScheduledEdit(start_time, end_time, room, current_event):
                 message += 'Start Time: ' + str(e.start_time) + '\n'
                 message += 'End Time: ' + str(e.end_time) + '\n'
 
-        return message
-
-    return ''
+    return message
 
 # admin booking room for the future
 def bookRoomSchedule(user, room, start_time, end_time, event_title = '<No Event Title>'):
