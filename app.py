@@ -10,6 +10,7 @@ from CAS import login_required
 from pywebpush import webpush, WebPushException
 from flask_mail import Message, Mail
 import smtplib
+import re
 
 app = Flask(__name__)
 app.config['MAIL_USE_SSL'] = False
@@ -464,7 +465,18 @@ def handleSchedule():
          if room_object is None:
             errorMsg = 'Please enter a valid room.'
             return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)
-        
+
+         regex = "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [A,P]M"
+         startMatch = re.search(regex, start_time)
+         endMatch = re.search(regex, end_time)
+         print(start_time)
+         if startMatch is None:
+            errorMsg = 'Please enter a valid start time. Select a time by clicking on the calendar icon, or enter a time in the format year-month-day hour:minutes:seconds AM/PM'
+            return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)
+         if endMatch is None:  
+            errorMsg = 'Please enter a valid end time. Select a time by clicking on the calendar icon, or enter a time in the format year:month:day:hour:minutes:seconds:milliseconds:AM/PM'
+            return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)
+
          # make a datetime object for the start and end
          start_year = start_time[:4]
          start_month = start_time[5:7]
