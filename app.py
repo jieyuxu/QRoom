@@ -390,24 +390,7 @@ def admin():
          buildings.append(b.building_name)
       print(buildings)
 
-      addMessage = ""
-      if 'addMessage' in request.args:
-         addMessage = request.args.get('addMessage')
-
-      bookMessage = ""
-      if 'bookMessage' in request.args:
-         bookMessage = request.args.get('bookMessage')
-
-      bookFlag = False
-      addFlag = False
-      if 'bookFlag' in request.args:
-         bookFlag = request.args.get('bookFlag')
-      if 'addFlag' in request.args:
-         print("request.args found an AddFlag")
-         addFlag = request.args.get('addFlag')
-         print("addflag", addFlag)
-
-      return render_template("admin.html", loggedin = isLoggedIn(), username = cas.username, admin = isAdmin, addMessage = addMessage, bookMessage = bookMessage, buildings = buildings, addSuccess = addFlag, bookSuccess = bookFlag)
+      return render_template("admin.html", loggedin = isLoggedIn(), username = cas.username, admin = 'admin' in session, buildings = buildings)
    else:
       return redirect(url_for("index"))
 
@@ -416,16 +399,19 @@ def handleAddUser():
    if isLoggedIn():
       if request.method == 'POST':
 
-         addFlag = False
          admin = request.form['admin-id']
-         print(admin)
-         current_user = session['username']
-         print(current_user)
 
+         current_user = session['username']
          current_user_object = getUser(current_user)
+         adminStatus = 'admin' in session
+
+         if not adminStatus:
+            errorMsg = "You do not have administrative access."
+            return render_template("newAdminConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, addMessage=errorMsg, newUser=admin)
 
          if (admin is None or admin.strip() == ""):
-            errorMsg = "Please enter an admin netid. User not added."
+            errorMsg = "Please enter an admin netid."
+            return render_template("newAdminConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, addMessage=errorMsg, newUser=admin)
 
          else:
             admin = admin.strip()
@@ -437,21 +423,15 @@ def handleAddUser():
 
             try:
                mail.send(msg)
-               print("I sent the mail")
                errorMsg = addAdmin(current_user_object, admin)
-
-               if errorMsg == "":
-                  addFlag = True
 
             except Exception as e:
                print("failed to send mail to user")
                print("Exception received, ", str(e))
-               errorMsg = "Could not contact the user."
+               errorMsg = "Could not contact the user. User not added as admin"
 
-            #isAdmin = ('admin' in session is True)
-            print("in handle user, ", errorMsg)
-            return redirect(url_for("admin", addMessage = errorMsg, bookMessage = '', addFlag = addFlag, bookFlag = False))
-
+            print("error message in handle user, ", errorMsg)
+            return render_template("newAdminConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, addMessage=errorMsg, newUser=admin)
       else:
          print("Error in handle add user: not a post request")
    else:
@@ -459,66 +439,64 @@ def handleAddUser():
 
 @app.route('/handleSchedule', methods = ['GET', 'POST'])
 def handleSchedule():
-    if isLoggedIn():
-        if request.method == 'POST':
-            bookFlag = False
-            print("printing request form", request.form.items())
-            for key, val in request.form.items():
-               print(key, val)
-            building_id = request.form['building']
-            room_id = request.form['room-id']
-            start_time = request.form['start-time']
-            end_time = request.form['end-time']
-            title = request.form['title']
+   if isLoggedIn():
+      if request.method == 'POST':
+         adminStatus = 'admin' in session
+         print("printing request form", request.form.items())
+         for key, val in request.form.items():
+            print(key, val)
+         building_id = request.form['building']
+         room_id = request.form['room-id']
+         start_time = request.form['start-time']
+         end_time = request.form['end-time']
+         title = request.form['title']
+         fullTime = "Start: " + start_time + " End: " + end_time
 
-            if title == '':
-                title = '< No Event Title >'
+         if title == '':
+            title = '< No Event Title >'
 
-            # check that the room id is in the building
-            # building_object = getBuildingObject(building_id)
-            room_object = getRoomObject(room_id, building_id)
-            if room_object is None:
-                roomMessage = 'Please enter a valid room.'
-                return redirect(url_for("admin", addMessage = '', bookMessage = roomMessage, addFlag = False, bookFlag = bookFlag))
+         if not adminStatus:
+            errorMsg = "You do not have administrative access."
+            return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)
 
-            # make a datetime object for the start and end
-            start_year = start_time[:4]
-            start_month = start_time[5:7]
-            start_day = start_time[8:10]
-            start_hour = start_time[11:13]
-            start_minutes = start_time[14:16]
-            start_meridiem = start_time[20:22]
+         # check that the room id is in the building
+         room_object = getRoomObject(room_id, building_id)
+         if room_object is None:
+            errorMsg = 'Please enter a valid room.'
+            return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)
+        
+         # make a datetime object for the start and end
+         start_year = start_time[:4]
+         start_month = start_time[5:7]
+         start_day = start_time[8:10]
+         start_hour = start_time[11:13]
+         start_minutes = start_time[14:16]
+         start_meridiem = start_time[20:22]
+         end_year = end_time[:4]
+         end_month= end_time[5:7]
+         end_day = end_time[8:10]
+         end_hour = end_time[11:13]
+         end_minutes = end_time[14:16]
+         end_meridiem = end_time[20:22]
+         starting_hour = int(start_hour)
+         ending_hour = int(end_hour)
 
-            end_year = end_time[:4]
-            end_month= end_time[5:7]
-            end_day = end_time[8:10]
-            end_hour = end_time[11:13]
-            end_minutes = end_time[14:16]
-            end_meridiem = end_time[20:22]
+         if (start_meridiem == "AM" and starting_hour == 12):
+            starting_hour = 0
+         if (start_meridiem == "PM" and starting_hour >= 1 and starting_hour < 12):
+            starting_hour += 12
+         if (end_meridiem == "AM" and ending_hour == 12):
+            ending_hour = 0
+         if (end_meridiem == "PM" and ending_hour >= 1 and ending_hour < 12):
+            ending_hour += 12
 
-            starting_hour = int(start_hour)
-            ending_hour = int(end_hour)
+         start = datetime(int(start_year), int(start_month), int(start_day), starting_hour, int(start_minutes))
+         end = datetime(int(end_year), int(end_month), int(end_day), ending_hour, int(end_minutes))
+         current_user = session['username']
+         current_user_object = getUser(current_user)
+         errorMsg = bookRoomSchedule(current_user_object, room_object, start, end, title)
 
-            if (start_meridiem == "AM" and starting_hour == 12):
-               starting_hour = 0
-            if (start_meridiem == "PM" and starting_hour >= 1 and starting_hour < 12):
-               starting_hour += 12
-            if (end_meridiem == "AM" and ending_hour == 12):
-               ending_hour = 0
-            if (end_meridiem == "PM" and ending_hour >= 1 and ending_hour < 12):
-               ending_hour += 12
-
-            start = datetime(int(start_year), int(start_month), int(start_day), starting_hour, int(start_minutes))
-            end = datetime(int(end_year), int(end_month), int(end_day), ending_hour, int(end_minutes))
-            current_user = session['username']
-            current_user_object = getUser(current_user)
-
-            eventMessage = bookRoomSchedule(current_user_object, room_object, start, end, title)
-            if eventMessage != '':
-                return redirect(url_for("admin", addMessage = '', bookMessage = eventMessage, addFlag = False, bookFlag = bookFlag))
-
-            bookFlag = True
-            return redirect(url_for("admin", addMessage = '', bookMessage = eventMessage, addFlag = False, bookFlag = bookFlag))
+         return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, building=building_id, room=room_id)
 
 @app.route('/currentBooking', methods = ['GET', 'POST'])
 def currentBooking():

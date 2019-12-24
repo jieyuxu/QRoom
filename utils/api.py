@@ -144,7 +144,7 @@ def bookRoomAdHoc(user1, room, button_end_time):
     if existEvent and isLater(event.start_time, current_time):
         return "SYS FAILURE: current time later than start time of booked event"
 
-    event = Events(user = user1, event_title="...", start_time = current_time,
+    event = Events(user = user1, event_title="AdHoc Booking", start_time = current_time,
                     end_time = button_end_time, room = room, passed = False)
 
     sess.add(event)
@@ -234,13 +234,13 @@ def isAvailableScheduled(start_time, end_time, room):
         return events
     print('returned from list available scheduled')
     if len(events) != 0:
-        message = 'The following events are scheduled during this time: <br>'
+        message = 'The following events are scheduled during this time: \n'
         for e in events:
-            message += '<br>'
-            message += str(e.event_title) + '<br>'
-            message += '&emsp; Booked By: ' + e.net_id + '<br>'
-            message += '&emsp; Start Time: ' + str(e.start_time) + '<br>'
-            message += '&emsp; End Time: ' + str(e.end_time) + '<br>'
+            message += '\n'
+            message += str(e.event_title) + '\n'
+            message += 'Booked By: ' + e.net_id + '\n'
+            message += 'Start Time: ' + str(e.start_time) + '\n'
+            message += 'End Time: ' + str(e.end_time) + '\n'
 
         return message
 
@@ -255,13 +255,13 @@ def isAvailableScheduledEdit(start_time, end_time, room, current_event):
         for e in events:
             if e.event_id != current_event.event_id:
                 if not seenConflictBefore:
-                    message = 'The following events are scheduled during this time: <br>'
+                    message = 'The following events are scheduled during this time: \n'
                     seenConflictBefore = True
-                message += '<br>'
-                message += str(e.event_title) + '<br>'
-                message += '&emsp; Booked By: ' + e.net_id + '<br>'
-                message += '&emsp; Start Time: ' + str(e.start_time) + '<br>'
-                message += '&emsp; End Time: ' + str(e.end_time) + '<br>'
+                message += '\n'
+                message += str(e.event_title) + '\n'
+                message += 'Booked By: ' + e.net_id + '\n'
+                message += 'Start Time: ' + str(e.start_time) + '\n'
+                message += 'End Time: ' + str(e.end_time) + '\n'
 
         return message
 
