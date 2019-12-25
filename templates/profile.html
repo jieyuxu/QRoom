@@ -92,13 +92,14 @@
                                                     <div class="col col-md-6">
                                                         <div class="form-group mb-4">
                                                             <label>Start Time</label>
-                                                            <div class="input-group date" id="datetimepicker12"
+                                                            <div class="input-group date"
+                                                                id="datetimepicker12{{event['eventId']}}"
                                                                 data-target-input="nearest">
                                                                 <input type="text" name="start-time"
                                                                     class="form-control datetimepicker-input"
-                                                                    data-target="#datetimepicker12" />
+                                                                    data-target="#datetimepicker12{{event['eventId']}}" />
                                                                 <div class="input-group-append"
-                                                                    data-target="#datetimepicker12"
+                                                                    data-target="#datetimepicker12{{event['eventId']}}"
                                                                     data-toggle="datetimepicker">
                                                                     <div class="input-group-text"><i
                                                                             class="fa fa-calendar"></i></div>
@@ -114,7 +115,7 @@
                                                     </script>
 
                                                     <script type="text/javascript">
-                                                        $('#datetimepicker12').datetimepicker({
+                                                        $("#datetimepicker12{{event['eventId']}}").datetimepicker({
                                                             defaultDate: new Date(
                                                                 parseInt("{{event['start_year']|tojson}}"),
                                                                 parseInt("{{event['start_month']|tojson}}") - 1,
@@ -132,13 +133,14 @@
                                                     <div class="col col-md-6">
                                                         <div class="form-group">
                                                             <label>End Time</label>
-                                                            <div class="input-group date" id="datetimepicker13"
+                                                            <div class="input-group date"
+                                                                id="datetimepicker13{{event['eventId']}}"
                                                                 data-target-input="nearest">
                                                                 <input type="text" name="end-time"
                                                                     class="form-control datetimepicker-input"
-                                                                    data-target="#datetimepicker13" />
+                                                                    data-target="#datetimepicker13{{event['eventId']}}" />
                                                                 <div class="input-group-append"
-                                                                    data-target="#datetimepicker13"
+                                                                    data-target="#datetimepicker13{{event['eventId']}}"
                                                                     data-toggle="datetimepicker">
                                                                     <div class="input-group-text"><i
                                                                             class="fa fa-calendar"></i></div>
@@ -147,7 +149,7 @@
                                                         </div>
                                                     </div>
                                                     <script type="text/javascript">
-                                                        $('#datetimepicker13').datetimepicker({
+                                                        $("#datetimepicker13{{event['eventId']}}").datetimepicker({
                                                             defaultDate: new Date(
                                                                 parseInt("{{event['end_year']|tojson}}"),
                                                                 parseInt("{{event['end_month']|tojson}}") - 1,
