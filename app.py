@@ -190,7 +190,7 @@ def bookRoom():
             time = get30(current_dt())
          else:
             time = add30(time)
-         times.append(str(time)[11:16])
+         times.append(str(time)[11:19])
          fullTimes.append(str(time))
       print(times)
       print(fullTimes)
@@ -256,6 +256,7 @@ def editReservation():
          start_day = start_time[8:10]
          start_hour = start_time[11:13]
          start_minutes = start_time[14:16]
+         start_seconds = start_time[17:19]
          start_meridiem = start_time[20:22]
 
          end_year = end_time[:4]
@@ -263,6 +264,7 @@ def editReservation():
          end_day = end_time[8:10]
          end_hour = end_time[11:13]
          end_minutes = end_time[14:16]
+         end_seconds = end_time[17:19]
          end_meridiem = end_time[20:22]
 
          starting_hour = int(start_hour)
@@ -277,8 +279,8 @@ def editReservation():
          if (end_meridiem == "PM" and ending_hour >= 1 and ending_hour < 12):
             ending_hour += 12
 
-         start = datetime(int(start_year), int(start_month), int(start_day), starting_hour, int(start_minutes))
-         end = datetime(int(end_year), int(end_month), int(end_day), ending_hour, int(end_minutes))
+         start = datetime(int(start_year), int(start_month), int(start_day), starting_hour, int(start_minutes), int(start_seconds))
+         end = datetime(int(end_year), int(end_month), int(end_day), ending_hour, int(end_minutes), int(end_seconds))
          current_user = session['username']
          current_user_object = getUser(current_user)
 
@@ -368,9 +370,9 @@ def confirmation():
         error = bookRoomAdHoc(user, room_object, end_time)
 
         if 'admin' in session:
-           return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = True)
+           return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:19], fullTime = time, admin = True)
         else:
-           return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = False)
+           return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:19], fullTime = time, admin = False)
     else:
       return redirect(url_for("index"))
 
@@ -493,6 +495,7 @@ def handleSchedule():
          start_day = start_time[8:10]
          start_hour = start_time[11:13]
          start_minutes = start_time[14:16]
+         start_seconds = start_time[17:19]
          start_meridiem = start_time[20:22]
 
          end_year = end_time[:4]
@@ -500,6 +503,7 @@ def handleSchedule():
          end_day = end_time[8:10]
          end_hour = end_time[11:13]
          end_minutes = end_time[14:16]
+         end_seconds = end_time[17:19]
          end_meridiem = end_time[20:22]
 
          starting_hour = int(start_hour)
@@ -514,8 +518,8 @@ def handleSchedule():
          if (end_meridiem == "PM" and ending_hour >= 1 and ending_hour < 12):
             ending_hour += 12
 
-         start = datetime(int(start_year), int(start_month), int(start_day), starting_hour, int(start_minutes))
-         end = datetime(int(end_year), int(end_month), int(end_day), ending_hour, int(end_minutes))
+         start = datetime(int(start_year), int(start_month), int(start_day), starting_hour, int(start_minutes), int(start_seconds))
+         end = datetime(int(end_year), int(end_month), int(end_day), ending_hour, int(end_minutes), int(end_seconds))
          current_user = session['username']
          current_user_object = getUser(current_user)
 
@@ -538,13 +542,14 @@ def currentBooking():
         day = int(time[8:10])
         hour = int(time[11:13])
         minute = int(time[14:16])
-        end_time = datetime(year, month, day, hour, minute, 0, 0)
+        second = int(time[17:19])
+        end_time = datetime(year, month, day, hour, minute, second, 0)
         seconds = (end_time - current_dt()).total_seconds()
 
         if 'admin' in session:
-            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], eventid = eventid, admin = True)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:19], eventid = eventid, admin = True)
         else:
-            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], eventid = eventid, admin = False)
+            return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:19], eventid = eventid, admin = False)
 
     else:
        return redirect(url_for("index"))
@@ -611,7 +616,7 @@ def extendStay():
             #         continue
             #     else:
             #         time = add30(time)
-            #     times.append(str(time)[11:16])
+            #     times.append(str(time)[11:19])
             #     fullTimes.append(str(time))
             #     print(times)
             #     print(fullTimes)
