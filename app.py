@@ -216,7 +216,7 @@ def editReservation():
          end_time = request.form['end-time']
          title = request.form['title']
          event_id = request.form['eventid']
-         fullTime = "Start: " + start_time + " End: " + end_time
+         fullTime = "Start: " + start_time + "\nEnd: " + end_time
 
          if title == '':
             title = '< No Event Title >'
@@ -461,7 +461,7 @@ def handleSchedule():
          start_time = request.form['start-time']
          end_time = request.form['end-time']
          title = request.form['title']
-         fullTime = "Start: " + start_time + " End: " + end_time
+         fullTime = "Start: " + start_time + "\nEnd: " + end_time
 
          if title == '':
             title = '< No Event Title >'
