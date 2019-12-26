@@ -17,18 +17,5 @@ window.onload = function() {
          }
       }
     });
-  }, 600)
-};
-
-document.getElementById("extend-button").onclick = function(){
-
-  $.ajax({
-    url: '/extendStay',
-    type: 'get',
-    contentType: 'application/json',
-    data: JSON.stringify({'eventid': eventid}),
-    success: function(data) {
-      window.location = data
-    }
-  });
+  }, 300000)
 };

@@ -29,8 +29,11 @@
         <p>You have 10 minutes left. Will you be occupying the room for longer?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="extend-button"">Yes, extend my stay.</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">No, let it expire.</button>
+        <form action="/extend" method="get">
+          <input type="hidden" name="eventid" value={{eventid}} />
+          <button type="submit" class="btn btn-primary" id="extend-button">Yes, extend my stay.</button>
+          <button type="button" class="btn btn-secondary" id="expire-button" data-dismiss="modal">No, let it expire.</button>
+        </form>
       </div>
     </div>
   </div>

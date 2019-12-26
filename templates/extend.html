@@ -17,12 +17,10 @@
 
        <div class="list-group list-group-flush">
          {% for time in times %}
-            <a href={{url_for('confirmation', building=building, room=room, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action">{{time}}</a>
+            <a href={{url_for('confirmExtend', building=building, room=room, eventid=eventid, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action">{{time}}</a>
          {% endfor %}
         </div>
         <br>
-        <center><a href={{url_for('viewRoom', building= building, room=room)}}
-        class="btn btn-info">View Room Schedule</a></center>
 </div>
 {% endblock %}
 {% block extrajs %}
