@@ -98,6 +98,7 @@ def displayBookingButtons(room):
     current_time = current_dt()
 
     if not isGroupOpen(group, current_time):
+        print("not open")
         return ZERO_BUTTONS
 
     for i in range(4):
@@ -107,12 +108,45 @@ def displayBookingButtons(room):
             time = add30(time)
         isOpen = isGroupOpen(group, time)
         if not isOpen:
+            print("not open")
             return i
         if existEvent:
+            # if time is later than the earliest events start time
             if isLater(event.start_time, time):
+                print("later")
                 return i
 
     return FOUR_BUTTONS
+
+# how many buttons to display?
+def displayExtendBookingButtons(room):
+    FOUR_BUTTONS = 4
+    ZERO_BUTTONS = 0
+
+    markPassed()
+    existEvent, event = findEarliest(room)
+
+    group = getGroup(room)
+
+    current_time = current_dt()
+
+    if not isGroupOpen(group, current_time):
+        return ZERO_BUTTONS
+
+    time = get30(current_dt())
+    for i in range(4):
+        time = add30(time)
+        isOpen = isGroupOpen(group, time)
+        if not isOpen:
+            return i
+        if existEvent:
+            # if time is later than the earliest events start time
+            if isLater(event.start_time, time):
+                print("later")
+                return i
+
+    return FOUR_BUTTONS
+
 
 # has this user booked anything yet that has not passed
 def hasBooked(user):
@@ -302,9 +336,15 @@ def addAdmin(user, net_id):
     sess.commit()
     return ""
 
+def updateEvent(event, end_time):
+    event.end_time = end_time;
+    sess.commit()
+    return ""
+
 def releaseEvent(event):
     sess.delete(event)
     sess.commit()
+    return ""
 
 # get list of building objects
 def getBuildings():

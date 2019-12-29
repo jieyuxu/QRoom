@@ -20,7 +20,7 @@
           {% for key, value in events.items(): %}
               {% if admin %}
                   <h4> {{key}} </h4>
-              {% endif %}    
+              {% endif %}
               {% for event in value %}
                   <div class="card-deck">
                       <div class="card" style="width: 18rem;">
@@ -33,7 +33,7 @@
                                       End Time: {{event['EndTime']}}
                                   </p>
                                   <a href={{url_for('currentBooking', building=event['buildingName'],
-                                  room=event['roomName'], fullTime=event['EndTime'])}}
+                                  room=event['roomName'], fullTime=event['EndTime'], eventid=event['eventId'])}}
                                   class="btn btn-info">Get Info</a>
 
                                   <a href={{url_for('releaseRoom', building=event['buildingName'],

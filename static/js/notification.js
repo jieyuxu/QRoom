@@ -18,19 +18,5 @@ window.onload = function() {
          }
       }
     });
-  }, 6000)
-};
-
-document.getElementById("extend-button").onclick = function(){
-  console.log('sending request to extend stay');
-  $.ajax({
-    url: '/extendStay',
-    type: 'post',
-    contentType: 'application/json',
-    data: JSON.stringify({'eventid': eventid}),
-    success: function(data) {
-      console.log(data);
-      window.location = data;
-    }
-  });
+  }, 300000)
 };
