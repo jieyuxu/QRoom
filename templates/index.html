@@ -123,7 +123,7 @@
     </div>
     <!-- // end .section -->
 
-    <div class="section bg-gradient" id="contact">
+    <!-- <div class="section bg-gradient" id="contact">
         <div class="container">
             <div class="call-to-action">
 
@@ -139,7 +139,7 @@
             </div>
         </div>
 
-    </div>
+    </div> -->
     <!-- // end .section -->
 
     <div class="light-bg py-5" id="contact">
@@ -175,6 +175,7 @@
     <footer class="my-5 text-center">
         <!-- Copyright removal is not prohibited! -->
         <p class="mb-2"><small>COPYRIGHT © 2017. ALL RIGHTS RESERVED. MOBAPP TEMPLATE BY <a href="https://colorlib.com">COLORLIB</a></small></p>
+        <p class="mb-2"><small>COPYRIGHT © 2019-2020. COS 333 Project by Team QRoom</small></p>
 
         <small>
             <a href="#" class="m-2">PRESS</a>
@@ -182,31 +183,4 @@
             <a href="#" class="m-2">PRIVACY</a>
         </small>
     </footer>
-{% endblock %}
-{% block extrajs %}
-<!-- <script src="../static/js/script.js"></script> -->
-<script>
-  $(document).ready(function(){
-  $('.navbar-brand').css('color', 'white');
-  $('.nav-link').css('color', 'white');
-   var scroll_start = 0;
-   var startchange = $('#scrollpast');
-   var offset = startchange.offset();
-    if (startchange.length){
-   $(document).scroll(function() {
-      scroll_start = $(this).scrollTop();
-      if(scroll_start > offset.top) {
-          $('.nav-menu').css('background-color', 'rgba(0,0,0,0.7)');
-
-       } else {
-         $('.nav-menu').css('background-color', 'transparent');
-          $('.nav-link').css('color', 'white');
-          $("#authbtn").css('color', 'white');
-          $("#authbtn").css('border-color', 'white');
-          $('.navbar-brand').css('color', 'white');
-       }
-   });
-    }
-});
-</script>
 {% endblock %}

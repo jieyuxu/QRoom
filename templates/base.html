@@ -27,14 +27,11 @@ URI     : https://colorlib.com
     <link rel="stylesheet" href="../static/css/themify-icons.css">
     <!-- Owl carousel -->
     <link rel="stylesheet" href="../static/css/owl.carousel.min.css">
-    <style>
-        .navbar-collapse.collapse.in{
-            background-color: black;
-        }
-    {% block extrastyle %}{% endblock %}
-    </style>
     <!-- Admin calendar -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <!-- extra styling -->
+    <link rel="stylesheet" href="../static/css/style.css">
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 
@@ -48,7 +45,7 @@ URI     : https://colorlib.com
 
 <body data-spy="scroll" data-target="#navbar" data-offset="30">
     <!-- Nav Menu -->
-    <div class="nav-menu fixed-top">
+    <!-- <div class="nav-menu fixed-top">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -81,7 +78,43 @@ URI     : https://colorlib.com
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+
+    <div class="nav-menu fixed-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                            {% if loggedin %}
+                            <nav class="navbar navbar-light navbar-expand-lg">
+                                <a class="navbar-brand" href="/profile">QRoom</a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+                            {% else %}
+                            <nav class="navbar navbar-dark navbar-expand-lg">
+                                <a class="navbar-brand" href="/">QRoom</a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+                            {% endif %}
+                            <div class="collapse navbar-collapse" id="navbar">
+                                <ul class="navbar-nav ml-auto">
+                                    {% if loggedin %}
+                                    <li class="nav-item"> <a class="nav-link" href="/profile">Home <span class="sr-only">(current)</span></a> </li>
+                                    <li class="nav-item"> <a class="nav-link" href="/buildings">Buildings</a> </li>
+                                    {% if admin %}
+                                    <li class="nav-item"> <a class="nav-link" href="/admin">Admin Portal</a> </li>
+                                    {% endif %}
+                                    <li class="nav-item"><a href="/logout" class="btn btn-outline-dark my-3 my-sm-0 ml-lg-3">Logout</a></li>
+                                    {% else %}
+                                    <li class="nav-item"> <a class="nav-link active" href="/">HOME <span class="sr-only">(current)</span></a> </li>
+                                    <li class="nav-item"> <a class="nav-link" href="#features">FEATURES</a> </li>
+                                    <li class="nav-item"> <a class="nav-link" href="#gallery">GET STARTED</a> </li>
+                                    <li class="nav-item"> <a class="nav-link" href="#pricing">FAQ</a> </li>
+                                    <li class="nav-item"> <a class="nav-link" href="#contact">CONTACT</a> </li>
+                                    <li class="nav-item"><a href="/login" class="btn btn-outline-light my-3 my-sm-0 ml-lg-3">Login</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     {% block content %}{% endblock %}
 
@@ -90,21 +123,7 @@ URI     : https://colorlib.com
     <script src="../static/js/bootstrap.bundle.min.js"></script>
     <!-- Plugins JS -->
     <script src="../static/js/owl.carousel.min.js"></script>
-    <script>
-    $(".navbar-toggler").click(function () {
-      if ($(".navbar-toggle").hasClass("collapsed")) {
-        $(".nav-link").css('color', 'white');
-        $("#authbtn").css('color', 'white');
-        $("#authbtn").css('border-color', 'white');
-        $(".navbar-collapse").css('background-color', 'transparent');
-      } else {
-        $(".nav-link").css('color', 'black');
-        $("#authbtn").css('color', 'black');
-        $("#authbtn").css('border-color', 'black');
-        // $(".navbar-collapse").css('background-color', 'rgba(255,255,255,0.8)');
-      }
-      })
-    </script>
+    <script src="../static/js/script.js"></script>
     {% block extrajs %}{% endblock %}
 </body>
 </html>
