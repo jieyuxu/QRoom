@@ -4,7 +4,6 @@ from sqlalchemy import or_, and_
 from flask_sqlalchemy_session import current_session
 from pytz import timezone
 
-
 sess = current_session
 
 def current_dt():
@@ -178,7 +177,7 @@ def bookRoomAdHoc(user1, room, button_end_time):
     if existEvent and isLater(event.start_time, current_time):
         return "SYS FAILURE: current time later than start time of booked event"
 
-    event = Events(user = user1, event_title="QR Booking", start_time = current_time,
+    event = Events(user = user1, event_title="AdHoc Booking", start_time = current_time,
                     end_time = button_end_time, room = room, passed = False)
 
     sess.add(event)
@@ -221,20 +220,17 @@ def listAvailableScheduled(start_time, end_time, room):
     group = getGroup(room)
 
     if start_time > end_time:
+        print('Start time later than end time')
         return 'Start time later than end time'
 
     if (not isGroupOpen(group, start_time)) or (not isGroupOpen(group, end_time)):
-<<<<<<< HEAD
-        message = 'Building is not open at Start or End Time <br><br> '
-        message += 'Building Hours: ' + str(group.open_time) + '-' + str(group.close_time)
-        return message
-=======
+        print('Building is not open')
         return 'Building is not open'
->>>>>>> origin/EditReservation
 
     # shouldn't book an event that ends in the past
     current_time = current_dt()
     if (end_time < current_time):
+        print('Event end time has passed')
         return 'Event end time has passed'
 
     conditions1 = []
@@ -248,27 +244,36 @@ def listAvailableScheduled(start_time, end_time, room):
     clause2 = and_(*conditions2)
 
     clauses = [clause1, clause2]
-    combined = or_(*clauses)
+    timeClause = or_(*clauses)
+
+    # only display conflicts for the same room
+    conditions3 = []
+    conditions3.append(Events.room_id == room.room_id)
+    conditions3.append(timeClause)
+    combined = and_(*conditions3)
 
     events = sess.query(Events) \
             .filter(combined) \
             .all()
-
+    print('Printing overlapping events')
     return events
 
 # can you schedule it at these times in the future?
 def isAvailableScheduled(start_time, end_time, room):
     # list of events that overlap
+    print('entered is available scheduled, about to call list available scheduled')
     events = listAvailableScheduled(start_time, end_time, room)
-
+    if (isinstance(events, str)):
+        return events
+    print('returned from list available scheduled')
     if len(events) != 0:
-        message = 'The following events are scheduled during this time: <br>'
+        message = 'The following events are scheduled during this time: \n'
         for e in events:
-            message += '<br>'
-            message += str(e.event_title) + '<br>'
-            message += '&emsp; Booked By: ' + e.net_id + '<br>'
-            message += '&emsp; Start Time: ' + str(e.start_time) + '<br>'
-            message += '&emsp; End Time: ' + str(e.end_time) + '<br>'
+            message += '\n'
+            message += str(e.event_title) + '\n'
+            message += 'Booked By: ' + e.net_id + '\n'
+            message += 'Start Time: ' + str(e.start_time) + '\n'
+            message += 'End Time: ' + str(e.end_time) + '\n'
 
         return message
 
@@ -279,27 +284,28 @@ def isAvailableScheduledEdit(start_time, end_time, room, current_event):
     events = listAvailableScheduled(start_time, end_time, room)
 
     seenConflictBefore = False
+    message = ''
     if len(events) != 0:
         for e in events:
             if e.event_id != current_event.event_id:
                 if not seenConflictBefore:
-                    message = 'The following events are scheduled during this time: <br>'
+                    message = 'The following events are scheduled during this time: \n'
                     seenConflictBefore = True
-                message += '<br>'
-                message += str(e.event_title) + '<br>'
-                message += '&emsp; Booked By: ' + e.net_id + '<br>'
-                message += '&emsp; Start Time: ' + str(e.start_time) + '<br>'
-                message += '&emsp; End Time: ' + str(e.end_time) + '<br>'
+                message += '\n'
+                message += str(e.event_title) + '\n'
+                message += 'Booked By: ' + e.net_id + '\n'
+                message += 'Start Time: ' + str(e.start_time) + '\n'
+                message += 'End Time: ' + str(e.end_time) + '\n'
 
-        return message
-
-    return ''
+    return message
 
 # admin booking room for the future
 def bookRoomSchedule(user, room, start_time, end_time, event_title = '<No Event Title>'):
+    print('Entered book room schedule, about to call is available scheduled')
     if not isAdmin(user):
         return "NOT ADMIN"
     problem = isAvailableScheduled(start_time, end_time, room)
+    print('returned from isAvailableScheduled')
     if problem != '':
         return problem
     event = Events(user = user, event_title= event_title, start_time = start_time,

@@ -1,106 +1,96 @@
 {% extends 'base.html' %}
 {% block extracss%}
-    <!-- Main css -->
-    <link href="../static/css/style.css" rel="stylesheet">
-    <!-- <link href="themify-icons.css" rel="stylesheet"> -->
+<!-- Main css -->
+<link href="../static/css/style.css" rel="stylesheet">
+<!-- <link href="themify-icons.css" rel="stylesheet"> -->
 {% endblock %}
 {% block content %}
 <div class="section mt-5 pt-5" id="rooms">
-   <div class="container">
-      <div class="section-title">
-          <h2>Admin Portal</h2>
-     </div>
-     <div class="row">
-       <div class="col col-md-6">
-          <h3>Add Another Admin</h3>
-          {% if addMessage %}
-           <div class="alert alert-danger" role="alert">
-             {{addMessage}}
-           </div>
-           {% endif %}
-           {% if addSuccess == "True"%}
-             <div class="alert alert-success" role="alert">
-               User was added successfully as admin.
-             </div>
-           {% endif %}
-          <form action = "/handleAddUser" method = "post">
-             <div class="form-group">
-               <label for="newAdmin">User to add as admin:</label>
-               <input type="newAdmin" class="form-control" name="admin-id" id="newAdmin" placeholder="Enter user's netid">
-             </div>
-             <button action="submit" class="btn btn-primary">Submit</button>
-          </form>
-       </div>
-       <div class="col col-md-6">
-          <h3 class="mt-4">Book a Room in Advance</h3>
-          {% if bookMessage %}
-           <div class="alert alert-danger" role="alert">
-             {% autoescape false %}
-                 {{bookMessage}}
-             {% endautoescape %}
-           </div>
-          {% endif %}
-           {% if bookSuccess == "True" %}
-             <div class="alert alert-success" role="alert">
-                 Room has been booked succesfully.
-             </div>
-           {% endif %}
-          <form action = "/handleSchedule" method = "post">
-            <div class="form-group">
-                <div class="form-group">
-                   <label for="title">Event Title</label>
-                   <input type="title" class="form-control" name="title" id="title" placeholder="Enter Event Title">
-                </div>
+  <div class="container">
+    <div class="section-title">
+      <h2>Admin Portal</h2>
+    </div>
+
+    <h3>Add Another Admin</h3>
+    <form action="/handleAddUser" method="post">
+      <div class="form-group">
+        <label for="newAdmin">User to add as admin:</label>
+        <input type="newAdmin" class="form-control" name="admin-id" id="newAdmin" placeholder="Enter user's netid">
+      </div>
+      <button action="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <h3 class=" mt-4">Book a Room in Advance</h3>
+    <form action="/handleSchedule" method="post">
+      <div class="row">
+        <div class="col col-md-6">
+          <div class="form-group mb-4">
+            <input type="title" class="form-control" name="title" id="title" placeholder="Enter Event Title">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col col-md-6">
+          <div class="form-group">
+            <select class="form-control" name="building">
+              {% for building in buildings %}
+              <option value="{{building}}" name="choice">{{building}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label" for="room">Room:</label>
+            <div class="col-sm-10">
+              <input type="room" class="form-control" name="room-id" id="room" placeholder="Enter desired room">
             </div>
-            <div class="form-row">
-               <div class="form-group col-md-8">
-                  <label for="building">Building</label>
-                  <select class="form-control" name="building">
-                      {% for building in buildings %}
-                        <option value="{{building}}" name="choice">{{building}}</option>
-                      {% endfor %}
-                     </select>
-               </div>
-               <div class="form-group col-md-4">
-                  <label for="room">Room</label>
-                  <input type="room" class="form-control" name="room-id" id="room" placeholder="Enter desired room">
-               </div>
-           </div>
-           <div class="form-row">
-              <div class="form-group col-md-6">
-                  <label for="start-time">Start Time</label>
-                  <div class="input-group date" id="datetimepicker12" data-target-input="nearest">
-                   <input type="text" name="start-time" class="form-control datetimepicker-input" data-target="#datetimepicker12"/>
-                   <div class="input-group-append" data-target="#datetimepicker12" data-toggle="datetimepicker">
-                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                   </div>
-                  </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col col-md-6">
+          <div class="form-group mb-4">
+            <label>Start Time</label>
+            <div class="input-group date" id="datetimepicker12" data-target-input="nearest">
+              <input type="text" name="start-time" class="form-control datetimepicker-input"
+                data-target="#datetimepicker12" />
+              <div class="input-group-append" data-target="#datetimepicker12" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
               </div>
-              <div class="form-group col-md-6">
-                  <label for="end-time">End Time</label>
-                 <div class="input-group date" id="datetimepicker13" data-target-input="nearest">
-                  <input type="text" name="end-time" class="form-control datetimepicker-input" data-target="#datetimepicker13"/>
-                  <div class="input-group-append" data-target="#datetimepicker13" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                  </div>
-                 </div>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript">
+          $('#datetimepicker12').datetimepicker({
+            defaultDate: new Date(),
+            format: 'YYYY-MM-DD hh:mm:ss A'
+          });
+        </script>
+      </div>
+
+      <div class="row">
+        <div class="col col-md-6">
+          <div class="form-group">
+            <label>End Time</label>
+            <div class="input-group date" id="datetimepicker13" data-target-input="nearest">
+              <input type="text" name="end-time" class="form-control datetimepicker-input"
+                data-target="#datetimepicker13" />
+              <div class="input-group-append" data-target="#datetimepicker13" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
               </div>
-           </div>
-            <button action="submit" class="btn btn-primary">Submit</button>
-          </form>
-       </div>
-     </div>
-</div>
- {% endblock %}
- {% block extrajs %}
- <script type="text/javascript">
-  $('#datetimepicker12').datetimepicker({
-    defaultDate: new Date(),
-    format: 'YYYY-MM-DD hh:mm:ss A'
-  });
-  $('#datetimepicker13').datetimepicker({
-    defaultDate: new Date(),
-    format: 'YYYY-MM-DD hh:mm:ss A'
-  });
-</script>
- {% endblock %}
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript">
+          $('#datetimepicker13').datetimepicker({
+            defaultDate: new Date(),
+            format: 'YYYY-MM-DD hh:mm:ss A'
+          });
+        </script>
+      </div>
+
+      <button action="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+  {% endblock %}
