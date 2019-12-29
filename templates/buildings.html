@@ -14,14 +14,13 @@
        <div class="section-title pl-3">
             <h3>Locations</h3>
        </div>
-       <div class="row justify-content-center">
+       <!-- <div class="row justify-content-center"> -->
          <div class="col col-md-11">
             <div class="card-deck">
             {% for building in buildings: %}
-                  <div class="card-block features m-2" style="width: 25rem;">
+                  <div class="card features m-2" style="width: 30%;">
                         <div class="card-body">
                           <div class="media">
-                            <!-- the logo; can replace with a logo of choice-->
                             <div class="media-body">
                               <h5 class="card-title"><a href={{url_for('rooms', building=building)}}>{{building}}</a></h5>
                               <h6 class="card-subtitle mb-2 text-muted">Hours</h6>
@@ -37,7 +36,7 @@
             {% endfor %}
             </div>
          </div>
-      </div>
+      <!-- </div> -->
   </div>
  {% endblock %}
  {% block modalspace %}
