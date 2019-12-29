@@ -28,15 +28,15 @@ URI     : https://colorlib.com
     <!-- Owl carousel -->
     <link rel="stylesheet" href="../static/css/owl.carousel.min.css">
     <style>
-    .navbar-collapse.collapse.in{
-        background-color: black;
-      }
+        .navbar-collapse.collapse.in{
+            background-color: black;
+        }
+    {% block extrastyle %}{% endblock %}
     </style>
     <!-- Admin calendar -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
@@ -105,9 +105,6 @@ URI     : https://colorlib.com
       }
       })
     </script>
-    <!-- Custom JS -->
-    </script>
     {% block extrajs %}{% endblock %}
 </body>
-
 </html>

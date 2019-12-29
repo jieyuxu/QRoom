@@ -1,63 +1,11 @@
 {% extends 'base.html' %}
-<<<<<<< HEAD
-{% block extrastyle %}
-    #map {
-        height: 100%;
-    }
-{% endblock %}
-{% block extracss %}
-    <link href="../static/css/style.css" rel="stylesheet">
-=======
 {% block extracss%}
 <link href="../static/css/style.css" rel="stylesheet">
->>>>>>> origin/EditReservation
 {% endblock %}
 {% block content %}
 <div class="section mt-5 pt-5" id="features">
     <div class="container">
         <div class="section-title pl-4">
-<<<<<<< HEAD
-          {% if admin %}
-              <h3>Current Bookings</h3>
-          {% else %}
-              <h3>Current Booking</h3>
-          {% endif %}
-
-          {% for key, value in events.items(): %}
-              {% if admin %}
-                  <h4> {{key}} </h4>
-              {% endif %}
-              {% for event in value %}
-                  <div class="card-deck">
-                      <div class="card" style="width: 18rem;">
-                              <div class="card-body">
-                                  <span><h5 class="card-title">{{event['title']}}</h5>
-                                  <h6 class="card-subtitle mb-2 text-muted">{{event['buildingName']}} {{event['roomName']}}</h6>
-                                  <!-- <h6 class="card-subtitle mb-2 text-muted">Room {{event['roomName']}}</h6> -->
-                                  <p class="card-text">
-                                      Start Time: {{event['StartTime']}} ||
-                                      End Time: {{event['EndTime']}}
-                                  </p>
-                                  <a href={{url_for('currentBooking', building=event['buildingName'],
-                                  room=event['roomName'], fullTime=event['EndTime'], eventid=event['eventId'])}}
-                                  class="btn btn-info">Get Info</a>
-
-                                  <a href={{url_for('releaseRoom', building=event['buildingName'],
-                                  room=event['roomName'], eventid=event['eventId'])}}
-                                  class="btn btn-info">Release Room</a>
-
-                                  {% if admin %}
-                                    <a href={{url_for('editReservation', building=event['buildingName'],
-                                    room=event['roomName'], eventid=event['eventId'])}}
-                                    class="btn btn-info">Edit Reservation</a>
-                                  {% endif %}
-                              </div>
-                      </div>
-                  </div>
-              {% endfor %}
-              <br>
-          {% endfor %}
-=======
             {% if admin %}
             <h3>Current Bookings</h3>
             {% else %}
@@ -235,7 +183,6 @@
             {% endfor %}
             <br>
             {% endfor %}
->>>>>>> origin/EditReservation
 
         </div>
     </div>

@@ -10,12 +10,12 @@
 {% endblock %}
 {% block content %}
 <div class="section mt-5 pt-5" id="buildings">
-   <div class="container">
+   <div class="container-fluid">
        <div class="section-title pl-3">
             <h3>Locations</h3>
        </div>
-       <div class="row">
-         <div class="col col-md-12">
+       <div class="row justify-content-center">
+         <div class="col col-md-11">
             <div class="card-deck">
             {% for building in buildings: %}
                   <div class="card features" style="width: 25rem;">
@@ -29,7 +29,7 @@
                                 time open and closed to be put soon and maybe some other data
                               </p>
                               <a href="{{url_for('rooms', building=building)}}" class="card-link">See Rooms</a>
-                              <a href="http://www.google.com/maps" class="card-link">Locate</a>
+                              <a href="{{url_for('rooms', building=building)}}" class="card-link">Locate</a>
                             </div>
                           </div>
                         </div>
@@ -39,4 +39,24 @@
          </div>
       </div>
   </div>
+ {% endblock %}
+ {% block modalspace %}
+ <div class="modal fade" id="LocationModalCenter" tabindex="-1" role="dialog" aria-labelledby="LocationModalCenterTitle" aria-hidden="true">
+     <div class="modal-dialog modal-dialog-centered" role="document">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title" id="LocationModalLongTitle">Location</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+         </div>
+         <div class="modal-body w-100 h-100">
+            <div id="map"></div>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+         </div>
+       </div>
+     </div>
+   </div>
  {% endblock %}
