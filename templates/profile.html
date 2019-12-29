@@ -39,6 +39,12 @@
                                   <a href={{url_for('releaseRoom', building=event['buildingName'],
                                   room=event['roomName'], eventid=event['eventId'])}}
                                   class="btn btn-info">Release Room</a>
+
+                                  {% if admin %}
+                                    <a href={{url_for('editReservation', building=event['buildingName'],
+                                    room=event['roomName'], eventid=event['eventId'])}}
+                                    class="btn btn-info">Edit Reservation</a>
+                                  {% endif %}
                               </div>
                       </div>
                   </div>

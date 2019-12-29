@@ -182,22 +182,26 @@ def isAdmin(user):
 def updateContact(user, contact):
     user.contact = contact
 
-# can you schedule it at these times in the future?
-def isAvailableScheduled(start_time, end_time, room):
+# helper for isAvailableScheduled; returns list of event objects that overlap with start_time, end_time for a room
+def listAvailableScheduled(start_time, end_time, room):
     group = getGroup(room)
 
     if start_time > end_time:
-        return 'Start Time later than End Time'
+        return 'Start time later than end time'
 
     if (not isGroupOpen(group, start_time)) or (not isGroupOpen(group, end_time)):
+<<<<<<< HEAD
         message = 'Building is not open at Start or End Time <br><br> '
         message += 'Building Hours: ' + str(group.open_time) + '-' + str(group.close_time)
         return message
+=======
+        return 'Building is not open'
+>>>>>>> origin/EditReservation
 
     # shouldn't book an event that ends in the past
     current_time = current_dt()
     if (end_time < current_time):
-        return 'Event End-Time has Passed'
+        return 'Event end time has passed'
 
     conditions1 = []
     conditions1.append(Events.start_time <= start_time)
@@ -216,14 +220,42 @@ def isAvailableScheduled(start_time, end_time, room):
             .filter(combined) \
             .all()
 
+    return events
+
+# can you schedule it at these times in the future?
+def isAvailableScheduled(start_time, end_time, room):
+    # list of events that overlap
+    events = listAvailableScheduled(start_time, end_time, room)
+
     if len(events) != 0:
-        message = 'The Following Events Are Schduled During This Time: <br>'
+        message = 'The following events are scheduled during this time: <br>'
         for e in events:
             message += '<br>'
             message += str(e.event_title) + '<br>'
             message += '&emsp; Booked By: ' + e.net_id + '<br>'
             message += '&emsp; Start Time: ' + str(e.start_time) + '<br>'
             message += '&emsp; End Time: ' + str(e.end_time) + '<br>'
+
+        return message
+
+    return ''
+
+def isAvailableScheduledEdit(start_time, end_time, room, current_event):
+    # list of events that overlap
+    events = listAvailableScheduled(start_time, end_time, room)
+
+    seenConflictBefore = False
+    if len(events) != 0:
+        for e in events:
+            if e.event_id != current_event.event_id:
+                if not seenConflictBefore:
+                    message = 'The following events are scheduled during this time: <br>'
+                    seenConflictBefore = True
+                message += '<br>'
+                message += str(e.event_title) + '<br>'
+                message += '&emsp; Booked By: ' + e.net_id + '<br>'
+                message += '&emsp; Start Time: ' + str(e.start_time) + '<br>'
+                message += '&emsp; End Time: ' + str(e.end_time) + '<br>'
 
         return message
 
@@ -242,6 +274,24 @@ def bookRoomSchedule(user, room, start_time, end_time, event_title = '<No Event 
     sess.add(event)
     sess.commit()
     return ""
+
+# admin booking room for the future
+def editRoomSchedule(user, room, start_time, end_time, current_event, event_title = '<No Event Title>'):
+    if not isAdmin(user):
+        return "NOT ADMIN"
+    problem = isAvailableScheduledEdit(start_time, end_time, room, current_event)
+    if problem != '':
+        return problem
+    # no problem -- release the current event booking and book a new one
+    releaseEvent(current_event)
+    print("Released current event")
+    newEvent = Events(user = user, event_title= event_title, start_time = start_time,
+                    end_time = end_time, room = room, passed = False)
+    sess.add(newEvent)
+    print("Added new (edited) event")
+    sess.commit()
+    return ""
+
 
 def addAdmin(user, net_id):
     if not isAdmin(user):
