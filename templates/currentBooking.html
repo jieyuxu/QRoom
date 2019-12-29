@@ -5,17 +5,31 @@
 {% block content %}
 <div class="section mt-5 pt-5" id="confirmation">
    <div class="container">
-       <div class="section-title">
+       <!-- <div class="section-title">
          <span class="eventid" eventid={{eventid}}></span>
 
           <div class="h2"> Current Booking Information </div>
             <p>Building: {{building}}</p>
             <p>Room: {{room}}</p>
-            <!-- <p>Start Time: {{start_time}}</p>
-            <p>End Time: {{end_time}}</p> -->
-        </div>
+            
+        </div> -->
+        <span class="eventid" eventid={{eventid}}></span>
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+              <div class="section-title">
+                <h1 style="color: #e38cb7;"><b>Current Booking Information</b></h1>
+              </div>
+              <div class="row justify-content-center">
+                  <p class="lead"><b>Building: {{building}}<br>Room: {{room}}<br>
+                    End time : {{time}}
+                  </b>
+                  </p>
+                  <p class="p-3"><b>Note:</b> You will be alerted 10 minutes before your booking ends with the option to extend the booking if the room is available then.</p>
+              </div>
+            </div>
+          </div>
          <br>
-         End time : {{time}}
+         
       </div>
     </div>
 </div>

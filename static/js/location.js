@@ -43,19 +43,19 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 }
 
 function showPosition(position) {
-  console.log("hi");
   var building = $('.building').attr('building');
   var lat1 = position.coords.latitude;
   var long1 = position.coords.longitude;
   var lat2 = $('.lat').attr('latitude');
   var long2 = $('.long').attr('longitude');
   var dist = distance(lat1, long1, lat2, long2, "K");
+  // console.log(dist);
   // for testing purposes
   // console.log(lat2);
   // console.log(long2);
   // console.log(building);
   // console.log(dist);
-  if (dist > 0.1) {
+  if (dist > 0.2) {
     alert('You are too far away to book this room.');
     window.location = "/profile";
   }
