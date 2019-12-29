@@ -32,10 +32,6 @@
                   {% endif %}
                 </div>
                 <p class="card-text"></p>
-                {% if value %}
-                  <a href={{url_for('bookRoom', building=building, room=key)}} class="btn btn-primary float-right">
-                    Book</a>
-                {% endif %}
                 <a href={{url_for('viewRoom', building= building, room=key)}}
                   class="btn btn-info float-right mr-2">View Room Schedule</a>
               </div>
