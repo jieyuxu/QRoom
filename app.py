@@ -185,7 +185,6 @@ def bookRoom():
 def editReservation():
    # MODAL STUFF
 
-
 @app.route('/viewRoom', methods=['GET', 'POST'])
 def viewRoom():
     if isLoggedIn():
