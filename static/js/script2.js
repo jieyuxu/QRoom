@@ -19,12 +19,24 @@ $(function() {
         var $navmenu = $('.nav-menu');
         if ($(window).scrollTop() > 50) {
             $navmenu.addClass('is-scrolling');
-            $('.nav-link').css('color', 'white;');
-            $('.navbar-brand').css('color', 'white;');
+            $('.nav-link').removeAttr('style');
+            $('.navbar-brand').removeAttr('style');
+
+            $('.nav-link').attr('style', 'color: white;');
+            $('.navbar-brand').attr('style', 'color: white;');
+            
+            $('a.btn').removeClass('btn-outline-dark');
+            $('a.btn').addClass('btn-outline-light');
         } else {
             $navmenu.removeClass("is-scrolling");
-            $('.nav-link').css('color', 'black;');
-            $('.navbar-brand').css('color', 'black;');
+            $('.nav-link').removeAttr('style');
+            $('.navbar-brand').removeAttr('style');
+
+            $('.nav-link').attr('style', 'color: black;');
+            $('.navbar-brand').attr('style', 'color: black;');
+
+            $('a.btn').removeClass('btn-outline-light');
+            $('a.btn').addClass('btn-outline-dark');
         }
     }
     menuscroll();
