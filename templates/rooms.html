@@ -19,7 +19,7 @@
                 <div class="card-body">
                 <div class="card-title">
                   {% if value %}
-                        <h5><a href={{url_for('bookRoom', building=building, room=key)}}>
+                        <h5><a href={{url_for('viewRoom', building=building, room=key)}}>
                           Room {{key}}</a>
                           <span class="badge badge-success float-right" style="font-size: 50%;">Available</span>
                         </h5>
