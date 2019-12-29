@@ -1,34 +1,36 @@
 var eventid = $('.eventid').attr('eventid');
+console.log(eventid);
 
 window.onload = function() {
   setInterval(function(){
-
     $.ajax({
       url: '/checkTime',
       type: 'post',
       contentType: 'application/json',
       data: JSON.stringify({'eventid': eventid}),
       success: function(data) {
-         if (data == "True") {
+        console.log(data);
+         if (data == "True" && !$('#myModal').is(':visible')) {
             $('#modal').modal('show');
          }
          else if (data == "Expired") {
-           window.location = '/profile'
+           window.location = '/profile';
          }
       }
     });
-  }, 600)
+  }, 6000)
 };
 
 document.getElementById("extend-button").onclick = function(){
-
+  console.log('sending request to extend stay');
   $.ajax({
     url: '/extendStay',
-    type: 'get',
+    type: 'post',
     contentType: 'application/json',
     data: JSON.stringify({'eventid': eventid}),
     success: function(data) {
-      window.location = data
+      console.log(data);
+      window.location = data;
     }
   });
 };
