@@ -29,8 +29,8 @@ sess = flask_scoped_session(session_factory, app)
 cas = CAS(app)
 app.config['CAS_SERVER'] = "https://fed.princeton.edu/cas/login"
 app.config['CAS_AFTER_LOGIN'] = 'caslogin'
-app.config['CAS_AFTER_LOGOUT'] = 'http://princeton-qroom.herokuapp.com/caslogout'
-# app.config['CAS_AFTER_LOGOUT'] = 'localhost:5000/caslogout'
+# app.config['CAS_AFTER_LOGOUT'] = 'http://princeton-qroom.herokuapp.com/caslogout'
+app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:5000/caslogout'
 app.config['CAS_LOGIN_ROUTE'] = '/cas'
 #########################################
 
