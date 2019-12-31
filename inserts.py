@@ -39,6 +39,7 @@ bob = Users(net_id= "bob", contact = 'bob@princeton.edu', admin = True)
 paul = Users(net_id= "paul", contact = 'paul@princeton.edu', admin = False)
 saishaa = Users(net_id= "saishaa", contact="saisha@princton.edu", admin = True)
 suki = Users(net_id= "sukiy", contact="sukiy@princton.edu", admin = True)
+amy = Users(net_id= "jyxu", contact="jyxu@princton.edu", admin = True)
 
 event1 = Events(user = bob, event_title="Bob's birthday",
 start_time = datetime(2020, 11, 28, 23, 55, 59, 342380),
