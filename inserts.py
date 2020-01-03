@@ -15,39 +15,44 @@ print('commited stuff')
 
 Base.metadata.create_all(engine)
 
-#4 - populate database
-firestone = Buildings(building_name = "Firestone", latitude=40.3495742, longitude=-74.6596086)
-frist = Buildings(building_name = "Frist", latitude=40.3468512, longitude=-74.6574649)
+# 4 - populate database
+firestone = Buildings(building_name="Firestone",
+                      latitude=40.3495742, longitude=-74.6596086)
+frist = Buildings(building_name="Frist",
+                  latitude=40.3468512, longitude=-74.6574649)
 # lewis = Buildings(building_name = "Lewis", latitude=40.3461, longitude=74.6526)
-lewis = Buildings(building_name = "Lewis", latitude=40.348833, longitude=-74.6550017)
-shepperd = Buildings(building_name = "Sherrerd Hall", latitude=40.3495354, longitude=-74.654877)
-friend = Buildings(building_name = "Friend Center", latitude=40.3505495, longitude=-74.6543927)
+lewis = Buildings(building_name="Lewis",
+                  latitude=40.348833, longitude=-74.6550017)
+shepperd = Buildings(building_name="Sherrerd Hall",
+                     latitude=40.3495354, longitude=-74.654877)
+friend = Buildings(building_name="Friend Center",
+                   latitude=40.3505495, longitude=-74.6543927)
 # @40.3423081,-74.6596026
 
-group1 = Groups(open_time = time(8,00,00), close_time = time(4,00,00))
-group2 = Groups(open_time = time(8,00,00), close_time = time(20,00,00))
+group1 = Groups(open_time=time(8, 00, 00), close_time=time(4, 00, 00))
+group2 = Groups(open_time=time(8, 00, 00), close_time=time(20, 00, 00))
 
 
-room1 = Rooms(building = firestone, room_name = '101', group = group1)
-room2 = Rooms(building = frist, room_name = '102', group = group2)
-room3 = Rooms(building = lewis, room_name = '103', group = group1)
-room4 = Rooms(building = firestone, room_name = '104', group = group1)
-room5 = Rooms(building = shepperd, room_name = '3rd Floor Atrium', group = group1)
-room6 = Rooms(building = friend, room_name = '006', group = group2)
+room1 = Rooms(building=firestone, room_name='101', group=group1)
+room2 = Rooms(building=frist, room_name='102', group=group2)
+room3 = Rooms(building=lewis, room_name='103', group=group1)
+room4 = Rooms(building=firestone, room_name='104', group=group1)
+room5 = Rooms(building=shepperd, room_name='3rd Floor Atrium', group=group1)
+room6 = Rooms(building=friend, room_name='006', group=group2)
 
-bob = Users(net_id= "bob", contact = 'bob@princeton.edu', admin = True)
-paul = Users(net_id= "paul", contact = 'paul@princeton.edu', admin = False)
-saishaa = Users(net_id= "saishaa", contact="saisha@princton.edu", admin = True)
-suki = Users(net_id= "sukiy", contact="sukiy@princton.edu", admin = True)
-jamie = Users(net_id= "jamieguo", contact="jamieguo@princton.edu", admin = True)
-julie = Users(net_id= "jkallini", contact="jkallini@princton.edu", admin = True)
-elise = Users(net_id= "ccolter", contact="ccolter@princeton.edu", admin = True)
+bob = Users(net_id="bob", contact='bob@princeton.edu', admin=True)
+paul = Users(net_id="paul", contact='paul@princeton.edu', admin=False)
+saishaa = Users(net_id="saishaa", contact="saisha@princton.edu", admin=True)
+suki = Users(net_id="sukiy", contact="sukiy@princton.edu", admin=True)
+jamie = Users(net_id="jamieguo", contact="jamieguo@princton.edu", admin=True)
+julie = Users(net_id="jkallini", contact="jkallini@princton.edu", admin=True)
+elise = Users(net_id="ccolter", contact="ccolter@princeton.edu", admin=True)
 jessica = Users(net_id="jjf4", contact="jjf4@princeton.edu", admin=True)
 
-event1 = Events(user = bob, event_title="Bob's birthday",
-start_time = datetime(2020, 11, 28, 23, 55, 59, 342380),
-end_time = datetime(2020, 11, 29, 23, 55, 59, 0),
-room = room1, passed = False)
+event1 = Events(user=bob, event_title="Bob's birthday",
+                start_time=datetime(2020, 11, 28, 23, 55, 59, 342380),
+                end_time=datetime(2020, 11, 29, 23, 55, 59, 0),
+                room=room1, passed=False)
 
 # event2 = Events(user = bob, event_title="Bob's graduation",
 # start_time = datetime(2020, 11, 28, 23, 55, 59, 342380),
@@ -86,6 +91,10 @@ sess.add(bob)
 sess.add(paul)
 sess.add(saishaa)
 sess.add(suki)
+sess.add(jamie)
+sess.add(julie)
+sess.add(elise)
+sess.add(jessica)
 
 sess.add(event1)
 # sess.add(event2)
