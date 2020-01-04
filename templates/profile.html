@@ -25,10 +25,11 @@
                             <!-- <h6 class="card-subtitle mb-2 text-muted">Room {{event['roomName']}}</h6> -->
                             <p class="card-text">
                                 Start Time: {{event['StartTime']}}
+                                <br>
                                 End Time: {{event['EndTime']}}
                             </p>
                             <a href={{url_for('currentBooking', building=event['buildingName'],
-                                  room=event['roomName'], fullTime=event['EndTime'])}} class="btn btn-info">Get
+                                  room=event['roomName'], fullTime=event['FullEndTime'])}} class="btn btn-info">Get
                                 Info</a>
 
                             <a href={{url_for('releaseRoom', building=event['buildingName'],
@@ -187,4 +188,7 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block extrajs %}
+<script src="../static/js/reload.js"></script>
 {% endblock %}

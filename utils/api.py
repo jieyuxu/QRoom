@@ -272,8 +272,8 @@ def isAvailableScheduled(start_time, end_time, room):
             message += '\n'
             message += str(e.event_title) + '\n'
             message += 'Booked By: ' + e.net_id + '\n'
-            message += 'Start Time: ' + str(e.start_time) + '\n'
-            message += 'End Time: ' + str(e.end_time) + '\n'
+            message += 'Start Time: ' + get_month_day(e.start_time) + ' ' + twelve_hour_time(e.start_time) + '\n'
+            message += 'End Time: ' + get_month_day(e.end_time) + ' ' + twelve_hour_time(e.end_time) + '\n'
 
         return message
 
@@ -294,8 +294,10 @@ def isAvailableScheduledEdit(start_time, end_time, room, current_event):
                 message += '\n'
                 message += str(e.event_title) + '\n'
                 message += 'Booked By: ' + e.net_id + '\n'
-                message += 'Start Time: ' + str(e.start_time) + '\n'
-                message += 'End Time: ' + str(e.end_time) + '\n'
+                print('helloooooooo')
+                print(get_month_day(e.start_time))
+                message += 'Start Time: ' + get_month_day(e.start_time) + ' ' + twelve_hour_time(e.start_time) + '\n'
+                message += 'End Time: ' + get_month_day(e.end_time) + ' ' + twelve_hour_time(e.end_time) + '\n'
 
     return message
 
@@ -417,3 +419,13 @@ def getUserObject(net_id):
                 .filter(Users.net_id == net_id)\
                 .first()
     return user
+
+# converts from military time to 12 hour system, stack overflow
+def twelve_hour_time(date_time):
+    timevalue_24hour = str(date_time.hour) + ":" + str(date_time.minute)
+    t = datetime.strptime(timevalue_24hour, "%H:%M")
+    return t.strftime("%I:%M %p")
+
+# returns month and day as string (i.e Janurary 2)
+def get_month_day(date_time):
+    return date_time.strftime("%B") + ' ' + str(date_time.day)
