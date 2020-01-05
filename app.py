@@ -214,13 +214,8 @@ def editReservation():
       if request.method == 'POST':
          adminStatus = 'admin' in session
          # room_id is a room number and building_id is the building name
-<<<<<<< HEAD
-         building_id = request.form['building']
-         room_id = request.form['room-id']
-=======
          # building_id = request.form['building']
          room_id = request.form['room-id'] 
->>>>>>> origin/adminStuff
          start_time = request.form['start-time']
          end_time = request.form['end-time']
          title = request.form['title']
@@ -557,8 +552,8 @@ def roomSchedule():
 
       # get event details, store into dictionary
       eventDetails = {}
-      eventDetails['StartTime'] = start_time
-      eventDetails['EndTime'] = end_time
+      eventDetails['StartTime'] = get_month_day(start_time) + ', ' + twelve_hour_time(start_time)
+      eventDetails['EndTime'] = get_month_day(end_time) + ', ' + twelve_hour_time(end_time)
       #eventDetails['eventId'] = event.event_id
       eventDetails['title'] = event.event_title
       eventDetails['owner'] = event.net_id

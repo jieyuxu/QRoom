@@ -435,6 +435,6 @@ def twelve_hour_time(date_time):
     t = datetime.strptime(timevalue_24hour, "%H:%M")
     return t.strftime("%I:%M %p")
 
-# returns month and day as string (i.e Janurary 2)
+# returns month and day as string (i.e January 2)
 def get_month_day(date_time):
     return date_time.strftime("%B") + ' ' + str(date_time.day)
