@@ -18,6 +18,7 @@ Base.metadata.create_all(engine)
 # 4 - populate database
 firestone = Buildings(building_name="Firestone",
                       latitude=40.3495742, longitude=-74.6596086)
+
 frist = Buildings(building_name="Frist",
                   latitude=40.3468512, longitude=-74.6574649)
 # lewis = Buildings(building_name = "Lewis", latitude=40.3461, longitude=74.6526)
@@ -29,7 +30,7 @@ friend = Buildings(building_name="Friend Center",
                    latitude=40.3505495, longitude=-74.6543927)
 # @40.3423081,-74.6596026
 
-group1 = Groups(open_time=time(8, 00, 00), close_time=time(4, 00, 00))
+group1 = Groups(open_time=time(8, 00, 00), close_time=time(5, 00, 00))
 group2 = Groups(open_time=time(8, 00, 00), close_time=time(20, 00, 00))
 
 
