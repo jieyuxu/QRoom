@@ -1,0 +1,29 @@
+{% block extracss%}
+<link href="../static/css/style.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="section mt-1 pt-2" id="features">
+    <div class="section-title pl-1">
+        <div class="text-left">
+            {% for key, value in events.items(): %}
+            <h4> {{key}} </h4>
+            {% for event in value %}
+            <span>
+                <label>{{event['title']}}</label>
+                <p style="margin-bottom: 0;">
+                    Start Time: {{event['StartTime']}}
+                </p>
+                <p style="padding-top: 0; margin-bottom: 0;">
+                    End Time: {{event['EndTime']}}
+                </p>
+                <p style="padding-top: 0;">
+                    Booked by: {{event['owner']}}
+                </p>
+            </span>
+            {% endfor %}
+            <br>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

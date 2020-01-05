@@ -392,6 +392,7 @@ def getBuildingObject(building_name):
 # get associated room object from room name and building name
 def getRoomObject(room_name, building_name):
     building = getBuildingObject(building_name)
+    print(building)
     room = sess.query(Rooms)\
                 .filter(Rooms.room_name == room_name)\
                 .filter(Rooms.building_id == building.building_id)\

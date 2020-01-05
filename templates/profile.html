@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <span>
                             <h5 class="card-title">{{event['title']}}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{event['buildingName']}} {{event['roomName']}}
+                            <h6 class="card-subtitle mb-2 text-muted">{{event['roomHeader']}}
                             </h6>
                             <!-- <h6 class="card-subtitle mb-2 text-muted">Room {{event['roomName']}}</h6> -->
                             <p class="card-text">
@@ -54,36 +54,30 @@
 
                                             <form action="/editReservation" method="post">
                                                 <div class="row">
-                                                    <div class="col col-md-6">
+                                                    <div class="col col-md-12">
                                                         <div class="form-group mb-4">
+                                                            <label>Event
+                                                                Title</label>
                                                             <input type="title" class="form-control" name="title"
                                                                 id="title" value="{{event['title']}}">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col col-md-6">
+                                                    <div class="col col-md-12">
                                                         <div class="form-group">
-                                                            <select class="form-control" name="building">
-                                                                {% for building in buildings %}
-                                                                {% if building == event['buildingName'] %}
-                                                                <option value="{{building}}" name="choice" selected>
-                                                                    {{building}}</option>
+                                                            <label>Room</label>
+                                                            <select class="form-control" name="room-id">
+                                                                {% for room in rooms %}
+                                                                {% if room == event['roomName'] %}
+                                                                <option value="{{room}}" name="choice" selected>
+                                                                    {{room}}</option>
                                                                 {% else %}
-                                                                <option value="{{building}}" name="choice">{{building}}
+                                                                <option value="{{room}}" name="choice">{{room}}
                                                                 </option>
                                                                 {% endif %}
                                                                 {% endfor %}
                                                             </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col col-md-6">
-                                                        <div class="form-group row">
-                                                            <label class="col-form-label" for="room">Room:</label>
-                                                            <div class="col-sm-10">
-                                                                <input type="room" class="form-control" name="room-id"
-                                                                    id="room" value="{{event['roomName']}}">
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -127,9 +121,6 @@
                                                             format: 'YYYY-MM-DD hh:mm:ss A',
                                                         });
                                                     </script>
-                                                </div>
-
-                                                <div class="row">
                                                     <div class="col col-md-6">
                                                         <div class="form-group">
                                                             <label>End Time</label>
@@ -166,9 +157,6 @@
                                                 <button action="submit" class="btn btn-primary">Submit</button>
                                                 <input type="hidden" name="eventid" value={{event['eventId']}}>
                                             </form>
-
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
                                         </div>
                                     </div>
                                 </div>

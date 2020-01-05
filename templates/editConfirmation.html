@@ -14,10 +14,10 @@
             <h5 style="white-space: pre-line">{{error}}</h5>
             {% else %}
             <h2>Confirmed!</h2>
-            <h3>{{building}} - {{room}}</h3>
+            <h3>{{room}}</h3>
             <h4 style="white-space: pre-line">{{fullTime}}</h4>
             {% endif %}
-            <p>Redirecting you to your profile in 5 seconds. Click <a href="/profile">here</a> to redirect now.</p>
+            <p>Redirecting you to your profile in 10 seconds. Click <a href="/profile">here</a> to redirect now.</p>
 
 
         </div>
@@ -30,7 +30,7 @@
                 // Move to a new location or you can do something else
                 window.location.href = "/profile";
 
-            }, 5500);
+            }, 11000);
 
         </script>
         {% endblock %}

@@ -14,105 +14,152 @@
       <div class="col col-md-6">
         <div class="card-column">
           <div class="card features">
-              <div class="card-body">
-                <h5 class="card-title">Add Another Admin</h5>
-                <form action="/handleAddUser" method="post">
-                  <div class="form-group">
-                    <label for="newAdmin">User to add as admin:</label>
-                    <input type="newAdmin" class="form-control" name="admin-id" id="newAdmin" placeholder="Enter user's netid">
-                  </div>
-                  <button action="submit" class="btn btn-primary">Submit</button>
-                </form>
-              </div>
-            </div>
-            <div class="card features mt-4 p-3">
-              <div class="card-body">
-                <h5 class="card-title">Book a Room in Advance</h5>
-                <form action="/handleSchedule" method="post">
-                  <div class="row">
-                    <div class="col col-md-12">
-                      <div class="form-group mb-4">
-                        <label for="title">Event Title</label>
-                        <input type="title" class="form-control" name="title" id="title" placeholder="Enter Event Title">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col col-md-8">
-                      <div class="form-group">
-                        <label for="building">Building</label>
-                        <select class="form-control" name="building">
-                          {% for building in buildings %}
-                          <option value="{{building}}" name="choice">{{building}}</option>
-                          {% endfor %}
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col col-md-4">
-                      <div class="form-group row">
-                        <label for="room">Room</label>
-                      
-                        <input type="room" class="form-control" name="room-id" id="room" placeholder="Enter room #">
-                        
-                      </div>
-                    </div>
-                  </div>
-            
-                  <div class="row">
-                    <div class="col col-md-6">
-                      <div class="form-group mb-4">
-                        <label>Start Time</label>
-                        <div class="input-group date" id="datetimepicker12" data-target-input="nearest">
-                          <input type="text" name="start-time" class="form-control datetimepicker-input"
-                            data-target="#datetimepicker12" />
-                          <div class="input-group-append" data-target="#datetimepicker12" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <script type="text/javascript">
-                      $('#datetimepicker12').datetimepicker({
-                        defaultDate: new Date(),
-                        format: 'YYYY-MM-DD hh:mm:ss A'
-                      });
-                    </script>
-                      <div class="col col-md-6">
-                          <div class="form-group">
-                            <label>End Time</label>
-                            <div class="input-group date" id="datetimepicker13" data-target-input="nearest">
-                              <input type="text" name="end-time" class="form-control datetimepicker-input"
-                                data-target="#datetimepicker13" />
-                              <div class="input-group-append" data-target="#datetimepicker13" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <script type="text/javascript">
-                          $('#datetimepicker13').datetimepicker({
-                            defaultDate: new Date(),
-                            format: 'YYYY-MM-DD hh:mm:ss A'
-                          });
-                        </script>
-                  </div>          
-                  <button action="submit" class="btn btn-primary">Submit</button>
-                </form>
-              </div>
+            <div class="card-body">
+              <h5 class="card-title">Add Another Admin</h5>
+              <form action="/handleAddUser" method="post">
+                <div class="form-group">
+                  <label for="newAdmin">User to add as admin:</label>
+                  <input type="newAdmin" class="form-control" name="admin-id" id="newAdmin"
+                    placeholder="Enter user's netid">
+                </div>
+                <button action="submit" class="btn btn-primary">Submit</button>
+              </form>
             </div>
           </div>
+          <div class="card features mt-4 p-3">
+            <div class="card-body">
+              <h5 class="card-title">Book a Room in Advance</h5>
+              <form action="/handleSchedule" method="post">
+                <div class="row">
+                  <div class="col col-md-12">
+                    <div class="form-group mb-4">
+                      <label for="title">Event Title</label>
+                      <input type="title" class="form-control" name="title" id="title" placeholder="Enter Event Title">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col col-md-12">
+                    <div class="form-group">
+                      <label for="room">Room</label>
+                      <select class="form-control" name="room-id">
+                        {% for room in rooms %}
+                        <option value="{{room}}" name="choice">{{room}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col col-md-6">
+                    <div class="form-group mb-4">
+                      <label>Start Time</label>
+                      <div class="input-group date" id="datetimepicker12" data-target-input="nearest">
+                        <input type="text" name="start-time" class="form-control datetimepicker-input"
+                          data-target="#datetimepicker12" />
+                        <div class="input-group-append" data-target="#datetimepicker12" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <script type="text/javascript">
+                    $('#datetimepicker12').datetimepicker({
+                      defaultDate: new Date(),
+                      format: 'YYYY-MM-DD hh:mm:ss A'
+                    });
+                  </script>
+                  <div class="col col-md-6">
+                    <div class="form-group">
+                      <label>End Time</label>
+                      <div class="input-group date" id="datetimepicker13" data-target-input="nearest">
+                        <input type="text" name="end-time" class="form-control datetimepicker-input"
+                          data-target="#datetimepicker13" />
+                        <div class="input-group-append" data-target="#datetimepicker13" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <script type="text/javascript">
+                    $('#datetimepicker13').datetimepicker({
+                      defaultDate: new Date(),
+                      format: 'YYYY-MM-DD hh:mm:ss A'
+                    });
+                  </script>
+                </div>
+                <button action="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="col col-md-6">
-          <div class="card features h-100">
-              <div class="card-body">
-                <h5 class="card-title">Room Schedules</h5>
-                <p class="card-text">See the schedules of a particular building and room.</p>
-                
+        <div class="card features h-100">
+          <div class="card-body">
+            <h5 class="card-title">Room Schedules</h5>
+            <label>See the schedules of a particular room.</label>
+            <div class="row">
+              <div class="col col-md-12">
+                <div class="form-group">
+                  <select class="form-control" name="room-schedule" id="room-schedule-id">
+                    {% for room in rooms %}
+                    <option value="{{room}}" name="choice">{{room}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
               </div>
             </div>
+            <span id="resultsParagraph"></span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+  <script>
+    console.log("entered script");
+    function setup() {
+      console.log("entered setup");
+      $('#room-schedule-id').on('input', getResults);
+      getResults()
+    }
+
+    function handleResponse(response) {
+      console.log("entered handle response");
+      $('#resultsParagraph').html(response);
+      console.log("response handled");
+    }
+
+    let request = null;
+
+    function getResults() {
+      console.log("entered getresults");
+      let room = $('#room-schedule-id').val();
+      console.log("room: " + room);
+      console.log(typeof room);
+      let location = room.split(" - ");
+      let building = encodeURIComponent(location[0]);
+      room = encodeURIComponent(location[1]);
+
+      let url = '/roomSchedule?building=' + building + '\&room=' + room
+
+      if (request != null)
+        request.abort();
+
+      request = $.ajax(
+        {
+          type: "GET",
+          url: url,
+          success: handleResponse
+        }
+      );
+      console.log("sent ajax request");
+    }
+
+    $('document').ready(setup);
+
+  </script>
   {% endblock %}
   {% block extrajs %}
   <script src="../static/js/script2.js"></script>
