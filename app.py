@@ -38,7 +38,7 @@ app.config['CAS_LOGIN_ROUTE'] = '/cas'
 @app.route('/')
 def index():
    if isLoggedIn():
-      return redirect(url_for('profile'))
+      return redirect(url_for('booking'))
       session['admin'] = True
 
    return render_template("index.html",loggedin = isLoggedIn(), admin = False)
@@ -57,7 +57,7 @@ def caslogin():
       if isAdmin(user):
          session['admin'] = cas.username
          print('i got here')
-   return redirect(url_for('profile'))
+   return redirect(url_for('booking'))
 
 @app.route('/caslogout')
 def caslogout():
@@ -68,13 +68,19 @@ def caslogout():
       session.modified = True
    return redirect(url_for('index'))
 
-@app.route('/profile')
-def profile():
+@app.route('/booking')
+def booking():
    if isLoggedIn():
       event_query = getUserEvent(session['username'])
       buildingname=''
       roomname=''
       eventid=''
+
+      if len(event_query) == 0:
+          if 'admin' in session:
+             return render_template("booking.html", loggedin = isLoggedIn(), username = cas.username, errorMsg = "No Bookings", admin = True)
+          else:
+             return render_template("booking.html", loggedin = isLoggedIn(), username = cas.username, errorMsg = "No Bookings", admin = False)
 
       buildings_query = getBuildings()
       rooms = []
@@ -102,11 +108,12 @@ def profile():
 
          # get event details, store into dictionary
          eventDetails = {}
-         eventDetails['StartTime'] = start_time
-         eventDetails['EndTime'] = end_time
+         eventDetails['StartTime'] = get_month_day(start_time) +  ', ' + twelve_hour_time(start_time)
+         eventDetails['EndTime'] = get_month_day(end_time) +  ', ' + twelve_hour_time(end_time)
+         eventDetails['FullEndTime'] = end_time
          location = getBuildingRoomName(event.room_id)
-         #eventDetails['buildingName'] = room[0]
-         eventDetails['roomName'] = location[0] + " - " + location[1]
+         eventDetails['buildingName'] = location[0]
+         eventDetails['roomName'] = location[1]
          eventDetails['roomHeader'] = location[0] + " " + location[1]
          eventDetails['eventId'] = event.event_id
          eventDetails['title'] = event.event_title
@@ -134,9 +141,9 @@ def profile():
          # eventdetails is a dictionary containing all of the information for a specific event within the month/yr
 
       if 'admin' in session:
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = True, rooms=rooms)
+         return render_template("booking.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = True, rooms=rooms)
       else:
-         return render_template("profile.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = False, rooms=rooms)
+         return render_template("booking.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = False, rooms=rooms)
    else:
       return redirect(url_for("index"))
 
@@ -215,7 +222,7 @@ def editReservation():
          adminStatus = 'admin' in session
          # room_id is a room number and building_id is the building name
          # building_id = request.form['building']
-         room_id = request.form['room-id'] 
+         room_id = request.form['room-id']
          start_time = request.form['start-time']
          end_time = request.form['end-time']
          title = request.form['title']
@@ -228,11 +235,11 @@ def editReservation():
             errorMsg = "You do not have administrative access."
             return render_template("editConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, room=room_id)
 
-         
+
          event_object = getEventObject(event_id)
          if event_object is None:
             print("This should not occur! Invalid event")
-            return redirect(url_for('profile'))
+            return redirect(url_for('booking'))
 
          regex = "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [A,P]M"
          startMatch = re.search(regex, start_time)
@@ -241,7 +248,7 @@ def editReservation():
          if startMatch is None:
             errorMsg = 'Please enter a valid start time. Select a time by clicking on the calendar icon, or enter a time in the format year-month-day hour:minutes:seconds AM/PM'
             return render_template("editConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, room=room_id)
-         if endMatch is None:  
+         if endMatch is None:
             errorMsg = 'Please enter a valid end time. Select a time by clicking on the calendar icon, or enter a time in the format year:month:day:hour:minutes:seconds:milliseconds:AM/PM'
             return render_template("editConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, room=room_id)
 
@@ -283,7 +290,7 @@ def editReservation():
          room_object = getRoomObject(location[1], location[0])
          errorMsg = editRoomSchedule(current_user_object, room_object, start, end, event_object, title)
          return render_template("editConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, room=room_id)
-   
+
    else:
         return redirect(url_for("index"))
 
@@ -480,7 +487,7 @@ def handleSchedule():
          if startMatch is None:
             errorMsg = 'Please enter a valid start time. Select a time by clicking on the calendar icon, or enter a time in the format year-month-day hour:minutes:seconds AM/PM'
             return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, room=room_id)
-         if endMatch is None:  
+         if endMatch is None:
             errorMsg = 'Please enter a valid end time. Select a time by clicking on the calendar icon, or enter a time in the format year:month:day:hour:minutes:seconds:milliseconds:AM/PM'
             return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, room=room_id)
 
@@ -539,7 +546,7 @@ def roomSchedule():
       # check end time and if it has passed
       if (current_dt() > event.end_time):
          continue
-      
+
       # check if start month, year in dictionary
       start_time = event.start_time
       end_time = event.end_time
@@ -578,6 +585,7 @@ def currentBooking():
         time = str(request.args.get('fullTime'))
         print(time)
         eventid = request.args.get('eventid')
+        print(eventid)
         year = int(time[0:4])
         month = int(time[5:7])
         day = int(time[8:10])

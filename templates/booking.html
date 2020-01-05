@@ -12,6 +12,15 @@
             <h3>Current Booking</h3>
             {% endif %}
 
+            {% if errorMsg|length %}
+            <br>
+            <br>
+            <p>You currently have no bookings!</p>
+            <p>Click on the Buildings tab to view
+              available building and room schedules. To book a room, please scan
+              the QR code in front of the room.</p>
+
+            {% else %}
             {% for key, value in events.items(): %}
             <h3> {{key}} </h3>
             {% for event in value %}
@@ -172,6 +181,7 @@
             {% endfor %}
             <br>
             {% endfor %}
+            {% endif %}
 
         </div>
     </div>

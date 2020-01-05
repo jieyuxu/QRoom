@@ -12,7 +12,7 @@
     	    <h2>Booking Extended!</h2>
     	    <h3>{{building}} - {{room}}</h3>
     		<h2>{{fullTime}}</h2>
-    		<p>Redirecting you to your profile in 5 seconds. Click <a href="/profile">here</a> to redirect now.</p>
+    		<p>Redirecting you in 5 seconds. Click <a href="/booking">here</a> to redirect now.</p>
     	 {% endif %}
 
 
@@ -24,11 +24,11 @@
       window.setTimeout(function(){
 
         // Move to a new location or you can do something else
-        window.location.href = "/profile";
+        window.location.href = "/booking";
 
         }, 5500);
 
   </script>
-  
+
   <script src="../static/js/script2.js"></script>
  {% endblock %}
