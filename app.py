@@ -529,7 +529,7 @@ def roomSchedule():
    room=request.args.get('room')
 
    room_object = getRoomObject(room, building)
-   event_query = getEvents(room_object)
+   event_query = getEventsSorted(room_object)
 
    calender = {}
    for event in event_query:

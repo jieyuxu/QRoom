@@ -382,6 +382,14 @@ def getEvents(room):
             .all()
     return events
 
+# get events given room object
+def getEventsSorted(room):
+    events = sess.query(Events)\
+            .filter(Events.room_id == room.room_id)\
+            .order_by(Events.start_time)\
+            .all()
+    return events
+
 # get assosiated building object from building name
 def getBuildingObject(building_name):
     building = sess.query(Buildings)\
