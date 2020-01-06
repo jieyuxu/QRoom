@@ -5,31 +5,25 @@
 {% block content %}
 <div class="section mt-5 pt-5" id="confirmation">
    <div class="container">
-       <!-- <div class="section-title">
-         <span class="eventid" eventid={{eventid}}></span>
-
-          <div class="h2"> Current Booking Information </div>
-            <p>Building: {{building}}</p>
-            <p>Room: {{room}}</p>
-
-        </div> -->
         <span class="eventid" eventid={{eventid}}></span>
-        <div class="jumbotron jumbotron-fluid">
-            <div class="container">
-              <div class="section-title">
-                <h1 style="color: #e38cb7;"><b>Current Booking Information</b></h1>
-              </div>
-              <div class="row justify-content-center">
-                  <p class="lead"><b>Building: {{building}}<br>Room: {{room}}<br>
-                    End time : {{time}}
-                  </b>
-                  </p>
-                  <p class="p-3"><b>Note:</b> Stay on this page to be alerted 10 minutes before your booking ends. You may extend the booking if the room is available.</p>
-              </div>
+        <div class="row">
+          <div class="col col-md-10">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                  <div class="section-title">
+                    <h1 style="color: #e38cb7;"><b>Current Booking Information</b></h1>
+                  </div>
+                  <div class="row justify-content-center">
+                      <p class="lead"><b>Building: {{building}}<br>Room: {{room}}<br>
+                        End time : {{time}}
+                      </b>
+                      </p>
+                      <p class="p-3"><b>Note:</b> Stay on this page to be alerted 10 minutes before your booking ends. You may extend the booking if the room is available.</p>
+                  </div>
+                </div>
             </div>
           </div>
-         <br>
-
+        </div>
       </div>
     </div>
 </div>
