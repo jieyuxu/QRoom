@@ -48,7 +48,8 @@ $(function() {
      *-----------------------------------*/
 
     $('.navbar-nav > li:not(.dropdown) > a').on('click', function() {
-        $('.navbar-collapse').collapse('toggle');
+        $('.navbar-collapse').collapse('hide');
+        console.log('chanigng navbar toggler')
         $('.navbar-toggler').attr('aria-expanded', 'false');
     });
 
