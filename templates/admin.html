@@ -85,22 +85,24 @@
         </div>
       </div>
       <div class="col col-md-6">
-        <div class="card features h-100 overflow-auto">
+        <div class="card features h-100">
           <div class="card-body">
             <h5 class="card-title">Room Schedules</h5>
             <label>See the schedules of a particular room.</label>
-            <div class="row">
-              <div class="col col-md-12">
-                <div class="form-group">
-                  <select class="form-control" name="room-schedule" id="room-schedule-id">
-                    {% for room in rooms %}
-                    <option value="{{room}}" name="choice">{{room}}</option>
-                    {% endfor %}
-                  </select>
+            <p class="card-text overflow-auto" style="overflow-y: auto;">
+              <div class="row">
+                <div class="col col-md-12">
+                  <div class="form-group">
+                    <select class="form-control" name="room-schedule" id="room-schedule-id">
+                      {% for room in rooms %}
+                      <option value="{{room}}" name="choice">{{room}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
                 </div>
               </div>
-            </div>
-            <span id="resultsParagraph"></span>
+              <span id="resultsParagraph"></span>
+            </p>
           </div>
         </div>
       </div>
