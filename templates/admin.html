@@ -64,12 +64,6 @@
                       </div>
                     </div>
                   </div>
-                  <script type="text/javascript">
-                    $('#datetimepicker12').datetimepicker({
-                      defaultDate: new Date(),
-                      format: 'YYYY-MM-DD hh:mm:ss A'
-                    });
-                  </script>
                   <div class="col col-md-6">
                     <div class="form-group">
                       <label>End Time</label>
@@ -82,12 +76,6 @@
                       </div>
                     </div>
                   </div>
-                  <script type="text/javascript">
-                    $('#datetimepicker13').datetimepicker({
-                      defaultDate: new Date(),
-                      format: 'YYYY-MM-DD hh:mm:ss A'
-                    });
-                  </script>
                 </div>
                 <button action="submit" class="btn btn-primary">Submit</button>
               </form>
@@ -118,6 +106,17 @@
     </div>
   </div>
   <script>
+    
+    $('#datetimepicker12').datetimepicker({
+      defaultDate: new Date(),
+      format: 'YYYY-MM-DD hh:mm:ss A'
+    });
+
+    $('#datetimepicker13').datetimepicker({
+      defaultDate: new Date(),
+      format: 'YYYY-MM-DD hh:mm:ss A'
+    });
+    
     console.log("entered script");
     function setup() {
       console.log("entered setup");
