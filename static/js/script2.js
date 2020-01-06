@@ -48,7 +48,7 @@ $(function() {
      *-----------------------------------*/
 
     $('.navbar-nav > li:not(.dropdown) > a').on('click', function() {
-        $('.navbar-collapse').collapse('hide');
+        $('.navbar-collapse').collapse('toggle');
     });
     /* 
      * NAVBAR TOGGLE BG
