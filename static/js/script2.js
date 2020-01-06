@@ -49,9 +49,8 @@ $(function() {
 
     $('.navbar-nav > li:not(.dropdown) > a').on('click', function() {
         $('.navbar-collapse').collapse('hide');
-        console.log('chanigng navbar toggler')
-        $('.navbar-toggler').attr('aria-expanded', 'false');
     });
+
 
     /* 
      * NAVBAR TOGGLE BG
@@ -62,6 +61,8 @@ $(function() {
     })
     siteNav.on('hide.bs.collapse', function(e) {
         $(this).parents('.nav-menu').removeClass('menu-is-open');
+        $('.navbar-collapse').collapse('hide');
+        $('.navbar-toggler').attr('aria-expanded', 'false');
     })
 
     /*-----------------------------------
