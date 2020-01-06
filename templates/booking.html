@@ -38,11 +38,11 @@
                                 End Time: {{event['EndTime']}}
                             </p>
                             <a href={{url_for('currentBooking', building=event['buildingName'],
-                                  room=event['roomName'], fullTime=event['FullEndTime'])}} class="btn btn-info">Get
+                                  room=event['roomName'], fullTime=event['FullEndTime'])}} class="btn btn-info mt-1">Get
                                 Info</a>
 
                             <a href={{url_for('releaseRoom', building=event['buildingName'],
-                                  room=event['roomName'], eventid=event['eventId'])}} class="btn btn-info">Release
+                                  room=event['roomName'], eventid=event['eventId'])}} class="btn btn-info mt-1">Release
                                 Room</a>
 
                             {% if admin %}
