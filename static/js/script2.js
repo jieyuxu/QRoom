@@ -46,11 +46,9 @@ $(function() {
     /*-----------------------------------
      * NAVBAR CLOSE ON CLICK
      *-----------------------------------*/
-    // $('.navbar-nav > li:not(.dropdown) > a').on('click', function() {
-    //     console.log('here i am');
-    //     $('.navbar-collapse').collapse('hide');
-    //     $('.navbar-toggler').addClass('collapsed');
-    // });
+    $('.navbar-nav > li:not(.dropdown) > a').on('click', function() {
+        $('.navbar-collapse').collapse('hide');
+    });
 
     /* 
      * NAVBAR TOGGLE BG
