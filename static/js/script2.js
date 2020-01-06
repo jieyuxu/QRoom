@@ -25,8 +25,8 @@ $(function() {
             $('.nav-link').attr('style', 'color: white;');
             $('.navbar-brand').attr('style', 'color: white;');
             
-            $('a.btn').removeClass('btn-outline-dark');
-            $('a.btn').addClass('btn-outline-light');
+            $('li > a.btn').removeClass('btn-outline-dark');
+            $('li > a.btn').addClass('btn-outline-light');
         } else {
             $navmenu.removeClass("is-scrolling");
             $('.nav-link').removeAttr('style');
@@ -35,8 +35,8 @@ $(function() {
             $('.nav-link').attr('style', 'color: black;');
             $('.navbar-brand').attr('style', 'color: black;');
 
-            $('a.btn').removeClass('btn-outline-light');
-            $('a.btn').addClass('btn-outline-dark');
+            $('li > a.btn').removeClass('btn-outline-light');
+            $('li > a.btn').addClass('btn-outline-dark');
         }
     }
     menuscroll();
