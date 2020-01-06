@@ -6,20 +6,20 @@
 <div class="section mt-5 pt-5" id="features">
     <div class="container">
         <div class="section-title pl-4">
+            <div class="row">
             {% if admin %}
             <h3>Current Bookings</h3>
             {% else %}
             <h3>Current Booking</h3>
             {% endif %}
-
+            </div>
+            <div class="row">
+                <div class="col col-md-12">
             {% if errorMsg|length %}
-            <br>
-            <br>
             <p>You currently have no bookings!</p>
             <p>Click on the Buildings tab to view
               available building and room schedules. To book a room, please scan
               the QR code in front of the room.</p>
-
             {% else %}
             {% for key, value in events.items(): %}
             <h3> {{key}} </h3>
@@ -179,10 +179,10 @@
                 </div>
             </div>
             {% endfor %}
-            <br>
             {% endfor %}
             {% endif %}
-
+            </div>
+            </div>
         </div>
     </div>
 </div>
