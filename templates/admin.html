@@ -89,7 +89,6 @@
           <div class="card-body">
             <h5 class="card-title">Room Schedules</h5>
             <label>See the schedules of a particular room.</label>
-            <p class="card-text overflow-auto" style="overflow-y: auto;">
               <div class="row">
                 <div class="col col-md-12">
                   <div class="form-group">
@@ -99,10 +98,11 @@
                       {% endfor %}
                     </select>
                   </div>
-                  <span id="resultsParagraph"></span>
+                  <p class="card-text overflow-auto" style="overflow-y: auto;">
+                    <span id="resultsParagraph"></span>
+                  </p>
                 </div>
               </div>
-            </p>
           </div>
         </div>
       </div>
