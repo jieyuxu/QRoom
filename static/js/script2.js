@@ -46,11 +46,11 @@ $(function() {
     /*-----------------------------------
      * NAVBAR CLOSE ON CLICK
      *-----------------------------------*/
-
-    $('.navbar-nav > li:not(.dropdown) > a').on('click', function() {
-        $('.navbar-collapse').collapse('hide');
-    });
-
+    // $('.navbar-nav > li:not(.dropdown) > a').on('click', function() {
+    //     console.log('here i am');
+    //     $('.navbar-collapse').collapse('hide');
+    //     $('.navbar-toggler').addClass('collapsed');
+    // });
 
     /* 
      * NAVBAR TOGGLE BG
@@ -61,8 +61,6 @@ $(function() {
     })
     siteNav.on('hide.bs.collapse', function(e) {
         $(this).parents('.nav-menu').removeClass('menu-is-open');
-        $('.navbar-collapse').collapse('hide');
-        $('.navbar-toggler').attr('aria-expanded', 'false');
     })
 
     /*-----------------------------------
