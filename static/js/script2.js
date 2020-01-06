@@ -49,7 +49,9 @@ $(function() {
 
     $('.navbar-nav > li:not(.dropdown) > a').on('click', function() {
         $('.navbar-collapse').collapse('toggle');
+        $('.navbar-toggler').attr('aria-expanded', 'false');
     });
+
     /* 
      * NAVBAR TOGGLE BG
      *-----------------*/
