@@ -1,6 +1,5 @@
 window.onload = function () {
   if (navigator.geolocation) {
-    this.checkPermission();
     navigator.geolocation.watchPosition(showPosition, error, options);
   } 
 };
@@ -29,7 +28,8 @@ function checkPermission() {
 
 function error(state) {
   alert("The application needs your current location to book a room.")
-  location.reload();
+  checkPermission();
+  window.location = '/booking';
 }
 
 function distance(lat1, lon1, lat2, lon2, unit) {
