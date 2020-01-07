@@ -1,11 +1,8 @@
 window.onload = function () {
   if (navigator.geolocation) {
-
+    this.checkPermission();
     navigator.geolocation.watchPosition(showPosition, error, options);
-  } else {
-    alert("The application needs your current location to book a room.")
-    window.location = '/booking';
-  }
+  } 
 };
 
 var options = {
