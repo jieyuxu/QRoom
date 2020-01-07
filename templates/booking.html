@@ -7,181 +7,178 @@
     <div class="container">
         <div class="section-title">
             <div class="row justify-content-center">
-            {% if admin %}
-            <h3>Current Bookings</h3>
-            {% else %}
-            <h3>Current Booking</h3>
-            {% endif %}
+                {% if admin %}
+                <h3>Current Bookings</h3>
+                {% else %}
+                <h3>Current Booking</h3>
+                {% endif %}
             </div>
             <div class="row justify-content-center">
                 <div class="col col-md-10">
-            {% if errorMsg|length %}
-            <p>You currently have no bookings!</p>
-            <p>Click on the Buildings tab to view
-              available building and room schedules. To book a room, please scan
-              the QR code in front of the room.</p>
-            {% else %}
-            {% for key, value in events.items(): %}
-            <h3> {{key}} </h3>
-            {% for event in value %}
-            <div class="card-deck">
-                <div class="card mx-auto" style="width: 18rem;">
-                    <div class="card-body">
-                        <span>
-                            <h5 class="card-title">{{event['title']}}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{event['roomHeader']}}
-                            </h6>
-                            <!-- <h6 class="card-subtitle mb-2 text-muted">Room {{event['roomName']}}</h6> -->
-                            <p class="card-text">
-                                Start Time: {{event['StartTime']}}
-                                <br>
-                                End Time: {{event['EndTime']}}
-                            </p>
-                            <a href={{url_for('currentBooking', building=event['buildingName'],
-                                  room=event['roomName'], fullTime=event['FullEndTime'])}} class="btn btn-info mt-1">Get
-                                Info</a>
+                    {% if errorMsg|length %}
+                    <p>You currently have no bookings!</p>
+                    <p>Click on the Buildings tab to view
+                        available building and room schedules. To book a room, please scan
+                        the QR code in front of the room.</p>
+                    {% else %}
+                    {% for key, value in events.items(): %}
+                    <h3> {{key}} </h3>
+                    {% for event in value %}
+                    <div class="card-deck">
+                        <div class="card mx-auto" style="width: 18rem;">
+                            <div class="card-body">
+                                <span>
+                                    <h5 class="card-title">{{event['title']}}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{event['roomHeader']}}
+                                    </h6>
+                                    <!-- <h6 class="card-subtitle mb-2 text-muted">Room {{event['roomName']}}</h6> -->
+                                    <p class="card-text">
+                                        Start Time: {{event['StartTime']}}
+                                        <br>
+                                        End Time: {{event['EndTime']}}
+                                    </p>
+                                    <a href={{url_for('currentBooking', building=event['buildingName'],
+                                  room=event['roomName'], fullTime=event['FullEndTime'])}}
+                                        class="btn btn-info mt-1">Get
+                                        Info</a>
 
-                            <a href={{url_for('releaseRoom', building=event['buildingName'],
+                                    <a href={{url_for('releaseRoom', building=event['buildingName'],
                                   room=event['roomName'], eventid=event['eventId'])}} class="btn btn-info mt-1">Release
-                                Room</a>
+                                        Room</a>
 
-                            {% if admin %}
-                            <button type="button" class="btn btn-info" data-toggle="modal"
-                                data-target="#editModal{{event['eventId']}}">
-                                Edit Reservation</button>
+                                    {% if admin %}
+                                    <button type="button" class="btn btn-info mt-1" data-toggle="modal"
+                                        data-target="#editModal{{event['eventId']}}">
+                                        Edit Reservation</button>
 
-                            <div class="modal fade" id="editModal{{event['eventId']}}" tabindex="-1" role="dialog"
-                                aria-labelledby="editModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document" id={{event['eventId']}}>
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Edit Reservation</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">×</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-
-                                            <form action="/editReservation" method="post">
-                                                <div class="row">
-                                                    <div class="col col-md-12">
-                                                        <div class="form-group mb-4">
-                                                            <label>Event
-                                                                Title</label>
-                                                            <input type="title" class="form-control" name="title"
-                                                                id="title" value="{{event['title']}}">
-                                                        </div>
-                                                    </div>
+                                    <div class="modal fade" id="editModal{{event['eventId']}}" tabindex="-1"
+                                        role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document" id={{event['eventId']}}>
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Edit Reservation</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col col-md-12">
-                                                        <div class="form-group">
-                                                            <label>Room</label>
-                                                            <select class="form-control" name="room-id">
-                                                                {% for room in rooms %}
-                                                                {% if room == event['roomName'] %}
-                                                                <option value="{{room}}" name="choice" selected>
-                                                                    {{room}}</option>
-                                                                {% else %}
-                                                                <option value="{{room}}" name="choice">{{room}}
-                                                                </option>
-                                                                {% endif %}
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <div class="modal-body">
 
-                                                <div class="row">
-                                                    <div class="col col-md-6">
-                                                        <div class="form-group mb-4">
-                                                            <label>Start Time</label>
-                                                            <div class="input-group date"
-                                                                id="datetimepicker12{{event['eventId']}}"
-                                                                data-target-input="nearest">
-                                                                <input type="text" name="start-time"
-                                                                    class="form-control datetimepicker-input"
-                                                                    data-target="#datetimepicker12{{event['eventId']}}" />
-                                                                <div class="input-group-append"
-                                                                    data-target="#datetimepicker12{{event['eventId']}}"
-                                                                    data-toggle="datetimepicker">
-                                                                    <div class="input-group-text"><i
-                                                                            class="fa fa-calendar"></i></div>
+                                                    <form action="/editReservation" method="post">
+                                                        <div class="row">
+                                                            <div class="col col-md-12">
+                                                                <div class="form-group mb-4">
+                                                                    <label>Event
+                                                                        Title</label>
+                                                                    <input type="title" class="form-control"
+                                                                        name="title" id="title"
+                                                                        value="{{event['title']}}">
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-
-                                                    <script type="text/javascript">
-                                                        console.log(parseInt("{{event['start_year']|tojson}}"));
-                                                        console.log(parseInt("{{event['start_month']|tojson}}"));
-                                                        console.log("{{event['StartTime']}}");
-                                                    </script>
-
-                                                    <script type="text/javascript">
-                                                        $("#datetimepicker12{{event['eventId']}}").datetimepicker({
-                                                            defaultDate: new Date(
-                                                                parseInt("{{event['start_year']|tojson}}"),
-                                                                parseInt("{{event['start_month']|tojson}}") - 1,
-                                                                parseInt("{{event['start_day']|tojson}}"),
-                                                                parseInt("{{event['start_hour']|tojson}}"),
-                                                                parseInt("{{event['start_minutes']|tojson}}"),
-                                                                parseInt("{{event['start_seconds']|tojson}}"),
-                                                                0),
-                                                            format: 'YYYY-MM-DD hh:mm:ss A',
-                                                        });
-                                                    </script>
-                                                    <div class="col col-md-6">
-                                                        <div class="form-group">
-                                                            <label>End Time</label>
-                                                            <div class="input-group date"
-                                                                id="datetimepicker13{{event['eventId']}}"
-                                                                data-target-input="nearest">
-                                                                <input type="text" name="end-time"
-                                                                    class="form-control datetimepicker-input"
-                                                                    data-target="#datetimepicker13{{event['eventId']}}" />
-                                                                <div class="input-group-append"
-                                                                    data-target="#datetimepicker13{{event['eventId']}}"
-                                                                    data-toggle="datetimepicker">
-                                                                    <div class="input-group-text"><i
-                                                                            class="fa fa-calendar"></i></div>
+                                                        <div class="row">
+                                                            <div class="col col-md-12">
+                                                                <div class="form-group">
+                                                                    <label>Room</label>
+                                                                    <select class="form-control" name="room-id">
+                                                                        {% for room in rooms %}
+                                                                        {% if room == event['roomName'] %}
+                                                                        <option value="{{room}}" name="choice" selected>
+                                                                            {{room}}</option>
+                                                                        {% else %}
+                                                                        <option value="{{room}}" name="choice">{{room}}
+                                                                        </option>
+                                                                        {% endif %}
+                                                                        {% endfor %}
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <script type="text/javascript">
-                                                        $("#datetimepicker13{{event['eventId']}}").datetimepicker({
-                                                            defaultDate: new Date(
-                                                                parseInt("{{event['end_year']|tojson}}"),
-                                                                parseInt("{{event['end_month']|tojson}}") - 1,
-                                                                parseInt("{{event['end_day']|tojson}}"),
-                                                                parseInt("{{event['end_hour']|tojson}}"),
-                                                                parseInt("{{event['end_minutes']|tojson}}"),
-                                                                parseInt("{{event['end_seconds']|tojson}}"),
-                                                                0),
-                                                            format: 'YYYY-MM-DD hh:mm:ss A'
-                                                        });
-                                                    </script>
-                                                </div>
 
-                                                <button action="submit" class="btn btn-primary">Submit</button>
-                                                <input type="hidden" name="eventid" value={{event['eventId']}}>
-                                            </form>
+                                                        <div class="row">
+                                                            <div class="col col-md-6">
+                                                                <div class="form-group mb-4">
+                                                                    <label>Start Time</label>
+                                                                    <div class="input-group date"
+                                                                        id="datetimepicker12{{event['eventId']}}"
+                                                                        data-target-input="nearest">
+                                                                        <input type="text" name="start-time"
+                                                                            class="form-control datetimepicker-input"
+                                                                            data-target="#datetimepicker12{{event['eventId']}}" />
+                                                                        <div class="input-group-append"
+                                                                            data-target="#datetimepicker12{{event['eventId']}}"
+                                                                            data-toggle="datetimepicker">
+                                                                            <div class="input-group-text"><i
+                                                                                    class="fa fa-calendar"></i></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <script type="text/javascript">
+                                                                $("#datetimepicker12{{event['eventId']}}").datetimepicker({
+                                                                    defaultDate: new Date(
+                                                                        parseInt("{{event['start_year']|tojson}}"),
+                                                                        parseInt("{{event['start_month']|tojson}}") - 1,
+                                                                        parseInt("{{event['start_day']|tojson}}"),
+                                                                        parseInt("{{event['start_hour']|tojson}}"),
+                                                                        parseInt("{{event['start_minutes']|tojson}}"),
+                                                                        parseInt("{{event['start_seconds']|tojson}}"),
+                                                                        0),
+                                                                    format: 'YYYY-MM-DD hh:mm:ss A',
+                                                                });
+                                                            </script>
+                                                            <div class="col col-md-6">
+                                                                <div class="form-group">
+                                                                    <label>End Time</label>
+                                                                    <div class="input-group date"
+                                                                        id="datetimepicker13{{event['eventId']}}"
+                                                                        data-target-input="nearest">
+                                                                        <input type="text" name="end-time"
+                                                                            class="form-control datetimepicker-input"
+                                                                            data-target="#datetimepicker13{{event['eventId']}}" />
+                                                                        <div class="input-group-append"
+                                                                            data-target="#datetimepicker13{{event['eventId']}}"
+                                                                            data-toggle="datetimepicker">
+                                                                            <div class="input-group-text"><i
+                                                                                    class="fa fa-calendar"></i></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <script type="text/javascript">
+                                                                $("#datetimepicker13{{event['eventId']}}").datetimepicker({
+                                                                    defaultDate: new Date(
+                                                                        parseInt("{{event['end_year']|tojson}}"),
+                                                                        parseInt("{{event['end_month']|tojson}}") - 1,
+                                                                        parseInt("{{event['end_day']|tojson}}"),
+                                                                        parseInt("{{event['end_hour']|tojson}}"),
+                                                                        parseInt("{{event['end_minutes']|tojson}}"),
+                                                                        parseInt("{{event['end_seconds']|tojson}}"),
+                                                                        0),
+                                                                    format: 'YYYY-MM-DD hh:mm:ss A'
+                                                                });
+                                                            </script>
+                                                        </div>
+
+                                                        <button action="submit" class="btn btn-primary">Submit</button>
+                                                        <input type="hidden" name="eventid" value={{event['eventId']}}>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+
+                                    {% endif %}
+
+
                             </div>
-
-                            {% endif %}
-
-
+                        </div>
                     </div>
+                    {% endfor %}
+                    {% endfor %}
+                    {% endif %}
                 </div>
-            </div>
-            {% endfor %}
-            {% endfor %}
-            {% endif %}
-            </div>
             </div>
         </div>
     </div>

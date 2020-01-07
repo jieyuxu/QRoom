@@ -36,9 +36,11 @@ URI     : https://colorlib.com
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
 
     {% block extracss %}{% endblock %}
 </head>
@@ -81,42 +83,50 @@ URI     : https://colorlib.com
     </div> -->
 
     <div class="nav-menu fixed-top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                            {% if loggedin %}
-                            <nav class="navbar navbar-light navbar-expand-lg">
-                                <a class="navbar-brand" href="/booking">QRoom</a> 
-                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
-                            {% else %}
-                            <nav class="navbar navbar-dark navbar-expand-lg">
-                                <a class="navbar-brand" href="/">QRoom</a> 
-                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    {% if loggedin %}
+                    <nav class="navbar navbar-light navbar-expand-lg">
+                        <a class="navbar-brand" href="/booking">QRoom</a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
+                            aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span
+                                class="navbar-toggler-icon"></span> </button>
+                        {% else %}
+                        <nav class="navbar navbar-dark navbar-expand-lg">
+                            <a class="navbar-brand" href="/">QRoom</a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
+                                aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span
+                                    class="navbar-toggler-icon"></span> </button>
                             {% endif %}
                             <div class="collapse navbar-collapse" id="navbar">
                                 <ul class="navbar-nav ml-auto">
                                     {% if loggedin %}
-                                    <li class="nav-item"> <a class="nav-link" href="/booking">Home <span class="sr-only">(current)</span></a> </li>
+                                    <li class="nav-item"> <a class="nav-link" href="/booking">Home <span
+                                                class="sr-only">(current)</span></a> </li>
                                     <li class="nav-item"> <a class="nav-link" href="/buildings">Buildings</a> </li>
                                     {% if admin %}
                                     <li class="nav-item"> <a class="nav-link" href="/admin">Admin Portal</a> </li>
                                     {% endif %}
-                                    <li class="nav-item"><a href="/logout" class="btn btn-outline-dark my-3 my-sm-0 ml-lg-3">Logout</a></li>
+                                    <li class="nav-item"><a href="/logout"
+                                            class="btn btn-outline-dark my-3 my-sm-0 ml-lg-3">Logout</a></li>
                                     {% else %}
-                                    <li class="nav-item"> <a class="nav-link active" href="/">HOME <span class="sr-only">(current)</span></a> </li>
+                                    <li class="nav-item"> <a class="nav-link active" href="/">HOME <span
+                                                class="sr-only">(current)</span></a> </li>
                                     <li class="nav-item"> <a class="nav-link" href="#features">FEATURES</a> </li>
                                     <li class="nav-item"> <a class="nav-link" href="#getstarted">GET STARTED</a> </li>
                                     <li class="nav-item"> <a class="nav-link" href="#faq">FAQ</a> </li>
                                     <li class="nav-item"> <a class="nav-link" href="#contact">CONTACT</a> </li>
-                                    <li class="nav-item"><a href="/login" class="btn btn-outline-light my-3 my-sm-0 ml-lg-3">Login</a></li>
+                                    <li class="nav-item"><a href="/login"
+                                            class="btn btn-outline-light my-3 my-sm-0 ml-lg-3">Login</a></li>
                                     {% endif %}
                                 </ul>
                             </div>
                         </nav>
-                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
     {% block content %}{% endblock %}
 
@@ -125,4 +135,5 @@ URI     : https://colorlib.com
     <script src="../static/js/owl.carousel.min.js"></script>
     {% block extrajs %}{% endblock %}
 </body>
+
 </html>
