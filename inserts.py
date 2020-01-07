@@ -27,7 +27,9 @@ lewis = Buildings(building_name="Lewis",
 shepperd = Buildings(building_name="Sherrerd Hall",
                      latitude=40.3495354, longitude=-74.654877)
 friend = Buildings(building_name="Friend Center",
-                   latitude=40.3505495, longitude=-74.6543927)
+                   latitude=40.3505454, longitude=-74.6543927)
+
+                   
 # @40.3423081,-74.6596026
 
 group1 = Groups(open_time=time(8, 00, 00), close_time=time(5, 00, 00))
