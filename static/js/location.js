@@ -1,5 +1,6 @@
 window.onload = function () {
   if (navigator.geolocation) {
+
     navigator.geolocation.watchPosition(showPosition, error, options);
   } else {
     alert("The application needs your current location to book a room.")
@@ -13,10 +14,10 @@ var options = {
   // maximumAge: 1000,
 };
 
-function error() {
-  console.log("there is an error");
+function checkPermission() {
+  // console.log("there is an error");
   // console.warn(`ERROR(${err.code}): ${err.message}`);
-  alert("The application needs your current location to book a room.")
+  
   navigator.permissions.query({name:'geolocation'}).then(function(result) {
     if (result.state == 'prompt') {
       report(result.state);
@@ -29,10 +30,9 @@ function error() {
   });
 }
 
-function report(state) {
-  console.log('Permission ' + state);
-}
-  window.location = '/booking';
+function error(state) {
+  alert("The application needs your current location to book a room.")
+  location.reload();
 }
 
 function distance(lat1, lon1, lat2, lon2, unit) {
