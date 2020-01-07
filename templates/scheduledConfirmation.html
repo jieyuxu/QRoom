@@ -9,7 +9,8 @@
             {% if admin == False %}
             <h2>Failure to confirm.</h2>
             <h3>{{error}}</h3>
-            <p>Redirecting you to your profile in 10 seconds. Click <a href="/profile">here</a> to redirect now.</p>
+            <p>Redirecting you to your current bookings in 10 seconds. Click <a href="/booking">here</a> to redirect
+                now.</p>
             {% elif error|length %}
             <h2>Failure to confirm.</h2>
             <h5 style="white-space: pre-line">{{error}}</h5>
@@ -18,7 +19,8 @@
             <h2>Confirmed!</h2>
             <h3>{{room}}</h3>
             <h4 style="white-space: pre-line">{{fullTime}}</h4>
-            <p>Redirecting you to your profile in 10 seconds. Click <a href="/profile">here</a> to redirect now.</p>
+            <p>Redirecting you to your current bookings in 10 seconds. Click <a href="/booking">here</a> to redirect
+                now.</p>
             {% endif %}
 
 
@@ -29,31 +31,31 @@
         {% block extrajs %}
         <script src="../static/js/script2.js"></script>
         {% if admin == False %}
-            <script>
-                window.setTimeout(function () {
-                    // Move to a new location or you can do something else
-                    window.location.href = "/profile";
+        <script>
+            window.setTimeout(function () {
+                // Move to a new location or you can do something else
+                window.location.href = "/booking";
 
-                }, 11000);
+            }, 11000);
 
-            </script>
+        </script>
         {% elif error|length %}
-            <script>
-                window.setTimeout(function () {
-                    // Move to a new location or you can do something else
-                    window.location.href = "/admin";
+        <script>
+            window.setTimeout(function () {
+                // Move to a new location or you can do something else
+                window.location.href = "/admin";
 
-                }, 11000);
+            }, 11000);
 
-            </script>
+        </script>
         {% else %}
-            <script>
-                window.setTimeout(function () {
-                    // Move to a new location or you can do something else
-                    window.location.href = "/profile";
+        <script>
+            window.setTimeout(function () {
+                // Move to a new location or you can do something else
+                window.location.href = "/booking";
 
-                }, 11000);
+            }, 11000);
 
-            </script>
+        </script>
         {% endif %}
         {% endblock %}

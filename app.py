@@ -227,6 +227,7 @@ def editReservation():
          end_time = request.form['end-time']
          title = request.form['title']
          event_id = request.form['eventid']
+         fullTime = start_time + ' - ' + end_time
 
          if title == '':
             title = '< No Event Title >'
@@ -283,6 +284,7 @@ def editReservation():
 
          start = datetime(int(start_year), int(start_month), int(start_day), starting_hour, int(start_minutes), int(start_seconds))
          end = datetime(int(end_year), int(end_month), int(end_day), ending_hour, int(end_minutes), int(end_seconds))
+         fullTime = "Start: " + get_month_day(start) + ' ' + twelve_hour_time(start) + "\nEnd: " + get_month_day(end) + ' ' + twelve_hour_time(end)
          current_user = session['username']
          current_user_object = getUser(current_user)
 
@@ -472,6 +474,7 @@ def handleSchedule():
          start_time = request.form['start-time']
          end_time = request.form['end-time']
          title = request.form['title']
+         fullTime = start_time + ' - ' + end_time
 
          if title == '':
             title = '< No Event Title >'
