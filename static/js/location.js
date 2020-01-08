@@ -1,10 +1,7 @@
 window.onload = function () {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(showPosition, error, options);
-  } else {
-    alert("The application needs your current location to book a room.")
-    window.location = '/booking';
-  }
+  } 
 };
 
 var options = {
@@ -13,10 +10,25 @@ var options = {
   // maximumAge: 1000,
 };
 
-function error() {
-  console.log("there is an error");
+function checkPermission() {
+  // console.log("there is an error");
   // console.warn(`ERROR(${err.code}): ${err.message}`);
+  
+  navigator.permissions.query({name:'geolocation'}).then(function(result) {
+    if (result.state == 'prompt') {
+      report(result.state);
+      geoBtn.style.display = 'none';
+      navigator.geolocation.getCurrentPosition(revealPosition,positionDenied,geoSettings);
+    } else if (result.state == 'denied') {
+      report(result.state);
+      geoBtn.style.display = 'inline';
+    }
+  });
+}
+
+function error(state) {
   alert("The application needs your current location to book a room.")
+  checkPermission();
   window.location = '/booking';
 }
 

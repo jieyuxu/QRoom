@@ -444,7 +444,7 @@ def handleAddUser():
             msg = Message('QRoom Admin',
                   sender='qroomteam@gmail.com',
                   recipients=[recipient])
-            msg.body = 'You have been added as an admin.'
+            msg.body = 'Weclome to the QRoom team! You have been added as an admin by ' + current_user + '. Administrative access allows you to access the Admin Portal, where you can add new users as admins, book rooms ahead of time, and monitor all current bookings. If you think this email was sent to you by mistake, please reply to us at qroomteam@gmail.com.'
 
             try:
                mail.send(msg)

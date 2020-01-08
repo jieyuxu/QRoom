@@ -27,7 +27,9 @@ lewis = Buildings(building_name="Lewis",
 shepperd = Buildings(building_name="Sherrerd Hall",
                      latitude=40.3495354, longitude=-74.654877)
 friend = Buildings(building_name="Friend Center",
-                   latitude=40.3505495, longitude=-74.6543927)
+                   latitude=40.3505454, longitude=-74.6543927)
+
+                   
 # @40.3423081,-74.6596026
 
 group1 = Groups(open_time=time(8, 00, 00), close_time=time(5, 00, 00))
@@ -50,7 +52,7 @@ julie = Users(net_id="jkallini", contact="jkallini@princton.edu", admin=True)
 elise = Users(net_id="ccolter", contact="ccolter@princeton.edu", admin=True)
 jessica = Users(net_id="jjf4", contact="jjf4@princeton.edu", admin=True)
 
-event1 = Events(user=bob, event_title="Bob's birthday",
+event1 = Events(user=bob, event_title="Paul's birthday",
                 start_time=datetime(2020, 11, 28, 23, 55, 59, 342380),
                 end_time=datetime(2020, 11, 29, 23, 55, 59, 0),
                 room=room1, passed=False)
