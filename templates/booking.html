@@ -66,7 +66,7 @@
 
                                                     <form action="/editReservation" method="post">
                                                         <div class="row">
-                                                            <div class="col col-md-12">
+                                                            <div class="col col-md-12 mx-auto">
                                                                 <div class="form-group mb-4">
                                                                     <label>Event
                                                                         Title</label>
@@ -77,7 +77,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="col col-md-12">
+                                                            <div class="col col-md-12 mx-auto">
                                                                 <div class="form-group">
                                                                     <label>Room</label>
                                                                     <select class="form-control" name="room-id">
@@ -95,8 +95,9 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="row">
-                                                            <div class="col col-md-6">
+                                                        <div class="col col-md-6 mx-auto">
+                                                            <div class="row">
+
                                                                 <div class="form-group mb-4">
                                                                     <label>Start Time</label>
                                                                     <div class="input-group date"
@@ -128,7 +129,7 @@
                                                                     format: 'YYYY-MM-DD hh:mm:ss A',
                                                                 });
                                                             </script>
-                                                            <div class="col col-md-6">
+                                                            <div class="row">
                                                                 <div class="form-group">
                                                                     <label>End Time</label>
                                                                     <div class="input-group date"
@@ -183,6 +184,14 @@
         </div>
     </div>
 </div>
+<style>
+    @media only screen and (max-width: 454px) {
+        .bootstrap-datetimepicker-widget {
+            bottom: 45px !important;
+            top: auto !important;
+        }
+    }
+</style>
 {% endblock %}
 {% block extrajs %}
 <script src="../static/js/script2.js"></script>
