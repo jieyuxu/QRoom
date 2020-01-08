@@ -38,7 +38,7 @@
                                         End Time: {{event['EndTime']}}
                                     </p>
                                     <a href={{url_for('currentBooking', building=event['buildingName'],
-                                  room=event['roomName'], fullTime=event['FullEndTime'])}}
+                                  room=event['roomName'], fullTime=event['FullEndTime'], eventid=event['eventId'])}}
                                         class="btn btn-info mt-1">Get
                                         Info</a>
 

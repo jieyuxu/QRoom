@@ -642,44 +642,42 @@ def extend():
     print("in extend stay")
     print("am i logged in?", isLoggedIn())
     print("request method", request.method)
-    if isLoggedIn() and request.method == 'POST':
-        if request.is_json:
-            THIRTY_MIN = 30
-            loggedin = True
-            print("getting content")
-            content = request.get_json()
-            print("getting eventid")
-            eventid = content['eventid']
-            event = getEventObject(eventid)
+    print(request.args)
+    print(request.args.get('eventid'))
+    if isLoggedIn():
+        THIRTY_MIN = 30
+        loggedin = True
+        eventid = request.args.get("eventid")
+        print(eventid)
+        event = getEventObject(eventid)
+        event.passed = True
 
-            roomid = event.room_id
-            result = getBuildingRoomName(roomid)
+        roomid = event.room_id
+        result = getBuildingRoomName(roomid)
 
-            print("getting room")
-            room = getRoomObject(result[1], result[0])
-            building=result[0]
+        room = getRoomObject(result[1], result[0])
+        building=result[0]
 
-            url = '/bookRoom?building=' + building + '&room=' + result[1]
-            print(url)
-            return url
-            #
-            # number = displayBookingButtons(room) # number of buttons to display
-            # times = []
-            # fullTimes = [] # military time
-            # for i in range(number):
-            #     if i == 0:
-            #         continue
-            #     else:
-            #         time = add30(time)
-            #     times.append(str(time)[11:19])
-            #     fullTimes.append(str(time))
-            #     print(times)
-            #     print(fullTimes)
-            # if 'admin' in session:
-            #     print('rendering bookroom')
-            #     return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = True)
-            # else:
-            #     return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, room=room, times = times, fullTimes = fullTimes, admin = False)
+        number = displayExtendBookingButtons(room) # number of buttons to display
+        print(number)
+        latitude, longitude = getLatLong(building)
+        times = []
+        fullTimes = [] # military time
+        time = get30(current_dt())
+        for i in range(number):
+            time = add30(time)
+            times.append(str(time)[11:16])
+            fullTimes.append(str(time))
+        print(times)
+        print(fullTimes)
+        event.passed = False
+
+        if 'admin' in session:
+            return render_template("extend.html", loggedin = loggedin, username = cas.username, building=building,\
+            room=result[1], eventid = eventid, times = times, fullTimes = fullTimes, admin = True, latitude=latitude, longitude=longitude)
+        else:
+            return render_template("extend.html", loggedin = loggedin, username = cas.username, building=building, \
+            room=result[1], eventid = eventid, times = times, fullTimes = fullTimes, admin = False, latitude=latitude, longitude=longitude)
     else:
         return redirect(url_for("index"))
 
@@ -706,7 +704,7 @@ def confirmExtend():
     if 'admin' in session:
        return render_template("confirmExtend.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=result[1], time = str(time)[11:16], fullTime = time, admin = True)
     else:
-        return render_template("confirmExtend.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = str(time)[11:16], fullTime = time, admin = False)
+        return render_template("confirmExtend.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=result[1], time = str(time)[11:16], fullTime = time, admin = False)
 
 
 
