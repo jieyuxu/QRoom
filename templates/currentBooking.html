@@ -69,10 +69,10 @@
       }
     });
   };
-  
+
   window.onload = function() {
     console.log("in onload");
-    notification();
+    setTimeout(notification, 5000);
     setInterval(notification, 240000)
   };
 </script>
