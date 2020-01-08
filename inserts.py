@@ -36,7 +36,7 @@ room1 = Rooms(building=firestone, room_name='101', group=group1)
 room2 = Rooms(building=frist, room_name='102', group=group2)
 room3 = Rooms(building=lewis, room_name='103', group=group1)
 room4 = Rooms(building=firestone, room_name='104', group=group1)
-room6 = Rooms(building=friend, room_name='006', group=group2)
+room5 = Rooms(building=friend, room_name='006', group=group2)
 
 paul = Users(net_id="paul", contact='paul@princeton.edu', admin=False)
 saishaa = Users(net_id="saishaa", contact="saisha@princton.edu", admin=True)
@@ -56,7 +56,7 @@ event2 = Events(user=saishaa, event_title="Graduation",
 event3 = Events(user=suki, event_title="QRoom Meeting",
                 start_time=datetime(2020, 2, 1, 16, 00, 59, 342380),
                 end_time=datetime(2020, 2, 1, 16, 55, 59, 0),
-                room=room6, passed=False)
+                room=room5, passed=False)
 
 
 sess = session_factory()
@@ -72,7 +72,7 @@ sess.add(room1)
 sess.add(room2)
 sess.add(room3)
 sess.add(room4)
-
+sess.add(room5)
 
 sess.add(paul)
 sess.add(saishaa)
