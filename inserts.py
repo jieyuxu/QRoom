@@ -24,8 +24,7 @@ frist = Buildings(building_name="Frist",
 # lewis = Buildings(building_name = "Lewis", latitude=40.3461, longitude=74.6526)
 lewis = Buildings(building_name="Lewis",
                   latitude=40.348833, longitude=-74.6550017)
-shepperd = Buildings(building_name="Sherrerd Hall",
-                     latitude=40.3495354, longitude=-74.654877)
+
 friend = Buildings(building_name="Friend Center",
                    latitude=40.3505454, longitude=-74.6543927)
 
@@ -81,6 +80,7 @@ sess = session_factory()
 sess.add(firestone)
 sess.add(frist)
 sess.add(lewis)
+sess.add(friend)
 
 sess.add(group1)
 sess.add(group2)
