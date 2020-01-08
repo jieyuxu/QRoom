@@ -52,25 +52,28 @@
   var eventid = $('.eventid').attr('eventid');
   console.log(eventid);
 
+  function notification() {
+    $.ajax({
+      url: '/checkTime',
+      type: 'post',
+      contentType: 'application/json',
+      data: JSON.stringify({'eventid': eventid}),
+      success: function(data) {
+        console.log(data);
+         if (data == "True" && !$('#myModal').is(':visible')) {
+            $('#modal').modal('show');
+         }
+         else if (data == "Expired") {
+           window.location = '/booking';
+         }
+      }
+    });
+  };
+  
   window.onload = function() {
     console.log("in onload");
-    setInterval(function(){
-      $.ajax({
-        url: '/checkTime',
-        type: 'post',
-        contentType: 'application/json',
-        data: JSON.stringify({'eventid': eventid}),
-        success: function(data) {
-          console.log(data);
-           if (data == "True" && !$('#myModal').is(':visible')) {
-              $('#modal').modal('show');
-           }
-           else if (data == "Expired") {
-             window.location = '/booking';
-           }
-        }
-      });
-    }, 240000)
+    notification();
+    setInterval(notification, 240000)
   };
 </script>
 <script src="../static/js/script2.js"></script>
