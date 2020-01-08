@@ -628,7 +628,7 @@ def checkTime():
 
         if endtime < timenow:
             releaseEvent(getEventObject(eventid))
-            return "Expired"
+            return str(timenow)
         elif deadline <= timenow:
             return "True"
         else:
