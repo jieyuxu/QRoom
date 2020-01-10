@@ -6,7 +6,7 @@
 <div class="section mt-5 pt-5" id="confirmation">
    <div class="container">
         <span class="eventid" eventid={{eventid}}></span>
-        <div class="row">
+        <div class="row justify-content-center">
           <div class="col col-md-10">
             <div class="jumbotron jumbotron-fluid">
                 <div class="container">
@@ -48,6 +48,33 @@
 </div>
  {% endblock %}
  {% block extrajs %}
-<script src="../static/js/notification.js"></script>
+<script>
+  var eventid = $('.eventid').attr('eventid');
+  console.log(eventid);
+
+  function notification() {
+    $.ajax({
+      url: '/checkTime',
+      type: 'post',
+      contentType: 'application/json',
+      data: JSON.stringify({'eventid': eventid}),
+      success: function(data) {
+        console.log(data);
+         if (data == "True" && !$('#myModal').is(':visible')) {
+            $('#modal').modal('show');
+         }
+         else if (data == "Expired") {
+           window.location = '/booking';
+         }
+      }
+    });
+  };
+
+  window.onload = function() {
+    console.log("in onload");
+    setTimeout(notification, 5000);
+    setInterval(notification, 240000)
+  };
+</script>
 <script src="../static/js/script2.js"></script>
  {% endblock %}
