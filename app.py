@@ -621,7 +621,7 @@ def checkTime():
             eventid = content['eventid']
             endtime = getEventObject(eventid).end_time
             deadline = endtime - timedelta(minutes=10)
-            timenow = datetime.now()
+            timenow = current_dt()
             print("endtime is " + str(endtime))
             print("now is " + str(timenow))
             print("deadline is " + str(deadline))
