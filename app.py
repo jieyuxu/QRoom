@@ -218,6 +218,8 @@ def bookRoom():
 @app.route('/editReservation', methods=['GET', 'POST'])
 def editReservation():
    if isLoggedIn():
+      if 'admin' not in session:
+         return redirect(url_for("index"))
       if request.method == 'POST':
          adminStatus = 'admin' in session
          # room_id is a room number and building_id is the building name
@@ -406,6 +408,10 @@ def releaseRoom():
 @app.route('/admin', methods = ['GET', 'POST'])
 def admin():
    if isLoggedIn():
+      if 'admin' not in session:
+         return redirect(url_for("index"))
+         
+      print("Admin has been detected in this session.")
       # query buildings for the admin template
       buildings_query = getBuildings()
       rooms = []
@@ -414,7 +420,6 @@ def admin():
          for r in rooms_query:
             s = b.building_name + " - " + r.room_name
             rooms.append(s)
-
       return render_template("admin.html", loggedin = isLoggedIn(), username = cas.username, admin = 'admin' in session, rooms = rooms)
    else:
       return redirect(url_for("index"))
@@ -422,6 +427,8 @@ def admin():
 @app.route('/handleAddUser', methods = ['GET', 'POST'])
 def handleAddUser():
    if isLoggedIn():
+      if 'admin' not in session:
+         return redirect(url_for("index"))
       if request.method == 'POST':
 
          admin = request.form['admin-id']
@@ -444,7 +451,7 @@ def handleAddUser():
             msg = Message('QRoom Admin',
                   sender='qroomteam@gmail.com',
                   recipients=[recipient])
-            msg.body = 'Weclome to the QRoom team! You have been added as an admin by ' + current_user + '. Administrative access allows you to access the Admin Portal, where you can add new users as admins, book rooms ahead of time, and monitor all current bookings. If you think this email was sent to you by mistake, please reply to us at qroomteam@gmail.com.'
+            msg.body = 'Weclome to the QRoom team! You have been added as an admin by ' + current_user + '. Administrative access allows you to access the Admin Portal, where you can add new users as admins, book rooms ahead of time, and monitor all current bookings. If you are currenty logged in to the application, please log out of the session and log in again to view the Admin Portal. If you think this email was sent to you by mistake, please reply to us at qroomteam@gmail.com.'
 
             try:
                mail.send(msg)
@@ -465,6 +472,8 @@ def handleAddUser():
 @app.route('/handleSchedule', methods = ['GET', 'POST'])
 def handleSchedule():
    if isLoggedIn():
+      if 'admin' not in session:
+         return redirect(url_for("index"))
       if request.method == 'POST':
          adminStatus = 'admin' in session
          print("printing request form", request.form.items())
@@ -533,50 +542,57 @@ def handleSchedule():
          errorMsg = bookRoomSchedule(current_user_object, room_object, start, end, title)
          fullTime = "Start: " + get_month_day(start) + ' ' + twelve_hour_time(start) + "\nEnd: " + get_month_day(end) + ' ' + twelve_hour_time(end)
 
-
          return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, room=room_id)
+      else:
+         return redirect(url_for("index"))
 
 @app.route('/roomSchedule')
 def roomSchedule():
-   building=request.args.get('building')
-   room=request.args.get('room')
+   if 'admin' not in session:
+         return redirect(url_for("index"))
+   if isLoggedIn():
 
-   room_object = getRoomObject(room, building)
-   event_query = getEventsSorted(room_object)
+      building=request.args.get('building')
+      room=request.args.get('room')
 
-   calender = {}
-   for event in event_query:
-      # check end time and if it has passed
-      if (current_dt() > event.end_time):
-         continue
+      room_object = getRoomObject(room, building)
+      event_query = getEventsSorted(room_object)
 
-      # check if start month, year in dictionary
-      start_time = event.start_time
-      end_time = event.end_time
-      mon_yr = str(start_time.strftime("%B")) + ' ' + str(start_time.year)
+      calender = {}
+      for event in event_query:
+         # check end time and if it has passed
+         if (current_dt() > event.end_time):
+            continue
 
-      if mon_yr in calender:
-         events = calender[mon_yr]
-      else:
-         events = []
+         # check if start month, year in dictionary
+         start_time = event.start_time
+         end_time = event.end_time
+         mon_yr = str(start_time.strftime("%B")) + ' ' + str(start_time.year)
 
-      # get event details, store into dictionary
-      eventDetails = {}
-      eventDetails['StartTime'] = get_month_day(start_time) + ', ' + twelve_hour_time(start_time)
-      eventDetails['EndTime'] = get_month_day(end_time) + ', ' + twelve_hour_time(end_time)
-      #eventDetails['eventId'] = event.event_id
-      eventDetails['title'] = event.event_title
-      eventDetails['owner'] = event.net_id
+         if mon_yr in calender:
+            events = calender[mon_yr]
+         else:
+            events = []
 
-      # add dictionary into events assos. with month, year and add [back] to calender
-      events.append(eventDetails)
-      calender[mon_yr] = events
+         # get event details, store into dictionary
+         eventDetails = {}
+         eventDetails['StartTime'] = get_month_day(start_time) + ', ' + twelve_hour_time(start_time)
+         eventDetails['EndTime'] = get_month_day(end_time) + ', ' + twelve_hour_time(end_time)
+         #eventDetails['eventId'] = event.event_id
+         eventDetails['title'] = event.event_title
+         eventDetails['owner'] = event.net_id
 
-      # calendar is a dictionary with key = a month/year string and value = events list
-      # events is a list of eventdetails dictionaries
-      # eventdetails is a dictionary containing all of the information for a specific event within the month/yr
-   response = make_response(render_template("roomResults.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = True))
-   return response
+         # add dictionary into events assos. with month, year and add [back] to calender
+         events.append(eventDetails)
+         calender[mon_yr] = events
+
+         # calendar is a dictionary with key = a month/year string and value = events list
+         # events is a list of eventdetails dictionaries
+         # eventdetails is a dictionary containing all of the information for a specific event within the month/yr
+      response = make_response(render_template("roomResults.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = True))
+      return response
+   else:
+      return redirect(url_for("index"))
 
 @app.route('/currentBooking', methods = ['GET', 'POST'])
 def currentBooking():
