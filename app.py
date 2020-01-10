@@ -334,16 +334,18 @@ def viewRoom():
                 continue
 
             for t in times_blocked:
+                print(t)
+                print(inRange(t[START_TIME], t[END_TIME], check))
                 if inRange(t[START_TIME], t[END_TIME], check):
                     dictionary[twelve_hour_time(counter_time)] = [False, t[BOOKER]]
                     break
 
             # if still not added into dictionary
-            if counter_time not in dictionary.keys():
+            if twelve_hour_time(counter_time) not in dictionary.keys():
                 dictionary[twelve_hour_time(counter_time)] = [True, '']
 
             counter_time = add30(counter_time)
-
+        print(dictionary)
         if 'admin' in session:
             return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username,
                                     building=building, room=room, times = dictionary, month_day = month_day, admin = True)
