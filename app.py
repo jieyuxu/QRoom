@@ -9,10 +9,12 @@ from CAS import CAS
 from CAS import login_required
 from pywebpush import webpush, WebPushException
 from flask_mail import Message, Mail
+from flask_talisman import Talisman
 import smtplib
 import re
 
 app = Flask(__name__)
+Talisman(app)
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
