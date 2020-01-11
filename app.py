@@ -23,8 +23,8 @@ Talisman(app,
            'https://*.cloudflare.com',
            'https://*.bootstrapcdn.com',
            'https://*.googleapis.com',
-           
-        ]
+
+        ],
         'img-src': '*',
         'script-src': [
             SELF,
