@@ -5,7 +5,7 @@ from utils.api import *
 from flask_sqlalchemy_session import flask_scoped_session
 from utils.base import session_factory
 from distance import distance
-from CAS import CAS
+from CAS import CAS, login
 from CAS import login_required
 from pywebpush import webpush, WebPushException
 from flask_mail import Message, Mail
@@ -194,7 +194,6 @@ def booking():
       else:
          return render_template("booking.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = False, rooms=rooms)
    else:
-      session['redirect'] = request.url
       return redirect(url_for("index"))
 
 @app.route('/buildings', methods=['GET', 'POST'])
@@ -209,8 +208,7 @@ def buildings():
         else:
            return render_template("buildings.html", loggedin = isLoggedIn(), username = cas.username, buildings=buildings, admin = False)
     else:
-      session['redirect'] = request.url
-      return redirect(url_for("index"))
+      return redirect(url_for("login"))
 
 @app.route('/rooms', methods=['GET', 'POST'])
 def rooms():
@@ -230,7 +228,6 @@ def rooms():
            return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username,
                                     building=building, rooms=rooms, admin = False)
     else:
-       session['redirect'] = request.url
        return redirect(url_for("index"))
 
 @app.route('/bookRoom', methods=['GET', 'POST'])
@@ -265,7 +262,6 @@ def bookRoom():
          room=room, times = times, fullTimes = fullTimes, admin = False, latitude=latitude, longitude=longitude)
 
    else:
-      session['redirect'] = request.url
       return redirect(url_for("index"))
 
 @app.route('/editReservation', methods=['GET', 'POST'])
@@ -349,7 +345,6 @@ def editReservation():
          return render_template("editConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, room=room_id)
 
    else:
-      session['redirect'] = request.url
       return redirect(url_for("index"))
 
 @app.route('/viewRoom', methods=['GET', 'POST'])
@@ -409,7 +404,6 @@ def viewRoom():
             return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username,
                                     building=building, room=room, times = dictionary, month_day = month_day, admin = False)
     else:
-       session['redirect'] = request.url
        return redirect(url_for("index"))
 
 @app.route('/confirmation', methods=['GET', 'POST'])
@@ -443,7 +437,6 @@ def confirmation():
         else:
            return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = fullTime, admin = False)
     else:
-      session['redirect'] = request.url
       return redirect(url_for("index"))
 
 @app.route('/releaseRoom', methods=['GET','DELETE'])
@@ -461,7 +454,6 @@ def releaseRoom():
       else:
          return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, admin = False)
    else:
-      session['redirect'] = request.url
       return redirect(url_for("index"))
 
 @app.route('/admin', methods = ['GET', 'POST'])
@@ -481,7 +473,6 @@ def admin():
             rooms.append(s)
       return render_template("admin.html", loggedin = isLoggedIn(), username = cas.username, admin = 'admin' in session, rooms = rooms)
    else:
-      session['redirect'] = request.url
       return redirect(url_for("index"))
 
 @app.route('/handleAddUser', methods = ['GET', 'POST'])
@@ -527,7 +518,6 @@ def handleAddUser():
       else:
          print("Error in handle add user: not a post request")
    else:
-      session['redirect'] = request.url
       return redirect(url_for("index"))
 
 @app.route('/handleSchedule', methods = ['GET', 'POST'])
@@ -605,7 +595,6 @@ def handleSchedule():
 
          return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, room=room_id)
       else:
-         session['redirect'] = request.url
          return redirect(url_for("index"))
 
 @app.route('/roomSchedule')
@@ -654,7 +643,6 @@ def roomSchedule():
       response = make_response(render_template("roomResults.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = True))
       return response
    else:
-      session['redirect'] = request.url
       return redirect(url_for("index"))
 
 @app.route('/currentBooking', methods = ['GET', 'POST'])
@@ -683,7 +671,6 @@ def currentBooking():
             return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = twelve_hour_time(end_time), eventid = eventid, admin = False)
 
     else:
-       session['redirect'] = request.url
        return redirect(url_for("index"))
 
 
@@ -714,7 +701,6 @@ def checkTime():
         else:
             return "False"
     else:
-       session['redirect'] = request.url
        return redirect(url_for("index"))
 
 
@@ -760,7 +746,6 @@ def extend():
             return render_template("extend.html", loggedin = loggedin, username = cas.username, building=building, \
             room=result[1], eventid = eventid, times = times, fullTimes = fullTimes, admin = False, latitude=latitude, longitude=longitude)
     else:
-        session['redirect'] = request.url
         return redirect(url_for("index"))
 
 @app.route('/confirmExtend', methods=['GET', 'POST'])
