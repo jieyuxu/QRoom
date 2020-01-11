@@ -33,6 +33,7 @@ Talisman(app,
            "'self'",
            'data:',
            'https://fonts.gstatic.com',
+           'https://*.bootstrapcdn.com',
         ],
         'script-src': [
             "'self'",
