@@ -39,6 +39,7 @@ Talisman(app,
             "'self'",
             'https://*.cloudflare.com',
             'https://*.bootstrapcdn.com',
+            "'unsafe-inline'",
         ],
         'style-src': [
             "'self'",
