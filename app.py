@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, url_for, redirect, current_app, json, make_response
-from flask import session, response
+from flask import session
 import os
 from utils.api import *
 from flask_sqlalchemy_session import flask_scoped_session
