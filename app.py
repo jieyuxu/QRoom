@@ -111,7 +111,7 @@ def caslogout():
       if 'admin' in session:
           session.pop('admin')
       session.modified = True
-   return redirect(url_for('index'))
+   return redirect(url_for('login'))
 
 @app.route('/booking')
 def booking():
@@ -224,7 +224,7 @@ def rooms():
            return render_template("rooms.html", loggedin = isLoggedIn(), username = cas.username,
                                     building=building, rooms=rooms, admin = False)
     else:
-       return redirect(url_for("index"))
+       return redirect(url_for("login"))
 
 @app.route('/bookRoom', methods=['GET', 'POST'])
 def bookRoom():
@@ -258,7 +258,7 @@ def bookRoom():
          room=room, times = times, fullTimes = fullTimes, admin = False, latitude=latitude, longitude=longitude)
 
    else:
-      return redirect(url_for("index"))
+      return redirect(url_for("login"))
 
 @app.route('/editReservation', methods=['GET', 'POST'])
 def editReservation():
@@ -341,7 +341,7 @@ def editReservation():
          return render_template("editConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, room=room_id)
 
    else:
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
 
 @app.route('/viewRoom', methods=['GET', 'POST'])
 def viewRoom():
@@ -400,7 +400,7 @@ def viewRoom():
             return render_template("viewRoom.html", loggedin = isLoggedIn(), username = cas.username,
                                     building=building, room=room, times = dictionary, month_day = month_day, admin = False)
     else:
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
 
 @app.route('/confirmation', methods=['GET', 'POST'])
 def confirmation():
@@ -433,7 +433,7 @@ def confirmation():
         else:
            return render_template("confirmation.html", loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = fullTime, admin = False)
     else:
-      return redirect(url_for("index"))
+      return redirect(url_for("login"))
 
 @app.route('/releaseRoom', methods=['GET','DELETE'])
 def releaseRoom():
@@ -450,7 +450,7 @@ def releaseRoom():
       else:
          return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, admin = False)
    else:
-      return redirect(url_for("index"))
+      return redirect(url_for("login"))
 
 @app.route('/admin', methods = ['GET', 'POST'])
 def admin():
@@ -469,7 +469,7 @@ def admin():
             rooms.append(s)
       return render_template("admin.html", loggedin = isLoggedIn(), username = cas.username, admin = 'admin' in session, rooms = rooms)
    else:
-      return redirect(url_for("index"))
+      return redirect(url_for("login"))
 
 @app.route('/handleAddUser', methods = ['GET', 'POST'])
 def handleAddUser():
@@ -514,7 +514,7 @@ def handleAddUser():
       else:
          print("Error in handle add user: not a post request")
    else:
-      return redirect(url_for("index"))
+      return redirect(url_for("login"))
 
 @app.route('/handleSchedule', methods = ['GET', 'POST'])
 def handleSchedule():
@@ -591,7 +591,7 @@ def handleSchedule():
 
          return render_template("scheduledConfirmation.html", loggedin=isLoggedIn(), username=cas.username, admin=adminStatus, error=errorMsg, fullTime=fullTime, room=room_id)
       else:
-         return redirect(url_for("index"))
+         return redirect(url_for("login"))
 
 @app.route('/roomSchedule')
 def roomSchedule():
@@ -639,7 +639,7 @@ def roomSchedule():
       response = make_response(render_template("roomResults.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = True))
       return response
    else:
-      return redirect(url_for("index"))
+      return redirect(url_for("login"))
 
 @app.route('/currentBooking', methods = ['GET', 'POST'])
 def currentBooking():
@@ -667,7 +667,7 @@ def currentBooking():
             return render_template("currentBooking.html", seconds = seconds, loggedin = isLoggedIn(), username = cas.username, building=building, room=room, time = twelve_hour_time(end_time), eventid = eventid, admin = False)
 
     else:
-       return redirect(url_for("index"))
+       return redirect(url_for("login"))
 
 
 def isLoggedIn():
@@ -697,7 +697,7 @@ def checkTime():
         else:
             return "False"
     else:
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
 
 
 @app.route('/extend', methods=['GET'])
@@ -742,7 +742,7 @@ def extend():
             return render_template("extend.html", loggedin = loggedin, username = cas.username, building=building, \
             room=result[1], eventid = eventid, times = times, fullTimes = fullTimes, admin = False, latitude=latitude, longitude=longitude)
     else:
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
 
 @app.route('/confirmExtend', methods=['GET', 'POST'])
 def confirmExtend():
