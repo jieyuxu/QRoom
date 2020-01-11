@@ -44,14 +44,14 @@ Talisman(app,
             "'self'",
             'https://*.cloudflare.com',
             'https://*.bootstrapcdn.com',
-            'unsafe-inline',
+            "'unsafe-inline'",
         ],
         'style-src-elem': [
            "'self'",
            'https://*.cloudflare.com',
            'https://*.bootstrapcdn.com',
            'https://*.googleapis.com',
-           'unsafe-inline',	
+           "'unsafe-inline'",	
         ],
    }
 )
