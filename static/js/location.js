@@ -7,13 +7,9 @@ window.onload = function () {
 var options = {
   enableHighAccuracy: true,
   timeout: 5000,
-  // maximumAge: 1000,
 };
 
 function checkPermission() {
-  // console.log("there is an error");
-  // console.warn(`ERROR(${err.code}): ${err.message}`);
-  
   navigator.permissions.query({name:'geolocation'}).then(function(result) {
     if (result.state == 'prompt') {
       report(result.state);
