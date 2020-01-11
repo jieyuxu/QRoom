@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, url_for, redirect, current_app, json, make_response
-from flask import session
+from flask import session, response
 import os
 from utils.api import *
 from flask_sqlalchemy_session import flask_scoped_session
@@ -14,7 +14,12 @@ import smtplib
 import re
 
 app = Flask(__name__)
+
+# http setup and CSP policy
 Talisman(app)
+response.headers['Content-Security-Policy'] = "default-src 'self' data: *.bootstrapcdn.com *.cloudflare.com *.googleapis.com; script-src 'self' *.cloudflare.com cdnjs.cloudflare.com; script-src-elem 'self' cdnjs.cloudflare.com *.bootstrapcdn.com; font-src 'self' data: https://fonts.gstatic.com;connect-src; img-src 'self' https://* data:; style-src 'self' https://fonts.googleapis.com *.cloudflare.com *.bootstrapcdn.com; style-src-elem 'self' *.cloudflare.com *.bootstrapcdn.com *.googleapis.com;"
+
+# mail setup
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
