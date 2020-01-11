@@ -1,7 +1,11 @@
 window.onload = function () {
   if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(showPosition, error, options);
+    // navigator.geolocation.watchPosition(showPosition, error, options);
+    this.checkPermission();
   } 
+  else {
+    alert('Geolocation is not supported for this Browser/OS.');
+  }
 };
 
 var options = {
@@ -11,13 +15,19 @@ var options = {
 
 function checkPermission() {
   navigator.permissions.query({name:'geolocation'}).then(function(result) {
-    if (result.state == 'prompt') {
-      report(result.state);
+    if (result.state == 'granted') {
+      // report(result.state);
       geoBtn.style.display = 'none';
-      navigator.geolocation.getCurrentPosition(revealPosition,positionDenied,geoSettings);
+      navigator.geolocation.watchPosition(showPosition, error, options);
+    } else if (result.state == 'prompt') {
+      // report(result.state);
+      geoBtn.style.display = 'inline';
     } else if (result.state == 'denied') {
       report(result.state);
       geoBtn.style.display = 'inline';
+    }
+    result.onchange = function() {
+      report(result.state);
     }
   });
 }
@@ -25,7 +35,15 @@ function checkPermission() {
 function error(state) {
   alert("The application needs your current location to book a room.")
   // checkPermission();
-  window.location = '/booking';
+  
+  switch(error.code) {
+    case error.TIMEOUT:
+      var nudge = document.getElementById("nudge");
+
+      // The user didn't accept the callout
+      nudge.style.display = "block";
+      break;
+  }
 }
 
 function distance(lat1, lon1, lat2, lon2, unit) {
@@ -51,6 +69,9 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 }
 
 function showPosition(position) {
+  var nudge = document.getElementById("nudge");
+  nudge.style.display = "none";
+
   var building = $('.building').attr('building');
   var lat1 = position.coords.latitude;
   var long1 = position.coords.longitude;
