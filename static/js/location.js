@@ -51,11 +51,9 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 }
 
 function showPosition(position) {
-  console.log('inside show position');
   var building = $('.building').attr('building');
   var lat1 = position.coords.latitude;
   var long1 = position.coords.longitude;
-  console.log(lat1, long1);
   var lat2 = $('.lat').attr('latitude');
   var long2 = $('.long').attr('longitude');
   var dist = distance(lat1, long1, lat2, long2, "K");
