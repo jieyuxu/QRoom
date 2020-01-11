@@ -25,7 +25,10 @@ Talisman(app,
            'https://*.googleapis.com',
 
         ],
-        'img-src': '*',
+        'img-src': [
+           '*',
+           'data:',
+        ],
         'script-src': [
             "'self'",
             'https://*.cloudflare.com',
@@ -40,6 +43,7 @@ Talisman(app,
            "'self'",
            'https://*.cloudflare.com',
            'https://*.bootstrapcdn.com',
+           'https://*.googleapis.com',
         ],
    }
 )
