@@ -10,7 +10,8 @@ window.onload = function () {
 
 var options = {
   enableHighAccuracy: true,
-  timeout: 30000,
+  timeout: 3000,
+  
 };
 
 function checkPermission() {
@@ -36,15 +37,15 @@ function error(state) {
   alert("The application needs your current location to book a room.");
   window.location = '/booking';
   // checkPermission();
-  
-  // switch(error.code) {
-  //   case error.TIMEOUT:
-  //     var nudge = document.getElementById("nudge");
+  if (state.code == 1) {
+    alert("The application needs your current location to book a room.");
+  }
 
-  //     // The user didn't accept the callout
-  //     nudge.style.display = "block";
-  //     break;
-  // }
+  if (state.code == 2) { 
+    alert("The application needs your current location to book a room. Please enable location services on your phone.");
+  }
+
+  location.reload();
 }
 
 function distance(lat1, lon1, lat2, lon2, unit) {
