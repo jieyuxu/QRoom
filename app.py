@@ -115,7 +115,7 @@ def caslogout():
       if 'admin' in session:
           session.pop('admin')
       session.modified = True
-   return redirect(url_for('login'))
+   return redirect(url_for('index'))
 
 @app.route('/booking')
 def booking():
