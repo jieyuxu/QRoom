@@ -101,6 +101,9 @@ def caslogin():
       user = getUser(str(cas.username))
       if isAdmin(user):
          session['admin'] = cas.username
+      if 'service' in request.args:
+         redirect(request.args.get('service'))
+
    return redirect(url_for('booking'))
 
 @app.route('/caslogout')
