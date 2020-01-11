@@ -70,9 +70,6 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 }
 
 function showPosition(position) {
-  var nudge = document.getElementById("nudge");
-  nudge.style.display = "none";
-
   var building = $('.building').attr('building');
   var lat1 = position.coords.latitude;
   var long1 = position.coords.longitude;
