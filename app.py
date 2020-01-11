@@ -31,7 +31,7 @@ Talisman(app,
         ],
         'font-src': [
            'data:',
-           'https://*.googleapis.com',
+           'https://fonts.gstatic.com',
         ],
         'script-src': [
             "'self'",
