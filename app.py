@@ -190,7 +190,7 @@ def booking():
       else:
          return render_template("booking.html", loggedin = isLoggedIn(), username = cas.username, events = calender, admin = False, rooms=rooms)
    else:
-      return redirect(url_for("index"))
+      return redirect(url_for("login"))
 
 @app.route('/buildings', methods=['GET', 'POST'])
 def buildings():
