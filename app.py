@@ -16,7 +16,33 @@ import re
 app = Flask(__name__)
 
 # http setup and CSP policy
-Talisman(app)
+Talisman(app, 
+   content_security_policy={
+        'default-src': [
+           SELF,
+           'https://*.cloudflare.com',
+           'https://*.bootstrapcdn.com',
+           'https://*.googleapis.com',
+           
+        ]
+        'img-src': '*',
+        'script-src': [
+            SELF,
+            'https://*.cloudflare.com',
+            'https://*.bootstrapcdn.com',
+        ],
+        'style-src': [
+            SELF,
+            'https://*.cloudflare.com',
+            'https://*.bootstrapcdn.com',
+        ],
+        'style-src-elem': [
+           SELF,
+           'https://*.cloudflare.com',
+           'https://*.bootstrapcdn.com',
+        ],
+   }
+)
 
 # mail setup
 app.config['MAIL_USE_SSL'] = False
@@ -40,11 +66,6 @@ app.config['CAS_AFTER_LOGOUT'] = 'http://princeton-qroom.herokuapp.com/caslogout
 # app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:5000/caslogout'
 app.config['CAS_LOGIN_ROUTE'] = '/cas'
 #########################################
-@app.after_request
-def add_security_headers(resp):
-   resp.headers['Content-Security-Policy']= "default-src 'self' *.bootstrapcdn.com *.cloudflare.com *.googleapis.com data:;"
-   # script-src 'self' *.cloudflare.com cdnjs.cloudflare.com; script-src-elem 'self' cdnjs.cloudflare.com *.bootstrapcdn.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' https://* data:; style-src 'self' https://fonts.googleapis.com https://*.cloudflare.com https://*.bootstrapcdn.com; style-src-elem 'self' https://*.cloudflare.com https://*.bootstrapcdn.com https://*.googleapis.com;"
-   return resp
 
 @app.route('/')
 def index():
