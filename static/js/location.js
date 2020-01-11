@@ -34,8 +34,6 @@ function checkPermission() {
 }
 
 function error(state) {
-  alert("The application needs your current location to book a room.");
-  window.location = '/booking';
   // checkPermission();
   if (state.code == 1) {
     alert("The application needs your current location to book a room.");
