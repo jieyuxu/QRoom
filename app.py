@@ -19,7 +19,7 @@ app = Flask(__name__)
 Talisman(app, 
    content_security_policy={
         'default-src': [
-           SELF,
+           "'self'",
            'https://*.cloudflare.com',
            'https://*.bootstrapcdn.com',
            'https://*.googleapis.com',
@@ -27,17 +27,17 @@ Talisman(app,
         ],
         'img-src': '*',
         'script-src': [
-            SELF,
+            "'self'",
             'https://*.cloudflare.com',
             'https://*.bootstrapcdn.com',
         ],
         'style-src': [
-            SELF,
+            "'self'",
             'https://*.cloudflare.com',
             'https://*.bootstrapcdn.com',
         ],
         'style-src-elem': [
-           SELF,
+           "'self'",
            'https://*.cloudflare.com',
            'https://*.bootstrapcdn.com',
         ],
