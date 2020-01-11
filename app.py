@@ -208,7 +208,7 @@ def buildings():
         else:
            return render_template("buildings.html", loggedin = isLoggedIn(), username = cas.username, buildings=buildings, admin = False)
     else:
-      return redirect(url_for("login"))
+      return redirect(url_for("/login"))
 
 @app.route('/rooms', methods=['GET', 'POST'])
 def rooms():
