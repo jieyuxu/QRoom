@@ -1,7 +1,7 @@
 window.onload = function () {
   if (navigator.geolocation) {
-    // navigator.geolocation.watchPosition(showPosition, error, options);
-    this.checkPermission();
+    navigator.geolocation.getCurrentPosition(showPosition, error, options);
+    // this.checkPermission();
   } 
   else {
     alert('Geolocation is not supported for this Browser/OS.');
@@ -33,17 +33,18 @@ function checkPermission() {
 }
 
 function error(state) {
-  alert("The application needs your current location to book a room.")
+  alert("The application needs your current location to book a room.");
+  window.location = '/booking';
   // checkPermission();
   
-  switch(error.code) {
-    case error.TIMEOUT:
-      var nudge = document.getElementById("nudge");
+  // switch(error.code) {
+  //   case error.TIMEOUT:
+  //     var nudge = document.getElementById("nudge");
 
-      // The user didn't accept the callout
-      nudge.style.display = "block";
-      break;
-  }
+  //     // The user didn't accept the callout
+  //     nudge.style.display = "block";
+  //     break;
+  // }
 }
 
 function distance(lat1, lon1, lat2, lon2, unit) {
