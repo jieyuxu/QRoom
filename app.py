@@ -44,7 +44,7 @@ Talisman(app,
             "'self'",
             'https://*.cloudflare.com',
             'https://*.bootstrapcdn.com',
-            'sha256-a330698cbe9dc4ef1fb12e2ee9fc06d5d14300262fa4dc5878103ab7347e158f',
+            'unsafe-inline',
         ],
         'style-src-elem': [
            "'self'",
