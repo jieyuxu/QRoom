@@ -17,7 +17,12 @@ app = Flask(__name__)
 
 # http setup and CSP policy
 Talisman(app)
-response.headers['Content-Security-Policy'] = "default-src 'self' data: *.bootstrapcdn.com *.cloudflare.com *.googleapis.com; script-src 'self' *.cloudflare.com cdnjs.cloudflare.com; script-src-elem 'self' cdnjs.cloudflare.com *.bootstrapcdn.com; font-src 'self' data: https://fonts.gstatic.com;connect-src; img-src 'self' https://* data:; style-src 'self' https://fonts.googleapis.com *.cloudflare.com *.bootstrapcdn.com; style-src-elem 'self' *.cloudflare.com *.bootstrapcdn.com *.googleapis.com;"
+response.headers['Content-Security-Policy'] = "default-src 'self' data: *.bootstrapcdn.com *.cloudflare.com\
+   *.googleapis.com; script-src 'self' *.cloudflare.com cdnjs.cloudflare.com;\
+      script-src-elem 'self' cdnjs.cloudflare.com *.bootstrapcdn.com;\
+      font-src 'self' data: https://fonts.gstatic.com; \
+      img-src 'self' https://* data:; style-src 'self' https://fonts.googleapis.com https://*.cloudflare.com https://*.bootstrapcdn.com;\
+      style-src-elem 'self' https://*.cloudflare.com https://*.bootstrapcdn.com https://*.googleapis.com;"
 
 # mail setup
 app.config['MAIL_USE_SSL'] = False
