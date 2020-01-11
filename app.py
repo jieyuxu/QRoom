@@ -715,7 +715,7 @@ def checkTime():
             return "False"
     else:
        session['redirect'] = request.url
-        return redirect(url_for("index"))
+       return redirect(url_for("index"))
 
 
 @app.route('/extend', methods=['GET'])
