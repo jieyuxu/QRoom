@@ -35,15 +35,13 @@ function checkPermission() {
 
 function error(state) {
   // checkPermission();
-  if (state.code == 1) {
-    alert("The application needs your current location to book a room.");
-  }
-
-  if (state.code == 2) { 
-    alert("The application needs your current location to book a room. Please enable location services on your phone.");
-  }
-
-  location.reload();
+  var r = confirm("The application needs your current location to book a room. Please turn on location services on your phone. Click 'OK' once you've done so. Clicking 'CANCEL' will take you back to your bookings page.");
+    if (r == true) {
+      location.reload();
+    }
+    else {
+      window.location = '/booking'
+    }
 }
 
 function distance(lat1, lon1, lat2, lon2, unit) {
