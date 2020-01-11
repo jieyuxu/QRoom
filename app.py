@@ -29,6 +29,10 @@ Talisman(app,
            '*',
            'data:',
         ],
+        'font-src': [
+           'data:',
+           'https://*.googleapis.com',
+        ],
         'script-src': [
             "'self'",
             'https://*.cloudflare.com',
