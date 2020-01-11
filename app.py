@@ -51,7 +51,7 @@ Talisman(app,
            'https://*.cloudflare.com',
            'https://*.bootstrapcdn.com',
            'https://*.googleapis.com',
-           'sha256-+X8OZVXUnvzxLpw6nv+WYxQNlQKSlLdcJSNMX/R0dI0='
+           'unsafe-inline',	
         ],
    }
 )
