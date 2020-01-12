@@ -1,18 +1,22 @@
+window.onload = checkLocation();
+
 function checkLocation() {
   if (navigator.geolocation) {
+    didMakeLocationDecision = true;
     navigator.geolocation.watchPosition(showPosition, error, options);
     // this.checkPermission();
   } 
   else {
     alert('Geolocation is not supported for this Browser/OS.');
   }
-};
+}
 
 var options = {
   enableHighAccuracy: true,
   timeout: 3000,
   
 };
+
 
 function error(state) {
   // checkPermission();
