@@ -4,10 +4,13 @@ window.onload = function () {
       alert('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS.');
       location.reload();
     } 
+    if (result.state == 'granted') {
+      navigator.geolocation.watchPosition(showPosition, error, options);
+    }
   });
+
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(showPosition, error, options);
-    // this.checkPermission();
   } else {
     alert('Geolocation is not supported for this Browser/OS.');
   }
@@ -41,6 +44,7 @@ function distance(lat1, lon1, lat2, lon2, unit) {
 }
 
 function showPosition(position) {
+  console.log('Calculating user position...');
   var building = $('.building').attr('building');
   var lat1 = position.coords.latitude;
   var long1 = position.coords.longitude;
@@ -60,8 +64,7 @@ function showPosition(position) {
 }
 
 function error(state) {
-  // checkPermission();
-  console.log('state code');
+  console.log('An error has occurred.');
   console.log(state.code);
   if (state.code == 1) {
     var r = confirm("Please turn on location services and allow QRoom to access your location. Click 'OK' once you've done so or click 'CANCEL' to return to your bookings page.");
