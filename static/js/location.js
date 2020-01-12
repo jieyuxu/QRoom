@@ -1,6 +1,5 @@
-window.onload = function () {
+function checkLocation() {
   if (navigator.geolocation) {
-    didMakeLocationDecision = true;
     navigator.geolocation.watchPosition(showPosition, error, options);
     // this.checkPermission();
   } 
@@ -14,25 +13,6 @@ var options = {
   timeout: 3000,
   
 };
-
-function checkPermission() {
-  navigator.permissions.query({name:'geolocation'}).then(function(result) {
-    if (result.state == 'granted') {
-      // report(result.state);
-      geoBtn.style.display = 'none';
-      navigator.geolocation.watchPosition(showPosition, error, options);
-    } else if (result.state == 'prompt') {
-      // report(result.state);
-      geoBtn.style.display = 'inline';
-    } else if (result.state == 'denied') {
-      report(result.state);
-      geoBtn.style.display = 'inline';
-    }
-    result.onchange = function() {
-      report(result.state);
-    }
-  });
-}
 
 function error(state) {
   // checkPermission();
@@ -91,10 +71,3 @@ function showPosition(position) {
     window.location = "/booking";
   }
 }
-
-$(document).click(function(e) {
-  if (e.button == 0 && !didMakeLocationDecision) {
-    e.preventDefault();
-    errorFunction();
-}
-});
