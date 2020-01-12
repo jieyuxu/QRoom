@@ -18,7 +18,8 @@ window.onload = function () {
 
 var options = {
   enableHighAccuracy: true,
-  timeout: 15000,
+  timeout: 60000,
+  maximumAge: 600000,
 };
 
 function distance(lat1, lon1, lat2, lon2, unit) {
