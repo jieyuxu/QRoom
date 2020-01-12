@@ -36,13 +36,17 @@ function checkPermission() {
 function error(state) {
   // checkPermission();
   if (state.code == 1) {
-    var r = confirm("The application needs your current location to book a room. Please turn on location services on your phone. Click 'OK' once you've done so. Clicking 'CANCEL' will take you back to your bookings page.");
+    var r = confirm("Please turn on location services and allow QRoom to access your location. Click 'OK' once you've done so or click 'CANCEL' to return to your bookings page.");
     if (r == true) {
       location.reload();
     }
     else {
       window.location = '/booking'
     }
+  }
+  else {
+    alert('There was an error acquiring your location. Refreshing...if this problem persists, clear your cache and try again.');
+    location.reload();
   }
 }
 
