@@ -15,7 +15,7 @@ window.onload = function () {
 
 var options = {
   enableHighAccuracy: true,
-  timeout: 30000,
+  timeout: 15000,
 };
 
 function distance(lat1, lon1, lat2, lon2, unit) {
