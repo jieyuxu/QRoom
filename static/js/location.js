@@ -2,6 +2,11 @@ window.onload = function () {
   checkLocation();
 };
 
+$("#check").on('click', function(e) {
+  e.preventDefault();
+  checkLocation();
+});
+
 var options = {
   enableHighAccuracy: true,
   timeout: 3000,
