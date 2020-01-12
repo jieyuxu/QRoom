@@ -38,7 +38,7 @@ function error(state) {
   if (state.code == 1) {
     var r = confirm("Please turn on location services and allow QRoom to access your location. Click 'OK' once you've done so or click 'CANCEL' to return to your bookings page.");
     if (r == true) {
-      location.reload();
+      navigator.geolocation.getCurrentPosition(showPosition, error, options);
     }
     else {
       window.location = '/booking'
