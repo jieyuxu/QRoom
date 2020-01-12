@@ -1,6 +1,6 @@
 window.onload = function () {
   navigator.permissions.query({name:'geolocation'}).then(function(result) {
-    while (result.state == 'prompt') {
+    if (result.state == 'prompt') {
       alert('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS.');
       location.reload();
     } 
