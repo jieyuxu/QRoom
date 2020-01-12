@@ -1,6 +1,6 @@
-window.onload = function () {
-  checkLocation();
-};
+// window.onload = function () {
+//   checkLocation();
+// };
 
 var options = {
   enableHighAccuracy: true,
