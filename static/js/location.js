@@ -7,13 +7,20 @@ var options = {
   timeout: 3000,
 };
 
-$("#check").on('click', function(e) {
-  navigator.geolocation.getCurrentPosition(
-    function() {
-      redir = $(this).attr('href');
-      window.location = redir;
-    },
-    error, options);
+$("#check").click(function() {
+  console.log('here');
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function() {
+        showPosition();
+        redir = $(this).attr('href');
+        window.location = redir;
+      },
+      error, options);
+  }
+  else {
+      alert('Geolocation is not supported for this Browser/OS.');
+  }
 });
 
 
