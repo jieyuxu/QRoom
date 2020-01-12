@@ -1,5 +1,10 @@
 window.onload = checkLocation();
 
+var options = {
+  enableHighAccuracy: true,
+  timeout: 3000,
+};
+
 function checkLocation() {
   if (navigator.geolocation) {
     didMakeLocationDecision = true;
@@ -8,30 +13,6 @@ function checkLocation() {
   } 
   else {
     alert('Geolocation is not supported for this Browser/OS.');
-  }
-}
-
-var options = {
-  enableHighAccuracy: true,
-  timeout: 3000,
-  
-};
-
-
-function error(state) {
-  // checkPermission();
-  if (state.code == 1) {
-    var r = confirm("Please turn on location services and allow QRoom to access your location. Click 'OK' once you've done so or click 'CANCEL' to return to your bookings page.");
-    if (r == true) {
-      navigator.geolocation.getCurrentPosition(showPosition, error, options);
-    }
-    else {
-      window.location = '/booking'
-    }
-  }
-  else {
-    alert('There was an error acquiring your location. Refreshing...if this problem persists, clear your cache and try again.');
-    location.reload();
   }
 }
 
@@ -75,3 +56,21 @@ function showPosition(position) {
     window.location = "/booking";
   }
 }
+
+function error(state) {
+  // checkPermission();
+  if (state.code == 1) {
+    var r = confirm("Please turn on location services and allow QRoom to access your location. Click 'OK' once you've done so or click 'CANCEL' to return to your bookings page.");
+    if (r == true) {
+      navigator.geolocation.getCurrentPosition(showPosition, error, options);
+    }
+    else {
+      window.location = '/booking'
+    }
+  }
+  else {
+    alert('There was an error acquiring your location. Refreshing...if this problem persists, clear your cache and try again.');
+    location.reload();
+  }
+}
+
