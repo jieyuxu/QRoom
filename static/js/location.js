@@ -7,7 +7,7 @@ var options = {
   timeout: 3000,
 };
 
-$("#check").click(function() {
+function buttonLoc() {
   console.log('here');
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -21,7 +21,7 @@ $("#check").click(function() {
   else {
       alert('Geolocation is not supported for this Browser/OS.');
   }
-});
+}
 
 
 function checkLocation() {
