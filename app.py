@@ -77,7 +77,7 @@ app.config['CAS_SERVER'] = "https://fed.princeton.edu/cas/login"
 app.config['CAS_AFTER_LOGIN'] = 'caslogin'
 app.config['CAS_AFTER_LOGOUT'] = 'http://princeton-qroom.herokuapp.com/caslogout'
 # app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:5000/caslogout'
-app.config['CAS_LOGIN_ROUTE'] = '/cas'
+# app.config['CAS_LOGIN_ROUTE'] = '/cas'
 #########################################
 
 @app.route('/')
