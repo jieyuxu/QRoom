@@ -1,47 +1,56 @@
-// window.onload = function () {
-//   checkLocation();
-// };
+window.onload = function () {
+  navigator.permissions.query({name:'geolocation'}).then(function(result) {
+    if (result.state == 'prompt') {
+      alert('Please allow this application to use your location.')
+    } 
+  });
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(showPosition, error, options);
+    // this.checkPermission();
+  } else {
+    alert('Geolocation is not supported for this Browser/OS.');
+  }
+};
 
 var options = {
   enableHighAccuracy: true,
   timeout: 3000,
 };
 
-function buttonLoc() {
-  console.log('here');
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      function() {
-        // showPosition();
-        var redir = $(this).attr('href');
-        console.log(redir);
-        // window.location = redir;
-      },
-      function() {
-        var r = confirm("Please turn on location services and allow QRoom to access your location. Click 'OK' once you've done so or click 'CANCEL' to return to your bookings page.");
-        if (r == true) {
-          navigator.geolocation.getCurrentPosition(showPosition, error, options);
-        }
-        else {
-          window.location = '/booking'
-        }
-      }, options);
-  }
-  else {
-      alert('Geolocation is not supported for this Browser/OS.');
-  }
-}
+// function buttonLoc() {
+//   console.log('here');
+//   if (navigator.geolocation) {
+//     navigator.geolocation.getCurrentPosition(
+//       function() {
+//         // showPosition();
+//         var redir = $(this).attr('href');
+//         console.log(redir);
+//         // window.location = redir;
+//       },
+//       function() {
+//         var r = confirm("Please turn on location services and allow QRoom to access your location. Click 'OK' once you've done so or click 'CANCEL' to return to your bookings page.");
+//         if (r == true) {
+//           navigator.geolocation.getCurrentPosition(showPosition, error, options);
+//         }
+//         else {
+//           window.location = '/booking'
+//         }
+//       }, options);
+//   }
+//   else {
+//       alert('Geolocation is not supported for this Browser/OS.');
+//   }
+// }
 
-
-function checkLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(showPosition, error, options);
-    // this.checkPermission();
-  } 
-  else {
-    alert('Geolocation is not supported for this Browser/OS.');
-  }
-}
+// function checkLocation() {
+//   if (navigator.geolocation) {
+//     navigator.geolocation.watchPosition(showPosition, error, options);
+//     // this.checkPermission();
+//   } 
+//   else {
+//     alert('Geolocation is not supported for this Browser/OS.');
+//   }
+// }
 
 function distance(lat1, lon1, lat2, lon2, unit) {
   if ((lat1 == lat2) && (lon1 == lon2)) {
