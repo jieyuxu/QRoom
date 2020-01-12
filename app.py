@@ -263,7 +263,7 @@ def bookRoom():
          room=room, times = times, fullTimes = fullTimes, admin = False, latitude=latitude, longitude=longitude)
 
    else:
-      session['redirect'] = '/bookRoom'
+      session['redirect'] = request.url
       return redirect('/login')
 
 @app.route('/editReservation', methods=['GET', 'POST'])
