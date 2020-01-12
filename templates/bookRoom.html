@@ -16,7 +16,7 @@
 
        <div class="list-group list-group-flush">
          {% for time in times %}
-            <a href={{url_for('confirmation', building=building, room=room, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action">{{time}}</a>
+            <a href={{url_for('confirmation', building=building, room=room, time=times[loop.index0], fullTime=fullTimes[loop.index0])}} class="list-group-item list-group-item-action" id="checkLink">{{time}}</a>
          {% endfor %}
         </div>
         <br>
@@ -27,4 +27,15 @@
 {% block extrajs %}
 <script src="../static/js/reload.js"></script>
 <script src="../static/js/script2.js"></script>
+<script>
+   $("#checkLink").click(function(e){
+    e.preventDefault();//this will prevent the link trying to navigate to another page
+    var href = $(this).attr("href");//get the href so we can navigate later
+
+    checkLocation();
+
+    //when update has finished, navigate to the other page
+    window.location = href;
+});
+</script>
 {% endblock %}
