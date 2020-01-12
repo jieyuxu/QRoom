@@ -14,6 +14,7 @@ function buttonLoc() {
       function() {
         // showPosition();
         redir = $(this).attr('destination');
+        console.log(redir);
         window.location = redir;
       },
       function() {
