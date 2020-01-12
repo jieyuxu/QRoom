@@ -1,4 +1,6 @@
-window.onload = checkLocation();
+window.onload = function () {
+  checkLocation();
+};
 
 var options = {
   enableHighAccuracy: true,
