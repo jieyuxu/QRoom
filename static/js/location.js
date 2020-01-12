@@ -2,19 +2,23 @@ window.onload = function () {
   checkLocation();
 };
 
-$("#check").on('click', function(e) {
-  e.preventDefault();
-  checkLocation();
-});
-
 var options = {
   enableHighAccuracy: true,
   timeout: 3000,
 };
 
+$("#check").on('click', function(e) {
+  navigator.geolocation.getCurrentPosition(
+    function() {
+      redir = $(this).attr('href');
+      window.location = redir;
+    },
+    error, options);
+});
+
+
 function checkLocation() {
   if (navigator.geolocation) {
-    didMakeLocationDecision = true;
     navigator.geolocation.watchPosition(showPosition, error, options);
     // this.checkPermission();
   } 
