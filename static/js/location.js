@@ -13,7 +13,7 @@ function buttonLoc() {
     navigator.geolocation.getCurrentPosition(
       function() {
         // showPosition();
-        redir = $(this).attr('destination');
+        redir = $(this).val();
         console.log(redir);
         // window.location = redir;
       },
