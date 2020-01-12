@@ -24,7 +24,7 @@ lewis = Buildings(building_name="Lewis",
                   latitude=40.348833, longitude=-74.6550017)
 
 friend = Buildings(building_name="Friend Center",
-                   latitude=40.3505454, longitude=-74.6543927)
+                   latitude=40.348833, longitude=-74.6550017)
 
                    
 # @40.3423081,-74.6596026
@@ -41,6 +41,7 @@ room5 = Rooms(building=friend, room_name='006', group=group2)
 paul = Users(net_id="paul", contact='paul@princeton.edu', admin=False)
 saishaa = Users(net_id="saishaa", contact="saisha@princton.edu", admin=True)
 suki = Users(net_id="sukiy", contact="sukiy@princton.edu", admin=True)
+thea = Users(net_id="tnfd", contact="tnfd@princton.edu", admin=True)
 
 event1 = Events(user=paul, event_title="Paul's birthday",
                 start_time=datetime(2020, 11, 28, 23, 55, 59, 342380),
@@ -77,6 +78,7 @@ sess.add(room5)
 sess.add(paul)
 sess.add(saishaa)
 sess.add(suki)
+sess.add(thea)
 
 sess.add(event1)
 sess.add(event2)
