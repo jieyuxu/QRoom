@@ -16,7 +16,9 @@ function buttonLoc() {
         redir = $(this).attr('destination');
         window.location = redir;
       },
-      error, options);
+      function() {
+        alert('Please enable location before proceeding.');
+      }, options);
   }
   else {
       alert('Geolocation is not supported for this Browser/OS.');
