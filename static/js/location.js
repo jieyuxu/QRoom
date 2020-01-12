@@ -1,5 +1,6 @@
 window.onload = function () {
   if (navigator.geolocation) {
+    didMakeLocationDecision = true;
     navigator.geolocation.watchPosition(showPosition, error, options);
     // this.checkPermission();
   } 
@@ -90,3 +91,10 @@ function showPosition(position) {
     window.location = "/booking";
   }
 }
+
+$(document).click(function(e) {
+  if (e.button == 0 && !didMakeLocationDecision) {
+    e.preventDefault();
+    errorFunction();
+}
+});
