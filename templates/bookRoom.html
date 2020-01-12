@@ -28,14 +28,16 @@
 <script src="../static/js/reload.js"></script>
 <script src="../static/js/script2.js"></script>
 <script>
-   $("#check").onclick(function(e){
-    console.log('clicked');
-    e.preventDefault();//this will prevent the link trying to navigate to another page
-    checkLocation();
-    var href = $(this).attr("href");//get the href so we can navigate later
+   $(document).ready(function(){
+      $("a").click(function(){
+         e.preventDefault();//this will prevent the link trying to navigate to another page
+         checkLocation();
 
-    //when update has finished, navigate to the other page
-    window.location = href;
-});
+         var href = $(this).attr("href");//get the href so we can navigate later
+
+         //when update has finished, navigate to the other page
+         window.location = href;
+      });
+   });
 </script>
 {% endblock %}
