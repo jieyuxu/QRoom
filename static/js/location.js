@@ -1,6 +1,6 @@
 window.onload = function () {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, error, options);
+    navigator.geolocation.watchPosition(showPosition, error, options);
     // this.checkPermission();
   } 
   else {
