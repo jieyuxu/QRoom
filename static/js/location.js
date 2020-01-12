@@ -18,7 +18,7 @@ window.onload = function () {
 
 var options = {
   enableHighAccuracy: true,
-  timeout: 60000,
+  timeout: 10000,
   maximumAge: 600000,
 };
 
