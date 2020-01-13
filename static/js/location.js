@@ -18,6 +18,10 @@ window.onload = function () {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(showPosition, error, options);
   } else {
+    $("#myModal").modal({
+      backdrop: 'static',
+      keyboard: false,
+    });
     $('#myModal button').attr('onclick', "window.location='/booking'");
     $('#modal-message').html('Geolocation is not supported for this Browser/OS.');
     $('#myModal').modal('show');    
@@ -97,7 +101,6 @@ function error(state) {
           });
           $('#modal-message').html('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will refresh this page so that your location can be obtained.');
           $('#myModal').modal('show');
-          // location.reload();
         }
       }); 
       navigator.geolocation.watchPosition(showPosition, error, options);
