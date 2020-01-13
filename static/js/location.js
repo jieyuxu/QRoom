@@ -6,7 +6,7 @@ window.onload = function () {
         backdrop: 'static',
         keyboard: false,
       });
-      $('#modal-message').text('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will refresh this page so that your location can be obtained.');
+      $('#modal-message').innerHTML('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will refresh this page so that your location can be obtained.');
       $('#myModal').modal('show');
       // location.reload();
     } 
@@ -19,7 +19,7 @@ window.onload = function () {
     navigator.geolocation.watchPosition(showPosition, error, options);
   } else {
     $('#myModal').modal('show');
-    $('#modal-message').text('Geolocation is not supported for this Browser/OS. Redirecting you to your bookings page.');
+    $('#modal-message').innerHTML('Geolocation is not supported for this Browser/OS. Redirecting you to your bookings page.');
     setTimeout(window.location = '/booking', 10000);
     // alert('Geolocation is not supported for this Browser/OS.');
     
@@ -70,14 +70,17 @@ function showPosition(position) {
   // console.log(dist);
 
   if (dist > 0.2) {
+    var timer;
     $("#myModal").modal({
       backdrop: 'static',
       keyboard: false,
     });
-    $('#modal-message').text('You are too far away to book this room. Redirecting you to your bookings page in 10 seconds.');
+    $('#modal-message').innerHTML('You are too far away to book this room. Redirecting you to your bookings page in 10 seconds.');
     $('#myModal button').removeAttr('onClick');
     $('#myModal').modal('show');
-    // setTimeout(window.location = '/booking', 60000);
+    
+    clearTimeout(timer);
+    timer = setTimeout(window.location = '/booking', 60000);
     // window.location = "/booking";
   }
 }
@@ -100,7 +103,7 @@ function error(state) {
       backdrop: 'static',
       keyboard: false,
     });
-    $('#modal-message').text('There was an error acquiring your location. Refreshing to your bookings in 10 seconds. If this problem persists, clear your cache and try again.');
+    $('#modal-message').innerHTML('There was an error acquiring your location. Refreshing to your bookings in 10 seconds. If this problem persists, clear your cache and try again.');
     $('#myModal').modal('show');
     setTimeout("location.reload(true);", 10000);
     // location.reload();
