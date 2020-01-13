@@ -1,11 +1,11 @@
 window.onload = function () {
-  $("#myModal").modal({
-    backdrop: 'static',
-    keyboard: false,
-  });
 
   navigator.permissions.query({name:'geolocation'}).then(function(result) {
     if (result.state == 'prompt') {
+      $("#myModal").modal({
+        backdrop: 'static',
+        keyboard: false,
+      });
       $('#modal-message').text('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will refresh this page so that your location can be obtained.');
       $('#myModal').modal('show');
       // location.reload();
@@ -70,15 +70,20 @@ function showPosition(position) {
   // console.log(dist);
 
   if (dist > 0.2) {
+    $("#myModal").modal({
+      backdrop: 'static',
+      keyboard: false,
+    });
     $('#modal-message').text('You are too far away to book this room. Redirecting you to your bookings page in 10 seconds.');
     $('#myModal button').removeAttr('onClick');
     $('#myModal').modal('show');
-    setTimeout(window.location = '/booking', 60000);
+    // setTimeout(window.location = '/booking', 60000);
     // window.location = "/booking";
   }
 }
 
 function error(state) {
+  $('#myModal').modal('hide');
   console.log('An error has occurred.');
   console.log(state.code);
   if (state.code == 1) {
@@ -91,6 +96,10 @@ function error(state) {
     }
   }
   else {
+    $("#myModal").modal({
+      backdrop: 'static',
+      keyboard: false,
+    });
     $('#modal-message').text('There was an error acquiring your location. Refreshing to your bookings in 10 seconds. If this problem persists, clear your cache and try again.');
     $('#myModal').modal('show');
     setTimeout("location.reload(true);", 10000);
