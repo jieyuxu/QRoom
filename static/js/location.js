@@ -89,14 +89,17 @@ function error(state) {
   if (state.code == 1) {
     var r = confirm("Please turn on location services and allow QRoom to access your location. Click 'OK' once you've done so or click 'CANCEL' to return to your bookings page.");
     if (r == true) {
-      if (result.state == 'prompt') {
-        $("#myModal").modal({
-          backdrop: 'static',
-          keyboard: false,
-        });
-        $('#modal-message').html('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will refresh this page so that your location can be obtained.');
-        $('#myModal').modal('show');
-      } 
+      navigator.permissions.query({name:'geolocation'}).then(function(result) {
+        if (result.state == 'prompt') {
+          $("#myModal").modal({
+            backdrop: 'static',
+            keyboard: false,
+          });
+          $('#modal-message').html('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will refresh this page so that your location can be obtained.');
+          $('#myModal').modal('show');
+          // location.reload();
+        }
+      }); 
       navigator.geolocation.watchPosition(showPosition, error, options);
     }
     else {
