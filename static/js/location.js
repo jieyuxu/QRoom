@@ -69,9 +69,10 @@ function showPosition(position) {
   // console.log(building);
   // console.log(dist);
   if (dist > 0.2) {
+    $('#myModal button').removeAttr('onClick');
     $('#myModal').modal('show');
     $('#modal-message').text('You are too far away to book this room. Redirecting you to your bookings page in 10 seconds.');
-    setTimeout(window.location = '/booking', 10000);
+    setTimeout(window.location = '/booking', 30000);
     // window.location = "/booking";
   }
 }
