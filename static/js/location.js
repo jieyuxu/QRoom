@@ -1,8 +1,12 @@
 window.onload = function () {
   navigator.permissions.query({name:'geolocation'}).then(function(result) {
     if (result.state == 'prompt') {
-      alert('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS.');
-      location.reload();
+      $("#myModal").modal({
+        backdrop: 'static',
+        keyboard: false,
+      });
+      $('#myModal').modal('show')
+      // location.reload();
     } 
     if (result.state == 'granted') {
       navigator.geolocation.watchPosition(showPosition, error, options);

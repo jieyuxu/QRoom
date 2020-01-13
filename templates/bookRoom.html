@@ -28,3 +28,25 @@
 <script src="../static/js/reload.js"></script>
 <script src="../static/js/script2.js"></script>
 {% endblock %}
+{% block modal %}
+<div class="modal fade" id="myModal" role="dialog">
+   <div class="modal-dialog modal-dialog-centered">
+     <!-- Modal content-->
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" onClick="window.location.reload();" class="close">&times;</button>
+         <h4 class="modal-title">Location not Found</h4>
+       </div>
+       <div class="modal-body">
+         <p>Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will
+            refresh this page so that your location can be obtained. 
+         </p>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-default" onClick="window.location.reload();">Close</button>
+       </div>
+     </div>
+     
+   </div>
+ </div>
+{% endblock %}
