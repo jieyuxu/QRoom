@@ -1,19 +1,23 @@
 window.onload = function () {
-
-  navigator.permissions.query({name:'geolocation'}).then(function(result) {
-    if (result.state == 'prompt') {
-      $("#myModal").modal({
-        backdrop: 'static',
-        keyboard: false,
-      });
-      $('#modal-message').html('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will refresh this page so that your location can be obtained.');
-      $('#myModal').modal('show');
-      // location.reload();
-    } 
-    if (result.state == 'granted') {
-      navigator.geolocation.watchPosition(showPosition, error, options);
-    }
-  });
+  try {
+    navigator.permissions.query({name:'geolocation'}).then(function(result) {
+      if (result.state == 'prompt') {
+        $("#myModal").modal({
+          backdrop: 'static',
+          keyboard: false,
+        });
+        $('#modal-message').html('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will refresh this page so that your location can be obtained.');
+        $('#myModal').modal('show');
+        // location.reload();
+      } 
+      if (result.state == 'granted') {
+        navigator.geolocation.watchPosition(showPosition, error, options);
+      }
+    });
+  }
+  catch(e) {
+    console.log('Browser not compatible with Permissions API, likely Safari');
+  }
 
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(showPosition, error, options);
