@@ -39,7 +39,9 @@ room3 = Rooms(building=lewis, room_name='103', group=group1)
 room4 = Rooms(building=firestone, room_name='104', group=group1)
 room5 = Rooms(building=sherred, room_name='006', group=group2)
 
-paul = Users(net_id="paul", contact='paul@princeton.edu', admin=False)
+paul = Users(net_id="pe5", contact='pe5@princeton.edu', admin=True)
+bob = Users(net_id="rdondero", contact='rdondero@princeton.edu', admin=True)
+
 saishaa = Users(net_id="saishaa", contact="saisha@princton.edu", admin=True)
 suki = Users(net_id="sukiy", contact="sukiy@princton.edu", admin=True)
 amy = Users(net_id="jyxu", contact="jyxu@princton.edu", admin=True)
@@ -79,6 +81,7 @@ sess.add(room4)
 sess.add(room5)
 
 sess.add(paul)
+sess.add(bob)
 sess.add(saishaa)
 sess.add(suki)
 sess.add(amy)
