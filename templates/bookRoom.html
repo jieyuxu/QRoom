@@ -34,12 +34,12 @@
      <!-- Modal content-->
      <div class="modal-content">
        <div class="modal-header">
-         <button type="button" onClick="window.location.reload();" class="close">&times;</button>
-         <h4 class="modal-title">Location not Found</h4>
+         <h4 class="modal-title">Geolocation Error!</h4>
+         <button type="button" class="close" onClick="window.location.reload();"><span aria-hidden="true">&times;</span></button>
        </div>
        <div class="modal-body">
-         <p>Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will
-            refresh this page so that your location can be obtained. 
+         <p id="modal-message">
+
          </p>
        </div>
        <div class="modal-footer">
