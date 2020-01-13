@@ -18,7 +18,6 @@ window.onload = function () {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(showPosition, error, options);
   } else {
-    
     $('#myModal button').attr('onclick', "window.location='/booking'");
     $('#modal-message').html('Geolocation is not supported for this Browser/OS.');
     $('#myModal').modal('show');    
@@ -84,13 +83,21 @@ function showPosition(position) {
 
 function error(state) {
   $('.modal').modal('hide');
-  
+
   console.log('An error has occurred.');
   console.log(state.code);
   if (state.code == 1) {
     var r = confirm("Please turn on location services and allow QRoom to access your location. Click 'OK' once you've done so or click 'CANCEL' to return to your bookings page.");
     if (r == true) {
-      navigator.geolocation.getCurrentPosition(showPosition, error, options);
+      if (result.state == 'prompt') {
+        $("#myModal").modal({
+          backdrop: 'static',
+          keyboard: false,
+        });
+        $('#modal-message').html('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will refresh this page so that your location can be obtained.');
+        $('#myModal').modal('show');
+      } 
+      navigator.geolocation.watchPosition(showPosition, error, options);
     }
     else {
       window.location = '/booking'
