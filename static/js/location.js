@@ -6,7 +6,7 @@ window.onload = function () {
         backdrop: 'static',
         keyboard: false,
       });
-      $('#modal-message').innerHTML('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will refresh this page so that your location can be obtained.');
+      $('#modal-message').html('Please allow this application to use your location. If you are on a mobile device, please turn on your GPS. Closing this alert will refresh this page so that your location can be obtained.');
       $('#myModal').modal('show');
       // location.reload();
     } 
@@ -20,7 +20,7 @@ window.onload = function () {
   } else {
     
     $('#myModal button').attr('onClick', "window.location='/booking'");
-    $('#modal-message').innerHTML('Geolocation is not supported for this Browser/OS. Redirecting you to your bookings page.');
+    $('#modal-message').html('Geolocation is not supported for this Browser/OS. Redirecting you to your bookings page.');
     $('#myModal').modal('show');    
   }
 };
@@ -74,7 +74,7 @@ function showPosition(position) {
       backdrop: 'static',
       keyboard: false,
     });
-    $('#modal-message').innerHTML('You are too far away to book this room. Redirecting you to your bookings page in 10 seconds.');
+    $('#modal-message').html('You are too far away to book this room. Redirecting you to your bookings page in 10 seconds.');
     $('#myModal button').attr('onClick', "window.location='/booking'");
     $('#myModal').modal('show');
 
@@ -100,7 +100,7 @@ function error(state) {
       backdrop: 'static',
       keyboard: false,
     });
-    $('#modal-message').innerHTML('There was an error acquiring your location. Refreshing to your bookings in 10 seconds. If this problem persists, clear your cache and try again.');
+    $('#modal-message').html('There was an error acquiring your location. Refreshing to your bookings in 10 seconds. If this problem persists, clear your cache and try again.');
     $('#myModal button').attr('onClick', "window.location='/booking'");
     $('#myModal').modal('show');
     // location.reload();
