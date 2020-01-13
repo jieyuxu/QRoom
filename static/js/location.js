@@ -83,7 +83,8 @@ function showPosition(position) {
 }
 
 function error(state) {
-  $('#myModal').modal('hide');
+  $('.modal').modal('hide');
+  
   console.log('An error has occurred.');
   console.log(state.code);
   if (state.code == 1) {
