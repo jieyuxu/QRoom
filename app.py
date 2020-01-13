@@ -16,7 +16,7 @@ import re
 app = Flask(__name__)
 
 # http setup and CSP policy
-Talisman(app, 
+Talisman(app,
    content_security_policy={
         'default-src': [
            "'self'",
@@ -52,7 +52,7 @@ Talisman(app,
            'https://*.cloudflare.com',
            'https://*.bootstrapcdn.com',
            'https://*.googleapis.com',
-           "'unsafe-inline'",	
+           "'unsafe-inline'",
         ],
    }
 )
@@ -465,7 +465,7 @@ def admin():
    if isLoggedIn():
       if 'admin' not in session:
          return redirect(url_for("index"))
-         
+
       print("Admin has been detected in this session.")
       # query buildings for the admin template
       buildings_query = getBuildings()
@@ -740,7 +740,7 @@ def extend():
         time = get30(current_dt())
         for i in range(number):
             time = add30(time)
-            times.append(str(time)[11:16])
+            times.append(twelve_hour_time(time))
             fullTimes.append(str(time))
         print(times)
         print(fullTimes)
