@@ -19,14 +19,14 @@ firestone = Buildings(building_name="Firestone Library",
 
 frist = Buildings(building_name="Frist Campus Center",
                   latitude=40.3468512, longitude=-74.6574649)
-# lewis = Buildings(building_name = "Lewis", latitude=40.3461, longitude=74.6526)
+
 lewis = Buildings(building_name="Lewis Library",
                   latitude=40.3461306, longitude=-74.654834)
 
-philly = Buildings(building_name="Philadelphia Location",
+philly = Buildings(building_name="Prof. Dondero's Home",
                    latitude=40.052526, longitude=-75.056786)
 
-bloomberg = Buildings(building_name="Bloomberg", latitude=40.3434997, longitude=-74.6581946)
+sherred = Buildings(building_name="Paul's Office", latitude=40.3496224, longitude=-74.6526984)
                    
 # @40.3423081,-74.6596026
 
@@ -37,7 +37,7 @@ room1 = Rooms(building=firestone, room_name='101', group=group1)
 room2 = Rooms(building=frist, room_name='102', group=group2)
 room3 = Rooms(building=lewis, room_name='103', group=group1)
 room4 = Rooms(building=firestone, room_name='104', group=group1)
-room5 = Rooms(building=bloomberg, room_name='006', group=group2)
+room5 = Rooms(building=sherred, room_name='006', group=group2)
 
 paul = Users(net_id="paul", contact='paul@princeton.edu', admin=False)
 saishaa = Users(net_id="saishaa", contact="saisha@princton.edu", admin=True)
@@ -67,7 +67,7 @@ sess.add(firestone)
 sess.add(frist)
 sess.add(lewis)
 sess.add(philly)
-sess.add(bloomberg)
+sess.add(sherred)
 
 sess.add(group1)
 sess.add(group2)
