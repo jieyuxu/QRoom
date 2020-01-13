@@ -19,8 +19,8 @@ window.onload = function () {
     navigator.geolocation.watchPosition(showPosition, error, options);
   } else {
     
-    $('#myModal button').attr('onClick', "window.location='/booking'");
-    $('#modal-message').html('Geolocation is not supported for this Browser/OS. Redirecting you to your bookings page.');
+    $('#myModal button').attr('onclick', "window.location='/booking'");
+    $('#modal-message').html('Geolocation is not supported for this Browser/OS.');
     $('#myModal').modal('show');    
   }
 };
@@ -74,8 +74,8 @@ function showPosition(position) {
       backdrop: 'static',
       keyboard: false,
     });
-    $('#modal-message').html('You are too far away to book this room. Redirecting you to your bookings page in 10 seconds.');
-    $('#myModal button').attr('onClick', "window.location='/booking'");
+    $('#modal-message').html('You are too far away to book this room.');
+    $('#myModal button').attr('onclick', "window.location='/booking'");
     $('#myModal').modal('show');
 
     // window.location = "/booking";
@@ -100,10 +100,8 @@ function error(state) {
       backdrop: 'static',
       keyboard: false,
     });
-    $('#modal-message').html('There was an error acquiring your location. Refreshing to your bookings in 10 seconds. If this problem persists, clear your cache and try again.');
-    $('#myModal button').attr('onClick', "window.location='/booking'");
-    $('#myModal').modal('show');
-    // location.reload();
+    alert('There was an error acquiring your location. Refreshing to your bookings in 10 seconds. If this problem persists, clear your cache and try again.');
+    location.reload();
   }
 }
 
