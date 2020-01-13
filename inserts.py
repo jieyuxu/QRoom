@@ -80,7 +80,7 @@ sess.add(room5)
 sess.add(paul)
 sess.add(saishaa)
 sess.add(suki)
-sess.add(jyxu)
+sess.add(amy)
 
 sess.add(event1)
 sess.add(event2)
