@@ -43,6 +43,7 @@ paul = Users(net_id="paul", contact='paul@princeton.edu', admin=False)
 saishaa = Users(net_id="saishaa", contact="saisha@princton.edu", admin=True)
 suki = Users(net_id="sukiy", contact="sukiy@princton.edu", admin=True)
 amy = Users(net_id="jyxu", contact="jyxu@princton.edu", admin=True)
+jeanna = Users(net_id="jmjoseph", contact="jmjoseph@princeton.edu", admin=True)
 
 event1 = Events(user=paul, event_title="Paul's birthday",
                 start_time=datetime(2020, 11, 28, 23, 55, 59, 342380),
@@ -81,6 +82,7 @@ sess.add(paul)
 sess.add(saishaa)
 sess.add(suki)
 sess.add(amy)
+sess.add(jeanna)
 
 sess.add(event1)
 sess.add(event2)
