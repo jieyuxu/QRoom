@@ -27,7 +27,7 @@ window.onload = function () {
       keyboard: false,
     });
     $('#myModal button').attr('onclick', "window.location='/booking'");
-    $('#modal-message').html('Geolocation is not supported for this Browser/OS.');
+    $('#modal-message').html('Geolocation is not supported for this browser.');
     $('#myModal').modal('show');    
   }
 };
