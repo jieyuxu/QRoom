@@ -112,17 +112,14 @@ function error(state) {
       catch(e) {
         console.log('Browser not compatible with Permissions API, likely Safari');
       }
-      navigator.geolocation.watchPosition(showPosition, error, options);
+
+      navigator.geolocation.watchPosition(checkPosition, error, options);
     }
     else {
       window.location = '/booking'
     }
   }
   else {
-    $("#myModal").modal({
-      backdrop: 'static',
-      keyboard: false,
-    });
     alert('There was an error acquiring your location. Refreshing to your bookings in 10 seconds. If this problem persists, clear your cache and try again.');
     location.reload();
   }
