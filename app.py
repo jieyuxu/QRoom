@@ -68,7 +68,7 @@ app.config['MAIL_PASSWORD'] = 'WeLoveBob123'
 
 mail = Mail(app)
 
-app.secret_key = 'hello its me'
+app.secret_key = "b'\xc9`\x8dj\x82c5\x90p\\\xabxj*r\xdd\xf0u\x86\xba\x06"Y?ca\xf1R\x91Dg\x04\xb4\xdd\x8d\x05'"
 # print(os.random(24))
 sess = flask_scoped_session(session_factory, app)
 
