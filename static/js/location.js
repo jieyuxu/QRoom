@@ -11,7 +11,7 @@ window.onload = function () {
         // location.reload();
       } 
       if (result.state == 'granted') {
-        navigator.geolocation.watchPosition(showPosition, error, options);
+        navigator.geolocation.watchPosition(checkPosition, error, options);
       }
     });
   }
@@ -20,7 +20,7 @@ window.onload = function () {
   }
 
   if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(showPosition, error, options);
+    navigator.geolocation.watchPosition(checkPosition, error, options);
   } else {
     $("#myModal").modal({
       backdrop: 'static',
@@ -60,7 +60,7 @@ function distance(lat1, lon1, lat2, lon2, unit) {
   }
 }
 
-function showPosition(position) {
+function checkPosition(position) {
   console.log('Calculating user position...');
   var building = $('.building').attr('building');
   var lat1 = position.coords.latitude;
