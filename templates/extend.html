@@ -11,6 +11,10 @@
        <span class="lat" latitude="{{latitude}}"></span>
        <span class="long" longitude="{{longitude}}"></span>
        <div class="section-title">
+       {% if errMsg %}
+            <center><h3>Unable to Extend Your Booking</h3></center>
+            <p>Sorry, your stay cannot be extended! Please leave the room once your booking expires.</p>
+        {% else %}
             <center><h3>{{building}} - {{room}}</h3></center>
             <h4>Available Times</h4>
        </div>
@@ -21,6 +25,7 @@
          {% endfor %}
         </div>
         <br>
+      {% endif %}
 </div>
 {% endblock %}
 {% block extrajs %}
