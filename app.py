@@ -243,8 +243,16 @@ def bookRoom():
       room = str(request.args.get('room'))
       room_object = getRoomObject(room, building)
       number = displayBookingButtons(room_object) # number of buttons to display
-
       latitude, longitude = getLatLong(building)
+      if number == 0:
+          errMsg = "Room is not available to be booked right now."
+          if 'admin' in session:
+              return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building,\
+              room=room, errMsg = errMsg, admin = True, latitude=latitude, longitude=longitude)
+          else:
+              return render_template("bookRoom.html", loggedin = loggedin, username = cas.username, building=building, \
+              room=room, errMsg = errMsg, admin = False, latitude=latitude, longitude=longitude)
+
       times = []
       fullTimes = [] # military time
       for i in range(number):
@@ -451,13 +459,15 @@ def releaseRoom():
       buildingname = request.args.get('building')
       roomname = request.args.get('room')
       event = getEventObject(eventid)
+      error = ""
       if event is not None:
           releaseEvent(event)
+      else: error = "No Event"
 
       if 'admin' in session:
-         return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, admin = True)
+         return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, error=error, admin = True)
       else:
-         return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, admin = False)
+         return render_template("releaseRoom.html", loggedin = isLoggedIn(), username = cas.username, building=buildingname, room=roomname, error=error, admin = False)
    else:
       return redirect('/login')
 
@@ -714,11 +724,6 @@ def checkTime():
 
 @app.route('/extend', methods=['GET'])
 def extend():
-    print("in extend stay")
-    print("am i logged in?", isLoggedIn())
-    print("request method", request.method)
-    print(request.args)
-    print(request.args.get('eventid'))
     if isLoggedIn():
         THIRTY_MIN = 30
         loggedin = True
@@ -732,10 +737,18 @@ def extend():
 
         room = getRoomObject(result[1], result[0])
         building=result[0]
+        latitude, longitude = getLatLong(building)
 
         number = displayExtendBookingButtons(room) # number of buttons to display
-        print(number)
-        latitude, longitude = getLatLong(building)
+        if number == 0:
+            errMsg = "Cannot Extend"
+            if 'admin' in session:
+                return render_template("extend.html", loggedin = loggedin, username = cas.username, building=building,\
+                room=result[1], eventid = eventid, errMsg = errMsg, admin = True, latitude=latitude, longitude=longitude)
+            else:
+                return render_template("extend.html", loggedin = loggedin, username = cas.username, building=building, \
+                room=result[1], eventid = eventid, errMsg = errMsg, admin = False, latitude=latitude, longitude=longitude)
+
         times = []
         fullTimes = [] # military time
         time = get30(current_dt())
