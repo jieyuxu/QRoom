@@ -1,133 +1,142 @@
 {% extends 'base.html' %}
 {% block extracss%}
-    <!-- Main css -->
-    <link href="../static/css/style.css" rel="stylesheet">
+<!-- Main css -->
+<link href="../static/css/style.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-    <header class="bg-gradient" id="home">
-        <div class="container mt-5">
-            <h1>QRoom</h1>
-            <p class="tagline">Scan. Reserve. Go.</p>
-        </div>
-        <div class="img-holder mt-3"><img src="../static/images/iphonex0.png" alt="phone" class="img-fluid"></div>
-        <div id="scrollpast"></div>
-    </header>
-    <div class="section light-bg" id="features">
-        <div class="container">
-            <div class="section-title">
-                <small>FEATURES</small>
-                <h3>Find your study space quickly and efficiently using QRoom.</h3>
-            </div>
-
-            <ul class="nav nav-tabs nav-justified" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#planning">Planning</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#booking">Booking</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#easy">Easy</a>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="planning">
-                    <div class="d-flex flex-column flex-lg-row">
-                        <img src="../static/images/graphic.png" alt="graphic" class="img-fluid rounded align-self-start mr-lg-5 mb-5 mb-lg-0">
-                        <div>
-
-                            <h2>Plan ahead.</h2>
-                            <p class="lead">You can instantly view which study spaces are available ahead of time, minimizing time wasted.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="booking">
-                    <div class="d-flex flex-column flex-lg-row">
-                        <div>
-                            <h2>Book a room.</h2>
-                            <p class="lead">Once you arrive to an available space, you can book the room with the simple scan of a QR code, minimzing distractions to come and giving you a more stress-free study environment. </p>
-                        </div>
-                        <img src="../static/images/graphic.png" alt="graphic" class="img-fluid rounded align-self-start mr-lg-5 mb-5 mb-lg-0">
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="easy">
-                    <div class="d-flex flex-column flex-lg-row">
-                        <img src="../static/images/graphic.png" alt="graphic" class="img-fluid rounded align-self-start mr-lg-5 mb-5 mb-lg-0">
-                        <div>
-                            <h2>An easy to use service.</h2>
-                            <p class="lead"> Our app is simple to use, making the process of finding a study space as quick and stress-free as it should be. </p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-
-        </div>
+<header class="bg-gradient" id="home">
+    <div class="container mt-5">
+        <h1>QRoom</h1>
+        <p class="tagline">Scan. Reserve. Go.</p>
     </div>
+    <div class="img-holder mt-3"><img src="../static/images/iphonex0.png" alt="phone" class="img-fluid"></div>
+    <div id="scrollpast"></div>
+</header>
+<div class="section light-bg" id="features">
+    <div class="container">
+        <div class="section-title">
+            <small>FEATURES</small>
+            <h3>Find your study space quickly and efficiently using QRoom.</h3>
+        </div>
 
-    <div class="section light-bg" id="getstarted">
+        <ul class="nav nav-tabs nav-justified" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#planning">Planning</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#booking">Booking</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#easy">Easy</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="planning">
+                <div class="d-flex flex-column flex-lg-row">
+                    <img src="../static/images/graphic.png" alt="graphic"
+                        class="img-fluid rounded align-self-start mr-lg-5 mb-5 mb-lg-0">
+                    <div>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 d-flex align-items-center">
-                    <ul class="list-unstyled ui-steps">
-                        <li class="media">
-                            <div class="circle-icon mr-4">1</div>
-                            <div class="media-body">
-                                <h5>Login via CAS</h5>
-                                <p>Click <a href="/login">here</a> to login with your Princeton netid.</p>
-                            </div>
-                        </li>
-                        <li class="media my-4">
-                            <div class="circle-icon mr-4">2</div>
-                            <div class="media-body">
-                                <h5>Scan a room's QR code</h5>
-                                <p>Scan the QR code in front of rooms that our app support. A list of the rooms we support can be found <a href="">here</a></a></p>
-                            </div>
-                        </li>
-                        <li class="media">
-                            <div class="circle-icon mr-4">3</div>
-                            <div class="media-body">
-                                <h5>Reserve your room</h5>
-                                <p>Fill out a quick form and you're done!</p>
-                            </div>
-                        </li>
-                    </ul>
+                        <h2>Plan ahead.</h2>
+                        <p class="lead">You can instantly view which study spaces are available ahead of time,
+                            minimizing time wasted.</p>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <img src="../static/images/iphonex2.png" alt="iphone" class="img-fluid">
+            </div>
+            <div class="tab-pane fade" id="booking">
+                <div class="d-flex flex-column flex-lg-row">
+                    <div>
+                        <h2>Book a room.</h2>
+                        <p class="lead">Once you arrive to an available space, you can book the room with the simple
+                            scan of a QR code, minimzing distractions to come and giving you a more stress-free study
+                            environment. </p>
+                    </div>
+                    <img src="../static/images/graphic.png" alt="graphic"
+                        class="img-fluid rounded align-self-start mr-lg-5 mb-5 mb-lg-0">
                 </div>
-
+            </div>
+            <div class="tab-pane fade" id="easy">
+                <div class="d-flex flex-column flex-lg-row">
+                    <img src="../static/images/graphic.png" alt="graphic"
+                        class="img-fluid rounded align-self-start mr-lg-5 mb-5 mb-lg-0">
+                    <div>
+                        <h2>An easy to use service.</h2>
+                        <p class="lead"> Our app is simple to use, making the process of finding a study space as quick
+                            and stress-free as it should be. </p>
+                    </div>
+                </div>
             </div>
 
         </div>
+
 
     </div>
+</div>
 
-    <div class="section" id="faq">
-        <div class="container">
-            <div class="section-title">
-                <small>FAQ</small>
-                <h3>Frequently Asked Questions</h3>
+<div class="section light-bg" id="getstarted">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 d-flex align-items-center">
+                <ul class="list-unstyled ui-steps">
+                    <li class="media">
+                        <div class="circle-icon mr-4">1</div>
+                        <div class="media-body">
+                            <h5>Login via CAS</h5>
+                            <p>Click <a href="/login">here</a> to login with your Princeton netid.</p>
+                        </div>
+                    </li>
+                    <li class="media my-4">
+                        <div class="circle-icon mr-4">2</div>
+                        <div class="media-body">
+                            <h5>Scan a room's QR code</h5>
+                            <p>Scan the QR code in front of the room you would like to reserve.</p>
+                        </div>
+                    </li>
+                    <li class="media">
+                        <div class="circle-icon mr-4">3</div>
+                        <div class="media-body">
+                            <h5>Reserve your room</h5>
+                            <p>Fill out a quick form and you're done!</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <img src="../static/images/iphonex2.png" alt="iphone" class="img-fluid">
             </div>
 
-            <div class="row pt-4">
-                <div class="col-md-6">
-                    <h4 class="mb-3">Why can't I book a room?</h4>
-                    <p class="light-font mb-5">The room is most likely not available and/or occupied by somebody else. If a room is available and you cannot book it, please contact us.</p>
-                </div>
-                <div class="col-md-6">
-                        <h4 class="mb-3">Can I book a room without scanning the QR code or in advance?</h4>
-                        <p class="light-font mb-5">No, this app helps students book rooms when they are looking for them in the location they want to book a room in.</p>
-                    </div>
-            </div>
         </div>
 
     </div>
-    <!-- // end .section -->
 
-    <!-- <div class="section bg-gradient" id="contact">
+</div>
+
+<div class="section" id="faq">
+    <div class="container">
+        <div class="section-title">
+            <small>FAQ</small>
+            <h3>Frequently Asked Questions</h3>
+        </div>
+
+        <div class="row pt-4">
+            <div class="col-md-6">
+                <h4 class="mb-3">Why can't I book a room?</h4>
+                <p class="light-font mb-5">The room is most likely not available and/or occupied by somebody else. If a
+                    room is available and you cannot book it, please contact us.</p>
+            </div>
+            <div class="col-md-6">
+                <h4 class="mb-3">Can I book a room without scanning the QR code or in advance?</h4>
+                <p class="light-font mb-5">No, this app helps students book rooms when they are looking for them in the
+                    location they want to book a room in.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- // end .section -->
+
+<!-- <div class="section bg-gradient" id="contact">
         <div class="container">
             <div class="call-to-action">
 
@@ -144,27 +153,28 @@
         </div>
 
     </div> -->
-    <!-- // end .section -->
+<!-- // end .section -->
 
-    <div class="light-bg py-5" id="contact">
-        <div class="section-title">
-                <small>Support</small>
-                <h3>Contact Us</h3>
-                <br>
-                <span class="ti-email mr-2"></span> <a class="mr-4" href="mailto:qroomteam@gmail.com">qroomteam@gmail.com</a>
-                </div>
-            </div>
-
-        </div>
-
+<div class="light-bg py-5" id="contact">
+    <div class="section-title">
+        <small>Support</small>
+        <h3>Contact Us</h3>
+        <br>
+        <span class="ti-email mr-2"></span> <a class="mr-4" href="mailto:qroomteam@gmail.com">qroomteam@gmail.com</a>
     </div>
-    <!-- // end .section -->
-    <footer class="my-5 text-center">
+</div>
 
-        <!-- Copyright removal is not prohibited! -->
-        <p class="mb-2"><small>COPYRIGHT © 2019-2020. COS 333 Project by Team QRoom</small></p>
-        <p class="mb-2"><small>COPYRIGHT © 2017. ALL RIGHTS RESERVED. MOBAPP TEMPLATE BY <a href="https://colorlib.com">COLORLIB</a></small></p>
-    </footer>
+</div>
+
+</div>
+<!-- // end .section -->
+<footer class="my-5 text-center">
+
+    <!-- Copyright removal is not prohibited! -->
+    <p class="mb-2"><small>COPYRIGHT © 2019-2020. COS 333 Project by Team QRoom</small></p>
+    <p class="mb-2"><small>COPYRIGHT © 2017. ALL RIGHTS RESERVED. MOBAPP TEMPLATE BY <a
+                href="https://colorlib.com">COLORLIB</a></small></p>
+</footer>
 {% endblock %}
 {% block extrajs %}
 <script src="../static/js/script.js"></script>
