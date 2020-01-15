@@ -75,7 +75,7 @@ function checkPosition(position) {
   // console.log(building);
   // console.log(dist);
 
-  if (dist > 0.2) {
+  if (dist > 0.19) {
     var timer;
     $("#myModal").modal({
       backdrop: 'static',
