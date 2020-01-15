@@ -11,6 +11,10 @@
        <div class="section-title">
             <center><h3>{{building}} - {{room}}</h3></center>
             <h4>Available End Times for Reservation </h4>
+            {% if errMsg %}
+            <p>This room is currently not available.</p>
+       </div>
+            {% else %}
             <p>Click a time below to occupy this room until then.<p>
        </div>
 
@@ -22,6 +26,7 @@
         <br>
         <center><a href={{url_for('viewRoom', building= building, room=room)}}
         class="btn btn-info">View Room Schedule</a></center>
+        {% endif %}
 </div>
 {% endblock %}
 {% block extrajs %}
@@ -46,7 +51,7 @@
          <button type="button" class="btn btn-default" onClick="window.location.reload();">Close</button>
        </div>
      </div>
-     
+
    </div>
  </div>
 {% endblock %}

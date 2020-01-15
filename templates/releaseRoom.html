@@ -6,8 +6,12 @@
 <div class="section mt-5 pt-5" id="releaseRoom">
    <div class="container">
        <div class="section-title">
+       {% if error|length %}
+          <h3>Failure to release room.</h3>
+       {% else %}
             <h2>Room Released.</h2>
             <h3>{{building}} - {{room}}</h3>
+       {% endif %}
             <p>Redirecting you in 5 seconds. Click <a href="/booking">here</a> to redirect now.</p>
        </div>
 </body>
